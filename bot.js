@@ -42,7 +42,15 @@ function onMessageHandler(channel, tags, msg, self) {
     const replyMsgSender = tags["reply-parent-display-name"]
     const replyMsgBody = tags["reply-parent-msg-body"]
 
-    console.log(`${sender}: ${msg}`)
+    const args = msg.split(' ')
+	const command = args.shift().toLowerCase()
+    const toUser = args[0] ? getToUser(args[0]) : ``
+
+    console.log(`\x1b[36m%s\x1b[0m`, `${sender}:`, `${msg}`)
+    // console.log(`command:`, command)
+    // console.log(`args:`, args)
+    // console.log(`toUser:`, toUser)
+
     let response = ``
 
     // Reply cases
@@ -61,12 +69,6 @@ function onMessageHandler(channel, tags, msg, self) {
     // if (msg.toLowerCase().includes(`undertalebot`)) {
     //     response = `${sender} is talking to me :)`
     // }
-
-    // No linkes!
-    if (msg.toLowerCase().includes(`http`)
-        || msg.toLowerCase().includes(`.com`)) {
-        response = `NO LINKS IN CHAT >(`
-    }
 
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
@@ -91,7 +93,7 @@ function onMessageHandler(channel, tags, msg, self) {
         response = `Wow, ${sender} is a Turbo user! :O`
     }
 
-    // Notice bits cheer message
+    // Notice bits cheer message (Not working?)
     if (bits || msg.toLowerCase().includes(`bits`)) {
         response = `bits: ${bits}`
     }
@@ -133,9 +135,8 @@ function onMessageHandler(channel, tags, msg, self) {
     // Reply and log it (maybe don't rely on this, because response can get overwritten this way)
     if (response) {
         client.say(channel, response)
-        console.log(`> Attempted response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Attempted response: ${response}`)
     }
-    bits ? console.log(`bits: ${bits}`) : null
 }
 
 // Helper functions
@@ -291,6 +292,14 @@ function getSpamtonQuote() {
         `HEY, IS IT COLD IN HERE OR IS IT JUST ME?`
     ]
     return quotes[Math.floor(Math.random() * quotes.length)]
+}
+
+function getToUser(str) {
+    if (str.startsWith(`@`)) {
+        return str.substring(1)
+    } else {
+        return str
+    }
 }
 
 // Called every time the bot connects to Twitch chat

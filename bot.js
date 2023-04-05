@@ -57,72 +57,101 @@ function onMessageHandler(channel, tags, msg, self) {
     // Reply cases
     if (command === `!spamton`) {
         const response = getSpamtonQuote(args[0])
-        respond(channel, response)
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
-    // if (msg.toLowerCase().includes(`pokemon`)) {
-    //     respond(channel, `I love pokemon :)`)
-    // }
+    if (command === `!fight`) {
+        let response = `* ${sender} attacks `
+        toUser ? response += `${toUser}, ` : response += `themself, `
 
-    // if (msg.toLowerCase().includes(`weed`)) {
-    //     respond(channel, `!call police`)
-    // }
+        const smallDamage = Math.ceil(Math.random() * 99)
+        const mediumDamage = Math.ceil(Math.random() * 299)
+        const bigDamage = Math.ceil(Math.random() * 999)
 
-    // if (msg.toLowerCase().includes(`undertalebot`)) {
-    //     respond(channel, `${sender} is talking to me :)`)
-    // }
+        outcome = [
+            `and deals ${smallDamage} damage!`,
+            `and deals ${mediumDamage} damage!`,
+            `and deals ${bigDamage} damage!`
+        ]
+        const randNum = Math.floor(Math.random() * outcome.length)
+        response += outcome[randNum]
 
-    // No links!
-    // if (msg.toLowerCase().includes(`http`)
-    //     || msg.toLowerCase().includes(`.com`)) {
-    //     respond(channel, `NO LINKS IN CHAT >(`)
-    // }
+        if (randNum === 1 && mediumDamage >= 200) {
+            response += ` Critical hit!`
+        } else if (randNum === 2 && bigDamage >= 500) {
+            response += ` Ouch!`
+        } else if (randNum === 2 && bigDamage >= 200) {
+            response += ` Critical hit!`
+        }
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
 
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
         || msg.toLowerCase().includes(`am i a sub`)
         || msg.toLowerCase().includes(`do i have a sub`)) {
-        senderIsSubbed ? respond(channel, `Yes ${sender}, you are subbed :)`) : respond(channel, `No ${sender}, you aren't subbed :(`)
+        let response
+        senderIsSubbed ? response = `Yes ${sender}, you are subbed :)` : response = `No ${sender}, you aren't subbed :(`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // AM I A MOD
     if (msg.toLowerCase().includes(`am i a mod`)
         || msg.toLowerCase().includes(`am i mod`)) {
-        senderIsAMod ? respond(channel, `Yes ${sender}, you are a mod :)`) : respond(channel, `No ${sender}, you aren't a mod :(`)
+        let response
+        senderIsAMod ? response = `Yes ${sender}, you are a mod :)` : response = `No ${sender}, you aren't a mod :(`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // AM I VIP
     if (msg.toLowerCase().includes(`am i vip`)
         || msg.toLowerCase().includes(`am i a vip`)
         || msg.toLowerCase().includes(`do i have vip`)) {
-        senderIsVIP ? respond(channel, `Yes ${sender}, you have VIP status :)`) : respond(channel, `No ${sender}, you don't have VIP status :(`)
+        let response
+        senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // Sender has Turbo?
     if (senderHasTurbo) {
-        respond(channel, `Wow, ${sender} is a Twitch Turbo user! :O`)
+        const response = `Wow, ${sender} is a Twitch Turbo user! :O`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // Notice bits cheer message (Not working?)
     if (bits || msg.toLowerCase().includes(`bits`)) {
-        respond(channel, `bits: ${bits}`)
+        const response = `bits: ${bits}`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // Contains MY MESSAGE ID
     if (msg.toLowerCase().includes(`my message id`)) {
-        respond(channel, `${sender}, your message ID was ${msgID} :)`)
+        const response = `${sender}, your message ID was ${msgID} :)`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // Contains HEX CODE / HEX COLOR
     if (msg.toLowerCase().includes(`hex code`)
         || msg.toLowerCase().includes(`hex color`)) {
-        respond(channel, `${sender}, your name's hex color is ${color} :)`)
+        const response = `${sender}, your name's hex color is ${color} :)`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // Notice a reply
-    // if (replyMsgSender) {
-    //     respond(channel, `I just noticed ${sender} reply to ${replyMsgSender}! :O`)
-    // }
+    if (replyMsgSender) {
+        const response = `I just noticed ${sender} reply to ${replyMsgSender}! :O`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
 
     // HELLO BOT
     if (msg.toLowerCase().includes(`hello bot`)
@@ -130,7 +159,9 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`hi bot`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-        respond(channel, `${greeting}, ${sender}! :)`)
+        const response = `${greeting}, ${sender}! :)`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
     // UNDERTALE BOT HI
@@ -139,7 +170,9 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`undertalebot hi`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-        respond(channel, `${greeting}, ${sender}! How are you? :)`)
+        const response = `${greeting}, ${sender}! How are you? :)`
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 }
 
@@ -296,12 +329,11 @@ function getSpamtonQuote(num) {
         `HEY, IS IT COLD IN HERE OR IS IT JUST ME?`
     ]
     const idx = Number(num) - 1
-    // console.log(quotes.length)
     if (idx >= 0 && idx < quotes.length && Number.isInteger(idx)) {
-        console.log(`Delivering quote ${idx}`)
+        // console.log(`Delivering quote ${idx}`)
         return quotes[idx]
     } else {
-        console.log(`Delivering random quote`)
+        // console.log(`Delivering random quote`)
         return quotes[Math.floor(Math.random() * quotes.length)]
     }
 }
@@ -312,11 +344,6 @@ function getToUser(str) {
     } else {
         return str
     }
-}
-
-function respond(channel, str) {
-    client.say(channel, str)
-    console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${str}`)
 }
 
 // Called every time the bot connects to Twitch chat

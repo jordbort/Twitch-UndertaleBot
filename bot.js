@@ -31,6 +31,7 @@ client.connect()
 function onMessageHandler(channel, tags, msg, self) {
     if (self) { return } // Ignore messages from the bot
 
+    // Message context
     const sender = tags["display-name"]
     const senderIsSubbed = tags["subscriber"]
     const senderIsAMod = tags["mod"]
@@ -42,31 +43,33 @@ function onMessageHandler(channel, tags, msg, self) {
     const replyMsgSender = tags["reply-parent-display-name"]
     const replyMsgBody = tags["reply-parent-msg-body"]
 
+    // Command and arguments parser
     const args = msg.split(' ')
-	const command = args.shift().toLowerCase()
+    const command = args.shift().toLowerCase()
     const toUser = args[0] ? getToUser(args[0]) : ``
 
-    console.log(`\x1b[36m%s\x1b[0m`, `${sender}:`, `${msg}`)
+    // Log message + optional 
+    console.log(`\x1b[36m%s\x1b[0m`, `${channel} ${sender}:`, `${msg}`)
     // console.log(`command:`, command)
     // console.log(`args:`, args)
     // console.log(`toUser:`, toUser)
 
-    let response = ``
-
     // Reply cases
     if (command === `!spamton`) {
-        const response = getSpamtonQuote()
+        const response = getSpamtonQuote(args[0])
         respond(channel, response)
     }
 
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
-        || msg.toLowerCase().includes(`am i a sub`)) {
+        || msg.toLowerCase().includes(`am i a sub`)
+        || msg.toLowerCase().includes(`do i have a sub`)) {
         senderIsSubbed ? respond(channel, `Yes ${sender}, you are subbed :)`) : respond(channel, `No ${sender}, you aren't subbed :(`)
     }
 
     // AM I A MOD
-    if (msg.toLowerCase().includes(`am i a mod`)) {
+    if (msg.toLowerCase().includes(`am i a mod`)
+        || msg.toLowerCase().includes(`am i mod`)) {
         senderIsAMod ? respond(channel, `Yes ${sender}, you are a mod :)`) : respond(channel, `No ${sender}, you aren't a mod :(`)
     }
 
@@ -79,7 +82,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // Sender has Turbo?
     if (senderHasTurbo) {
-        respond(channel, `Wow, ${sender} is a Turbo user! :O`)
+        respond(channel, `Wow, ${sender} is a Twitch Turbo user! :O`)
     }
 
     // Notice bits cheer message (Not working?)
@@ -123,7 +126,7 @@ function onMessageHandler(channel, tags, msg, self) {
 }
 
 // Helper functions
-function getSpamtonQuote() {
+function getSpamtonQuote(num) {
     const quotes = [
         `$VALUES$`,
         `$$DEALS$`,
@@ -274,6 +277,7 @@ function getSpamtonQuote() {
         `… HER? YOU'RE STILL TRYING TO [Use] HER!? HA HA HA HA!!! YOU THINK SHE CAN [Hear] YOU NOW, MUTTERING HER NAME!? WHAT'S SHE GONNA DO, MAKE ME AN [Ice Cream]!?`,
         `HEY, IS IT COLD IN HERE OR IS IT JUST ME?`
     ]
+    // return num
     return quotes[Math.floor(Math.random() * quotes.length)]
 }
 
@@ -287,11 +291,11 @@ function getToUser(str) {
 
 function respond(channel, str) {
     client.say(channel, str)
-    console.log(`\x1b[33m%s\x1b[0m`, `> Attempted response: ${str}`)
+    console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${str}`)
 }
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    client.say(CHANNEL_1, `I have been rebooted :)`)
+    // client.say(CHANNEL_1, `I have been rebooted :)`)
 }

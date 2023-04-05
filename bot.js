@@ -63,7 +63,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     if (command === `!fight`) {
         let response = `* ${sender} attacks `
-        toUser ? response += `${toUser}, ` : response += `themself, `
+        toUser && toUser.toLowerCase !== sender.toLowerCase ? response += `${toUser}, ` : response += `themself, `
 
         const smallDamage = Math.ceil(Math.random() * 99)
         const mediumDamage = Math.ceil(Math.random() * 299)

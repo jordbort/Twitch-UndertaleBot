@@ -54,64 +54,53 @@ function onMessageHandler(channel, tags, msg, self) {
     let response = ``
 
     // Reply cases
-    if (msg.toLowerCase().includes(`spamton`)) {
-        response = getSpamtonQuote()
+    if (command === `!spamton`) {
+        const response = getSpamtonQuote()
+        respond(channel, response)
     }
-
-    // if (msg.toLowerCase().includes(`pokemon`)) {
-    //     response = `I love pokemon :)`
-    // }
-
-    // if (msg.toLowerCase().includes(`weed`)) {
-    //     response = `!call police`
-    // }
-
-    // if (msg.toLowerCase().includes(`undertalebot`)) {
-    //     response = `${sender} is talking to me :)`
-    // }
 
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
         || msg.toLowerCase().includes(`am i a sub`)) {
-        senderIsSubbed ? response = `Yes ${sender}, you are subbed :)` : response = `No ${sender}, you aren't subbed :(`
+        senderIsSubbed ? respond(channel, `Yes ${sender}, you are subbed :)`) : respond(channel, `No ${sender}, you aren't subbed :(`)
     }
 
     // AM I A MOD
     if (msg.toLowerCase().includes(`am i a mod`)) {
-        senderIsAMod ? response = `Yes ${sender}, you are a mod :)` : response = `No ${sender}, you aren't a mod :(`
+        senderIsAMod ? respond(channel, `Yes ${sender}, you are a mod :)`) : respond(channel, `No ${sender}, you aren't a mod :(`)
     }
 
     // AM I VIP
     if (msg.toLowerCase().includes(`am i vip`)
         || msg.toLowerCase().includes(`am i a vip`)
         || msg.toLowerCase().includes(`do i have vip`)) {
-        senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
+        senderIsVIP ? respond(channel, `Yes ${sender}, you have VIP status :)`) : respond(channel, `No ${sender}, you don't have VIP status :(`)
     }
 
     // Sender has Turbo?
     if (senderHasTurbo) {
-        response = `Wow, ${sender} is a Turbo user! :O`
+        respond(channel, `Wow, ${sender} is a Turbo user! :O`)
     }
 
     // Notice bits cheer message (Not working?)
     if (bits || msg.toLowerCase().includes(`bits`)) {
-        response = `bits: ${bits}`
+        respond(channel, `bits: ${bits}`)
     }
 
     // Contains MY MESSAGE ID
     if (msg.toLowerCase().includes(`my message id`)) {
-        response = `${sender}, your message ID was ${msgID} :)`
+        respond(channel, `${sender}, your message ID was ${msgID} :)`)
     }
 
     // Contains HEX CODE / HEX COLOR
     if (msg.toLowerCase().includes(`hex code`)
         || msg.toLowerCase().includes(`hex color`)) {
-        response = `${sender}, your name's hex color is ${color} :)`
+        respond(channel, `${sender}, your name's hex color is ${color} :)`)
     }
 
     // Notice a reply
     // if (replyMsgSender) {
-    //     response = `I just noticed ${sender} reply to ${replyMsgSender}! :O`
+    //     respond(channel, `I just noticed ${sender} reply to ${replyMsgSender}! :O`)
     // }
 
     // HELLO BOT
@@ -120,7 +109,7 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`hi bot`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-        response = `${greeting}, ${sender}! :)`
+        respond(channel, `${greeting}, ${sender}! :)`)
     }
 
     // UNDERTALE BOT HI
@@ -129,13 +118,7 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`undertalebot hi`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-        response = `${greeting}, ${sender}! How are you? :)`
-    }
-
-    // Reply and log it (maybe don't rely on this, because response can get overwritten this way)
-    if (response) {
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Attempted response: ${response}`)
+        respond(channel, `${greeting}, ${sender}! How are you? :)`)
     }
 }
 
@@ -302,7 +285,13 @@ function getToUser(str) {
     }
 }
 
+function respond(channel, str) {
+    client.say(channel, str)
+    console.log(`\x1b[33m%s\x1b[0m`, `> Attempted response: ${str}`)
+}
+
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
+    client.say(CHANNEL_1, `I have been rebooted :)`)
 }

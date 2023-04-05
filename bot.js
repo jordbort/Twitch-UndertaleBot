@@ -60,6 +60,24 @@ function onMessageHandler(channel, tags, msg, self) {
         respond(channel, response)
     }
 
+    // if (msg.toLowerCase().includes(`pokemon`)) {
+    //     respond(channel, `I love pokemon :)`)
+    // }
+
+    // if (msg.toLowerCase().includes(`weed`)) {
+    //     respond(channel, `!call police`)
+    // }
+
+    // if (msg.toLowerCase().includes(`undertalebot`)) {
+    //     respond(channel, `${sender} is talking to me :)`)
+    // }
+
+    // No links!
+    // if (msg.toLowerCase().includes(`http`)
+    //     || msg.toLowerCase().includes(`.com`)) {
+    //     respond(channel, `NO LINKS IN CHAT >(`)
+    // }
+
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
         || msg.toLowerCase().includes(`am i a sub`)
@@ -277,8 +295,15 @@ function getSpamtonQuote(num) {
         `… HER? YOU'RE STILL TRYING TO [Use] HER!? HA HA HA HA!!! YOU THINK SHE CAN [Hear] YOU NOW, MUTTERING HER NAME!? WHAT'S SHE GONNA DO, MAKE ME AN [Ice Cream]!?`,
         `HEY, IS IT COLD IN HERE OR IS IT JUST ME?`
     ]
-    // return num
-    return quotes[Math.floor(Math.random() * quotes.length)]
+    const idx = Number(num) - 1
+    // console.log(quotes.length)
+    if (idx >= 0 && idx < quotes.length && Number.isInteger(idx)) {
+        console.log(`Delivering quote ${idx}`)
+        return quotes[idx]
+    } else {
+        console.log(`Delivering random quote`)
+        return quotes[Math.floor(Math.random() * quotes.length)]
+    }
 }
 
 function getToUser(str) {

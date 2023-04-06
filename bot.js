@@ -114,6 +114,19 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
+    // EQUIP
+    if (command === `!equip`) {
+        let response = `* ${sender} `
+        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
+            response += `gave ${toUser} `
+            response += fetchGivenWeaponOrArmor()
+        } else {
+            response += fetchWeaponOrArmor()
+        }
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
+
     // MERCY
     if (command === `!mercy`) {
         const randNum = Math.ceil(Math.random() * 20)
@@ -172,11 +185,11 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // Notice bits cheer message (Not working?)
-    if (bits || msg.toLowerCase().includes(`bits`)) {
-        const response = `bits: ${bits}`
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
-    }
+    // if (bits || msg.toLowerCase().includes(`bits`)) {
+    //     const response = `bits: ${bits}`
+    //     client.say(channel, response)
+    //     console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    // }
 
     // Contains MY MESSAGE ID
     if (msg.toLowerCase().includes(`my message id`)) {
@@ -927,6 +940,260 @@ function fetchGivenItemText(user, target) {
     return givenItemText[Math.floor(Math.random() * givenItemText.length)]
 }
 
+function fetchWeaponOrArmor() {
+    const equipText = [
+        `threw the Stick away. Then picked it back up.`,
+        `threw the Stick away. Then picked it back up.`,
+        `threw the Stick away. Then picked it back up.`,
+        `threw the Stick away. Then picked it back up.`,
+        `equipped the Stick. Its bark is worse than its bite.`,
+        `equipped the Stick. Its bark is worse than its bite.`,
+        `equipped the Stick. Its bark is worse than its bite.`,
+        `equipped the Stick. Its bark is worse than its bite.`,
+        `equipped the Toy Knife. +3 ATTACK`,
+        `equipped the Toy Knife. +3 ATTACK`,
+        `equipped the Toy Knife. +3 ATTACK`,
+        `equipped the Toy Knife. +3 ATTACK`,
+        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `equipped the Tough Glove. +5 ATTACK`,
+        `equipped the Tough Glove. +5 ATTACK`,
+        `equipped the Tough Glove. +5 ATTACK`,
+        `equipped the Tough Glove. +5 ATTACK`,
+        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `equipped the Ballet Shoes. +7 ATTACK`,
+        `equipped the Ballet Shoes. +7 ATTACK`,
+        `equipped the Ballet Shoes. +7 ATTACK`,
+        `equipped the Ballet Shoes. +7 ATTACK`,
+        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
+        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
+        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
+        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
+        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
+        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
+        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
+        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
+        `equipped the Burnt Pan. +10 ATTACK`,
+        `equipped the Burnt Pan. +10 ATTACK`,
+        `equipped the Burnt Pan. +10 ATTACK`,
+        `equipped the Burnt Pan. +10 ATTACK`,
+        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `equipped the Empty Gun. +12 ATTACK`,
+        `equipped the Empty Gun. +12 ATTACK`,
+        `equipped the Empty Gun. +12 ATTACK`,
+        `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
+        `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
+        `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
+        `equipped the Worn Dagger. +15 ATTACK`,
+        `equipped the Worn Dagger. +15 ATTACK`,
+        `equipped the Worn Dagger. Perfect for cutting plants and vines.`,
+        `equipped the Worn Dagger. Perfect for cutting plants and vines.`,
+        `equipped the Real Knife. About time. +99 ATTACK`,
+        `re-applied the used Bandage. They recovered 10 HP!`,
+        `re-applied the used Bandage. They recovered 10 HP!`,
+        `re-applied the used Bandage. They recovered 10 HP!`,
+        `re-applied the used Bandage. They recovered 10 HP!`,
+        `equipped the Faded Ribbon. +5 DEFENSE`,
+        `equipped the Faded Ribbon. +5 DEFENSE`,
+        `equipped the Faded Ribbon. +5 DEFENSE`,
+        `equipped the Faded Ribbon. +5 DEFENSE`,
+        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
+        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
+        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
+        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
+        `equipped the Manly Bandanna. +7 DEFENSE`,
+        `equipped the Manly Bandanna. +7 DEFENSE`,
+        `equipped the Manly Bandanna. +7 DEFENSE`,
+        `equipped the Manly Bandanna. +7 DEFENSE`,
+        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `equipped the Old Tutu. +10 DEFENSE`,
+        `equipped the Old Tutu. +10 DEFENSE`,
+        `equipped the Old Tutu. +10 DEFENSE`,
+        `equipped the Old Tutu. +10 DEFENSE`,
+        `equipped the Old Tutu. Finally, a protective piece of armor.`,
+        `equipped the Old Tutu. Finally, a protective piece of armor.`,
+        `equipped the Old Tutu. Finally, a protective piece of armor.`,
+        `equipped the Old Tutu. Finally, a protective piece of armor.`,
+        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `donned the Temmie Armor. The things you can do with a college education!`,
+        `donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`,
+        `equipped the Stained Apron. +11 DEFENSE`,
+        `equipped the Stained Apron. +11 DEFENSE`,
+        `equipped the Stained Apron. +11 DEFENSE`,
+        `equipped the Stained Apron. +11 DEFENSE`,
+        `equipped the Stained Apron. Heals 1 HP every other turn.`,
+        `equipped the Stained Apron. Heals 1 HP every other turn.`,
+        `equipped the Stained Apron. Heals 1 HP every other turn.`,
+        `equipped the Stained Apron. Heals 1 HP every other turn.`,
+        `equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+        `equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
+        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
+        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
+        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
+        `equipped the Heart Locket. +15 DEFENSE`,
+        `equipped the Heart Locket. It says "Best Friends Forever."`,
+        `equipped the Locket. Right where it belongs.`,
+        `used Dog Residue. The rest of their inventory filled up with Dog Residue.`,
+        `used Dog Residue. ... They finished using it. An uneasy atmosphere fills the room.`,
+        `used a Punch Card. Punching attacks became stronger.`,
+        `got a Punch Card.`,
+        `deployed the Annoying Dog. The dog absorbs an artifact and leaves.`,
+        `got the Mystery Key. It is too bent to fit on their keychain.`,
+        `used 0. If you are reading this, I messed up somehow.`
+    ]
+    return equipText[Math.floor(Math.random() * equipText.length)]
+}
+
+function fetchGivenWeaponOrArmor() {
+    const givenEquipText = [
+        `the Stick. They ran and picked it up.`,
+        `the Stick. They ran and picked it up.`,
+        `the Stick. They ran and picked it up.`,
+        `the Stick. They ran and picked it up.`,
+        `the Stick. Its bark is worse than its bite.`,
+        `the Stick. Its bark is worse than its bite.`,
+        `the Stick. Its bark is worse than its bite.`,
+        `the Stick. Its bark is worse than its bite.`,
+        `the Toy Knife. +3 ATTACK`,
+        `the Toy Knife. +3 ATTACK`,
+        `the Toy Knife. +3 ATTACK`,
+        `the Toy Knife. +3 ATTACK`,
+        `the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `the Toy Knife. Made of plastic. A rarity nowadays.`,
+        `the Tough Glove. +5 ATTACK`,
+        `the Tough Glove. +5 ATTACK`,
+        `the Tough Glove. +5 ATTACK`,
+        `the Tough Glove. +5 ATTACK`,
+        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
+        `the Ballet Shoes. +7 ATTACK`,
+        `the Ballet Shoes. +7 ATTACK`,
+        `the Ballet Shoes. +7 ATTACK`,
+        `the Ballet Shoes. +7 ATTACK`,
+        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
+        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
+        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
+        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
+        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
+        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
+        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
+        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
+        `the Burnt Pan. +10 ATTACK`,
+        `the Burnt Pan. +10 ATTACK`,
+        `the Burnt Pan. +10 ATTACK`,
+        `the Burnt Pan. +10 ATTACK`,
+        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
+        `the Empty Gun. +12 ATTACK`,
+        `the Empty Gun. +12 ATTACK`,
+        `the Empty Gun. +12 ATTACK`,
+        `the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
+        `the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
+        `the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
+        `the Worn Dagger. +15 ATTACK`,
+        `the Worn Dagger. +15 ATTACK`,
+        `the Worn Dagger. Perfect for cutting plants and vines.`,
+        `the Worn Dagger. Perfect for cutting plants and vines.`,
+        `the Real Knife. About time.`,
+        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
+        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
+        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
+        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
+        `the Faded Ribbon. +5 DEFENSE`,
+        `the Faded Ribbon. +5 DEFENSE`,
+        `the Faded Ribbon. +5 DEFENSE`,
+        `the Faded Ribbon. +5 DEFENSE`,
+        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
+        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
+        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
+        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
+        `the Manly Bandanna. +7 DEFENSE`,
+        `the Manly Bandanna. +7 DEFENSE`,
+        `the Manly Bandanna. +7 DEFENSE`,
+        `the Manly Bandanna. +7 DEFENSE`,
+        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
+        `the Old Tutu. +10 DEFENSE`,
+        `the Old Tutu. +10 DEFENSE`,
+        `the Old Tutu. +10 DEFENSE`,
+        `the Old Tutu. +10 DEFENSE`,
+        `the Old Tutu. Finally, a protective piece of armor.`,
+        `the Old Tutu. Finally, a protective piece of armor.`,
+        `the Old Tutu. Finally, a protective piece of armor.`,
+        `the Old Tutu. Finally, a protective piece of armor.`,
+        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
+        `the Temmie Armor. The things you can do with a college education!`,
+        `the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`,
+        `the Stained Apron. +11 DEFENSE`,
+        `the Stained Apron. +11 DEFENSE`,
+        `the Stained Apron. +11 DEFENSE`,
+        `the Stained Apron. +11 DEFENSE`,
+        `the Stained Apron. Heals 1 HP every other turn.`,
+        `the Stained Apron. Heals 1 HP every other turn.`,
+        `the Stained Apron. Heals 1 HP every other turn.`,
+        `the Stained Apron. Heals 1 HP every other turn.`,
+        `the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+        `the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
+        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
+        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
+        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
+        `the Heart Locket. +15 DEFENSE`,
+        `the Heart Locket. It says "Best Friends Forever."`,
+        `the Locket. They can feel it beating.`,
+        `Dog Residue. The rest of their inventory filled up with Dog Residue.`,
+        `Dog Residue. ... They finished using it. An uneasy atmosphere fills the room.`,
+        `a Punch Card. Punching attacks became stronger.`,
+        `a Punch Card. One step closer to a free Nice Cream...`,
+        `the Annoying Dog. A little white dog. It's fast asleep...`,
+        `the Mystery Key. ????? Probably to someone's house LOL.`,
+        `0. If you are reading this, I messed up somehow.`
+    ]
+    return givenEquipText[Math.floor(Math.random() * givenEquipText.length)]
+}
+
 function getToUser(str) {
     if (str.startsWith(`@`)) {
         return str.substring(1)
@@ -938,5 +1205,5 @@ function getToUser(str) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    client.say(CHANNEL_2, `I have been rebooted :)`)
+    // client.say(CHANNEL_2, `I have been rebooted :)`)
 }

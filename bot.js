@@ -4,6 +4,7 @@ const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
 const CHANNEL_1 = process.env.CHANNEL_1
 const CHANNEL_2 = process.env.CHANNEL_2
+const CHANNEL_3 = process.env.CHANNEL_3
 
 // Define configuration options
 const opts = {
@@ -13,7 +14,8 @@ const opts = {
     },
     channels: [
         CHANNEL_1,
-        CHANNEL_2
+        CHANNEL_2,
+        CHANNEL_3
     ]
 }
 
@@ -29,7 +31,7 @@ client.connect()
 
 let count = 0
 let players = {
-    test: {
+    dummy: {
         hp: 500,
         dead: false
     }
@@ -69,14 +71,11 @@ function onMessageHandler(channel, tags, msg, self) {
         }
     }
 
-    // Reply cases
-    if (command === `count`) {
-        count += 1
-        const response = `The count is at ${count} :)`
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
-    }
+    // *****************
+    // ** REPLY CASES **
+    // *****************
 
+    // MEMORY
     if (command === `!memory`) {
         let response = `Here's everyone I know: `
         for (const player in players) {
@@ -84,6 +83,26 @@ function onMessageHandler(channel, tags, msg, self) {
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
+
+    // REVIVE (for testing)
+    if (command === `!revive`) {
+        let response
+        if (sender === `JPEGSTRIPES`) {
+            console.log(`\x1b[31m%s\x1b[0m`, players)
+            for (const player in players) {
+                players[player][`hp`] = 500
+                players[player][`dead`] = false
+                console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
+            }
+            response = `Everyone is alive :)`
+            client.say(channel, response)
+            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        } else {
+            response = `You can't use this command, ${sender} ;)`
+            client.say(channel, response)
+            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        }
     }
 
     // SPAMTON QUOTE
@@ -477,10 +496,10 @@ function getSpamtonQuote(num) {
     ]
     const idx = Number(num) - 1
     if (idx >= 0 && idx < quotes.length && Number.isInteger(idx)) {
-        // console.log(`Delivering quote ${idx}`)
+        // console.log(`\x1b[31m%s\x1b[0m`, `Delivering quote ${idx}`)
         return quotes[idx]
     } else {
-        // console.log(`Delivering random quote`)
+        // console.log(`\x1b[31m%s\x1b[0m`, `Delivering random quote`)
         return quotes[Math.floor(Math.random() * quotes.length)]
     }
 }
@@ -1282,7 +1301,7 @@ function fetchGivenWeaponOrArmor() {
 }
 
 function deathCheck(chatroom, user) {
-    console.log(`chatroom: ${chatroom}, user: ${user}, hp: ${players[user.toLowerCase()][`hp`]}`)
+    console.log(`\x1b[31m%s\x1b[0m`, `${chatroom}, user: ${user}, hp: ${players[user.toLowerCase()][`hp`]}`)
     // if (players[user.toLowerCase()][`dead`]) { return } // So as not to die again (is this necessary?)
 
     const deathText = [

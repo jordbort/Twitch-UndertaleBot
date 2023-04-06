@@ -114,6 +114,27 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
+    // MERCY
+    if (command === `!mercy`) {
+        const randNum = Math.ceil(Math.random() * 20)
+        const gold = Math.floor(Math.random() * 100)
+        let response = `* `
+
+        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
+            if (randNum === 20) {
+                response += `YOU WON! ${toUser} was spared. ${sender} earned 0 XP and ${gold} gold.`
+            } else {
+                response += `${sender} tried to spare ${toUser}. ${toUser} `
+                response += getThirdPersonFlavorText()
+            }
+        } else {
+            response += `${sender} tried to spare themself. But nothing happened.`
+        }
+
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
+
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
         || msg.toLowerCase().includes(`am i a sub`)
@@ -173,11 +194,11 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // Notice a reply
-    if (replyMsgSender) {
-        const response = `I just noticed ${sender} reply to ${replyMsgSender}! :O`
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
-    }
+    // if (replyMsgSender) {
+    //     const response = `I just noticed ${sender} reply to ${replyMsgSender}! :O`
+    //     client.say(channel, response)
+    //     console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    // }
 
     // HELLO BOT
     if (msg.toLowerCase().includes(`hello bot`)

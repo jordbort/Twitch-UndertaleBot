@@ -82,7 +82,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response += `${player} `
         }
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // REVIVE (for testing)
@@ -97,11 +97,11 @@ function onMessageHandler(channel, tags, msg, self) {
             }
             response = `Everyone is alive :)`
             client.say(channel, response)
-            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
         } else {
             response = `You can't use this command, ${sender} ;)`
             client.say(channel, response)
-            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
         }
     }
 
@@ -109,7 +109,7 @@ function onMessageHandler(channel, tags, msg, self) {
     if (command === `!spamton`) {
         const response = getSpamtonQuote(args[0])
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // FIGHT
@@ -117,7 +117,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (players[sender.toLowerCase()][`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
-            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${reply}`)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
             return
         }
 
@@ -127,13 +127,13 @@ function onMessageHandler(channel, tags, msg, self) {
                 if (players[toUser.toLowerCase()][`dead`]) {
                     reply = `${toUser} is already dead! :(`
                     client.say(channel, reply)
-                    console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${reply}`)
+                    console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                     return
                 }
             } else {
                 reply = `${toUser} is not registered yet :(`
                 client.say(channel, reply)
-                console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${reply}`)
+                console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                 return
             }
         }
@@ -162,7 +162,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response += ` Critical hit!`
         }
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
 
         if (toUser && toUser.toLowerCase() in players) {
             if (randNum === 0) {
@@ -190,7 +190,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `* ${sender} `
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // ITEM
@@ -198,7 +198,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // EQUIP
@@ -211,7 +211,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response += fetchWeaponOrArmor()
         }
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // MERCY
@@ -232,7 +232,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // HP
@@ -251,7 +251,7 @@ function onMessageHandler(channel, tags, msg, self) {
             if (players[sender.toLowerCase()][`dead`]) { response += ` You are dead :(` }
         }
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // AM I SUBBED
@@ -261,7 +261,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         senderIsSubbed ? response = `Yes ${sender}, you are subbed :)` : response = `No ${sender}, you aren't subbed :(`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // AM I A MOD
@@ -270,7 +270,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         senderIsAMod ? response = `Yes ${sender}, you are a mod :)` : response = `No ${sender}, you aren't a mod :(`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // AM I VIP
@@ -280,28 +280,28 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // Sender has Turbo?
     if (senderHasTurbo) {
         const response = `Wow, ${sender} is a Twitch Turbo user! :O`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // Notice bits cheer message (Not working?)
     // if (bits || msg.toLowerCase().includes(`bits`)) {
     //     const response = `bits: ${bits}`
     //     client.say(channel, response)
-    //     console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    //     console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     // }
 
     // Contains MY MESSAGE ID
     if (msg.toLowerCase().includes(`my message id`)) {
         const response = `${sender}, your message ID was ${msgID} :)`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // Contains HEX CODE / HEX COLOR
@@ -309,14 +309,14 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`hex color`)) {
         const response = `${sender}, your name's hex color is ${color} :)`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // Notice a reply
     // if (replyMsgSender) {
     //     const response = `I just noticed ${sender} reply to ${replyMsgSender}! :O`
     //     client.say(channel, response)
-    //     console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    //     console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     // }
 
     // HELLO BOT
@@ -327,7 +327,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // UNDERTALE BOT HI
@@ -338,7 +338,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`
         client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 }
 
@@ -1319,7 +1319,7 @@ function deathCheck(chatroom, user) {
         players[user.toLowerCase()][`dead`] = true
         setTimeout(function () {
             client.say(chatroom, response)
-            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
         }, 2000)
     }
 }
@@ -1335,5 +1335,5 @@ function getToUser(str) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    client.say(CHANNEL_2, `I have been rebooted :)`)
+    client.say(CHANNEL_1, `I have been rebooted :)`)
 }

@@ -82,6 +82,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `Here's everyone I know: `
         for (const player in players) {
             response += `${player} `
+            console.log(`\x1b[31m%s\x1b[0m`, `${channel} <${player}> ${players[player][`hp`]} HP${players[player][`gold`] > 0 ? `, ${players[player][`gold`]} gold` : ``} ${players[player][`dead`] ? `(dead)` : `(alive)`}`)
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -91,11 +92,11 @@ function onMessageHandler(channel, tags, msg, self) {
     if (command === `!revive`) {
         let response
         if (sender === `JPEGSTRIPES`) {
-            console.log(`\x1b[31m%s\x1b[0m`, players)
+            // console.log(`\x1b[31m%s\x1b[0m`, players)
             for (const player in players) {
                 players[player][`hp`] = maxHP
                 players[player][`dead`] = false
-                console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
+                // console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
             }
             response = `Everyone is alive :)`
             client.say(channel, response)

@@ -29,7 +29,7 @@ client.on('connected', onConnectedHandler)
 // Connect to Twitch:
 client.connect()
 
-let count = 0
+const maxHP = 1000
 let players = {
     dummy: {
         hp: 500,
@@ -66,7 +66,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     if (!(sender.toLowerCase() in players)) {
         players[`${sender.toLowerCase()}`] = {
-            hp: 500,
+            hp: maxHP,
             dead: false
         }
     }
@@ -873,7 +873,95 @@ function fetchItemText(user) {
         `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies. ${user} recovered 28 HP!`,
         `* Papyrus gives ${user} some of his oak-aged spaghetti. ${user} takes a small bite. Their face reflexively scrunches up. The taste is indescribable... Papyrus is flattered!`
     ]
-    return itemText[Math.floor(Math.random() * itemText.length)]
+
+    const randItem = Math.floor(Math.random() * itemText.length)
+    let userHealAmt = 0
+
+    if (randItem >= 0 && randItem <= 12) { userHealAmt = 10 }
+    if (randItem >= 13 && randItem <= 20) { userHealAmt = 12 }
+    if (randItem >= 21 && randItem <= 28) { userHealAmt = 24 }
+    if (randItem >= 29 && randItem <= 31) { userHealAmt = maxHP }
+    if (randItem >= 32 && randItem <= 36) { userHealAmt = 45 }
+    if (randItem >= 37 && randItem <= 44) { userHealAmt = 15 }
+    if (randItem >= 45 && randItem <= 48) { userHealAmt = 22 }
+    if (randItem >= 49 && randItem <= 52) { userHealAmt = 11 }
+    if (randItem >= 53 && randItem <= 60) { userHealAmt = 22 }
+    if (randItem >= 61 && randItem <= 68) { userHealAmt = 21 }
+    if (randItem >= 69 && randItem <= 76) { userHealAmt = 18 }
+    if (randItem >= 77 && randItem <= 83) { userHealAmt = 10 }
+    if (randItem >= 84 && randItem <= 88) { userHealAmt = 34 }
+    if (randItem >= 89 && randItem <= 98) { userHealAmt = 2 }
+    if (randItem >= 99 && randItem <= 100) { userHealAmt = 10 }
+    if (randItem >= 101 && randItem <= 102) { userHealAmt = 30 }
+    if (randItem >= 103 && randItem <= 104) { userHealAmt = maxHP }
+    if (randItem >= 105 && randItem <= 106) { userHealAmt = 90 }
+    if (randItem >= 107 && randItem <= 108) { userHealAmt = 15 }
+    if (randItem >= 109 && randItem <= 110) { userHealAmt = 4 }
+    if (randItem >= 111 && randItem <= 113) { userHealAmt = 20 }
+    if (randItem >= 114 && randItem <= 116) { userHealAmt = 21 }
+    if (randItem >= 117 && randItem <= 123) { userHealAmt = 17 }
+    if (randItem >= 124 && randItem <= 126) { userHealAmt = 65 }
+    if (randItem >= 127 && randItem <= 133) { userHealAmt = 14 }
+    if (randItem >= 134 && randItem <= 140) { userHealAmt = 27 }
+    if (randItem >= 141 && randItem <= 147) { userHealAmt = 40 }
+    if (randItem >= 148 && randItem <= 150) { userHealAmt = 60 }
+    if (randItem >= 151 && randItem <= 155) { userHealAmt = 13 }
+    if (randItem === 156) { userHealAmt = maxHP }
+    if (randItem === 157) { userHealAmt = 15 }
+    if (randItem === 158) { userHealAmt = 1 }
+    if (randItem === 159) { userHealAmt = 8 }
+    if (randItem === 160) { userHealAmt = 5 }
+    if (randItem === 161) { userHealAmt = 16 }
+    if (randItem === 162) { userHealAmt = 28 }
+    // if (randItem === 163) { userHealAmt = 0 }
+
+    /*
+    index results from pastebin (subtract 1 from line number for index number)
+    lines 1-13: +10
+    lines 14-21: +12
+    lines 22-29: +24
+    lines 30-32: full heal
+    lines 33-37: +45
+    lines 38-45: +15
+    lines 46-49: +22
+    lines 50-53: +11
+    lines 54-61: +22
+    lines 62-69: +21
+    lines 70-77: +18
+    lines 78-84: +10
+    lines 85-89: +34
+    lines 90-99: +2
+    lines 100-101: +10
+    lines 102-103: +30
+    lines 104-105: full heal
+    lines 106-107: +90
+    lines 108-109: +15
+    lines 110-111: +4
+    lines 112-114: +20
+    lines 115-117: +21
+    lines 118-124: +17
+    lines 125-127: +65
+    lines 128-134: +14
+    lines 135-141: +27
+    lines 142-148: +40
+    lines 149-151: +60
+    lines 152-156: +13
+    line 157: full heal
+    line 158: +15
+    line 159: +1
+    line 160: +8
+    line 161: +5
+    line 162: +16
+    line 163: +28
+    line 164: +0
+    */
+
+    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
+
+    players[user.toLowerCase()][`hp`] += userHealAmt
+    if (players[user.toLowerCase()][`hp`] > maxHP) { players[user.toLowerCase()][`hp`] = maxHP }
+
+    return itemText[randItem]
 }
 
 function fetchGivenItemText(user, target) {
@@ -1043,7 +1131,104 @@ function fetchGivenItemText(user, target) {
         `* ${user} gives ${target} Puppydough Icecream. Mmm! Tastes like puppies. ${target} recovered 28 HP!`,
         `* ${user} gives ${target} some of Papyrus's oak-aged spaghetti. ${target} takes a small bite. Their face reflexively scrunches up. The taste is indescribable... Papyrus is flattered!`
     ]
-    return givenItemText[Math.floor(Math.random() * givenItemText.length)]
+
+    const randGivenItem = Math.floor(Math.random() * givenItemText.length)
+    let userHealAmt = 0
+    let targetHealAmt = 0
+
+    if (randGivenItem >= 0 && randGivenItem <= 12) { targetHealAmt = 10 }
+    if (randGivenItem >= 13 && randGivenItem <= 20) { targetHealAmt = 12 }
+    if (randGivenItem >= 21 && randGivenItem <= 28) { targetHealAmt = 24 }
+    if (randGivenItem >= 29 && randGivenItem <= 31) { targetHealAmt = maxHP }
+    if (randGivenItem >= 32 && randGivenItem <= 36) { targetHealAmt = 45 }
+    if (randGivenItem >= 37 && randGivenItem <= 44) { targetHealAmt = 15 }
+    if (randGivenItem >= 45 && randGivenItem <= 46) { targetHealAmt = 22 }
+    if (randGivenItem >= 47 && randGivenItem <= 48) { targetHealAmt = 11 }
+    if (randGivenItem >= 49 && randGivenItem <= 50) { userHealAmt = 11; targetHealAmt = 11 }
+    if (randGivenItem >= 51 && randGivenItem <= 52) { targetHealAmt = 11 }
+    if (randGivenItem >= 53 && randGivenItem <= 60) { targetHealAmt = 22 }
+    if (randGivenItem >= 61 && randGivenItem <= 68) { targetHealAmt = 21 }
+    if (randGivenItem >= 69 && randGivenItem <= 76) { targetHealAmt = 18 }
+    if (randGivenItem >= 77 && randGivenItem <= 83) { targetHealAmt = 10 }
+    if (randGivenItem >= 84 && randGivenItem <= 88) { targetHealAmt = 34 }
+    if (randGivenItem >= 89 && randGivenItem <= 98) { targetHealAmt = 2 }
+    if (randGivenItem >= 99 && randGivenItem <= 100) { targetHealAmt = 10 }
+    if (randGivenItem >= 101 && randGivenItem <= 102) { targetHealAmt = 30 }
+    if (randGivenItem >= 103 && randGivenItem <= 104) { targetHealAmt = maxHP }
+    if (randGivenItem >= 105 && randGivenItem <= 106) { targetHealAmt = 90 }
+    if (randGivenItem >= 107 && randGivenItem <= 108) { targetHealAmt = 15 }
+    if (randGivenItem >= 109 && randGivenItem <= 110) { targetHealAmt = 4 }
+    if (randGivenItem >= 111 && randGivenItem <= 113) { targetHealAmt = 20 }
+    if (randGivenItem >= 114 && randGivenItem <= 116) { targetHealAmt = 21 }
+    if (randGivenItem >= 117 && randGivenItem <= 123) { targetHealAmt = 17 }
+    if (randGivenItem >= 124 && randGivenItem <= 126) { targetHealAmt = 65 }
+    if (randGivenItem >= 127 && randGivenItem <= 133) { targetHealAmt = 14 }
+    if (randGivenItem >= 134 && randGivenItem <= 140) { targetHealAmt = 27 }
+    if (randGivenItem >= 141 && randGivenItem <= 147) { targetHealAmt = 40 }
+    if (randGivenItem >= 148 && randGivenItem <= 150) { targetHealAmt = 60 }
+    if (randGivenItem >= 151 && randGivenItem <= 155) { targetHealAmt = 13 }
+    if (randGivenItem === 156) { targetHealAmt = maxHP }
+    if (randGivenItem === 157) { targetHealAmt = 15 }
+    if (randGivenItem === 158) { targetHealAmt = 1 }
+    if (randGivenItem === 159) { targetHealAmt = 8 }
+    if (randGivenItem === 160) { targetHealAmt = 5 }
+    if (randGivenItem === 161) { targetHealAmt = 16 }
+    if (randGivenItem === 162) { targetHealAmt = 28 }
+    // if (randGivenItem === 163) { targetHealAmt = 0 }
+
+    /*
+    index results from pastebin (subtract 1 from line number for index number)
+    lines 1-13: +10
+    lines 14-21: +12
+    lines 22-29: +24
+    lines 30-32: full heal
+    lines 33-37: +45
+    lines 38-45: +15
+    lines 46-47: +22
+    lines 48-49: +11
+    lines 50-51: both users recover +11!
+    lines 52-53: +11
+    lines 54-61: +22
+    lines 62-69: +21
+    lines 70-77: +18
+    lines 78-84: +10
+    lines 85-89: +34
+    lines 90-99: +2
+    lines 100-101: +10
+    lines 102-103: +30
+    lines 104-105: full heal
+    lines 106-107: +90
+    lines 108-109: +15
+    lines 110-111: +4
+    lines 112-114: +20
+    lines 115-117: +21
+    lines 118-124: +17
+    lines 125-127: +65
+    lines 128-134: +14
+    lines 135-141: +27
+    lines 142-148: +40
+    lines 149-151: +60
+    lines 152-156: +13
+    line 157: full heal
+    line 158: +15
+    line 159: +1
+    line 160: +8
+    line 161: +5
+    line 162: +16
+    line 163: +28
+    line 164: +0
+    */
+
+    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
+    console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${players[target.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
+
+    players[user.toLowerCase()][`hp`] += userHealAmt
+    if (players[user.toLowerCase()][`hp`] > maxHP) { players[user.toLowerCase()][`hp`] = maxHP }
+
+    players[target.toLowerCase()][`hp`] += targetHealAmt
+    if (players[target.toLowerCase()][`hp`] > maxHP) { players[target.toLowerCase()][`hp`] = maxHP }
+
+    return givenItemText[randGivenItem]
 }
 
 function fetchWeaponOrArmor() {

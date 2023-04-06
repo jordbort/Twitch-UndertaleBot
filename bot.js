@@ -190,6 +190,30 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ACT
     if (command === `!act`) {
+        if (players[sender.toLowerCase()][`dead`]) {
+            const reply = `Sorry ${sender}, you are dead! :(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
+
+        if (toUser) {
+            let reply
+            if (toUser.toLowerCase() in players) {
+                if (players[toUser.toLowerCase()][`dead`]) {
+                    reply = `Sorry ${sender}, ${toUser} is dead! :(`
+                    client.say(channel, reply)
+                    console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+                    return
+                }
+            } else {
+                reply = `${toUser} is not registered yet :(`
+                client.say(channel, reply)
+                console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+                return
+            }
+        }
+
         let response = `* ${sender} `
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
         client.say(channel, response)

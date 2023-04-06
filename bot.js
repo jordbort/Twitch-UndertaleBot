@@ -28,6 +28,12 @@ client.on('connected', onConnectedHandler)
 client.connect()
 
 let count = 0
+let players = {
+    test: {
+        hp: 500,
+        dead: false
+    }
+}
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, msg, self) {
@@ -56,6 +62,13 @@ function onMessageHandler(channel, tags, msg, self) {
     // console.log(`args:`, args)
     // console.log(`toUser:`, toUser)
 
+    if (!(sender.toLowerCase() in players)) {
+        players[`${sender.toLowerCase()}`] = {
+            hp: 500,
+            dead: false
+        }
+    }
+
     // Reply cases
     if (command === `count`) {
         count += 1
@@ -64,6 +77,16 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
 
+    if (command === `!memory`) {
+        let response = `Here's everyone I know: `
+        for (const player in players) {
+            response += `${player} `
+        }
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
+
+    // SPAMTON QUOTE
     if (command === `!spamton`) {
         const response = getSpamtonQuote(args[0])
         client.say(channel, response)
@@ -72,6 +95,30 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // FIGHT
     if (command === `!fight`) {
+        if (players[sender.toLowerCase()][`dead`]) {
+            const reply = `Sorry ${sender}, you are dead! :(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${reply}`)
+            return
+        }
+
+        if (toUser) {
+            let reply
+            if (toUser.toLowerCase() in players) {
+                if (players[toUser.toLowerCase()][`dead`]) {
+                    reply = `${toUser} is already dead! :(`
+                    client.say(channel, reply)
+                    console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${reply}`)
+                    return
+                }
+            } else {
+                reply = `${toUser} is not registered yet :(`
+                client.say(channel, reply)
+                console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${reply}`)
+                return
+            }
+        }
+
         let response = `* ${sender} attacks `
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += `${toUser}, ` : response += `themself, `
 
@@ -82,7 +129,8 @@ function onMessageHandler(channel, tags, msg, self) {
         outcome = [
             `and deals ${smallDamage} damage!`,
             `and deals ${mediumDamage} damage!`,
-            `and deals ${bigDamage} damage!`
+            `and deals ${bigDamage} damage!`,
+            `but misses!`
         ]
         const randNum = Math.floor(Math.random() * outcome.length)
         response += outcome[randNum]
@@ -96,6 +144,26 @@ function onMessageHandler(channel, tags, msg, self) {
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+
+        if (toUser && toUser.toLowerCase() in players) {
+            if (randNum === 0) {
+                players[toUser.toLowerCase()][`hp`] -= smallDamage
+            } else if (randNum === 1) {
+                players[toUser.toLowerCase()][`hp`] -= mediumDamage
+            } else if (randNum === 2) {
+                players[toUser.toLowerCase()][`hp`] -= bigDamage
+            }
+            deathCheck(channel, toUser)
+        } else if (!toUser) {
+            if (randNum === 0) {
+                players[sender.toLowerCase()][`hp`] -= smallDamage
+            } else if (randNum === 1) {
+                players[sender.toLowerCase()][`hp`] -= mediumDamage
+            } else if (randNum === 2) {
+                players[sender.toLowerCase()][`hp`] -= bigDamage
+            }
+            deathCheck(channel, sender)
+        }
     }
 
     // ACT
@@ -144,6 +212,25 @@ function onMessageHandler(channel, tags, msg, self) {
             response += `${sender} tried to spare themself. But nothing happened.`
         }
 
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+    }
+
+    // HP
+    if (command === `!hp`) {
+        const senderHP = players[sender.toLowerCase()][`hp`]
+        let response
+        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
+            if (toUser.toLowerCase() in players) {
+                response = `${toUser} has ${players[toUser.toLowerCase()][`hp`]} HP :)`
+                if (players[toUser.toLowerCase()][`dead`]) { response += ` ${toUser} is dead :(` }
+            } else {
+                response = `${toUser} isn't registered :(`
+            }
+        } else {
+            response = `${sender} has ${senderHP} HP :)`
+            if (players[sender.toLowerCase()][`dead`]) { response += ` You are dead :(` }
+        }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
     }
@@ -1194,6 +1281,30 @@ function fetchGivenWeaponOrArmor() {
     return givenEquipText[Math.floor(Math.random() * givenEquipText.length)]
 }
 
+function deathCheck(chatroom, user) {
+    console.log(`chatroom: ${chatroom}, user: ${user}, hp: ${players[user.toLowerCase()][`hp`]}`)
+    // if (players[user.toLowerCase()][`dead`]) { return } // So as not to die again (is this necessary?)
+
+    const deathText = [
+        `The future of monsters depends on you!`,
+        `Don't lose hope!`,
+        `You cannot give up just yet...`,
+        `Our fate rests upon you...`,
+        `It cannot end now!`,
+        `You're going to be alright!`
+    ]
+    if (players[user.toLowerCase()][`hp`] <= 0) {
+        let response = `* `
+        response += deathText[Math.floor(Math.random() * deathText.length)]
+        response += ` ${user}! Stay determined...`
+        players[user.toLowerCase()][`dead`] = true
+        setTimeout(function () {
+            client.say(chatroom, response)
+            console.log(`\x1b[33m%s\x1b[0m`, `> Response: ${response}`)
+        }, 2000)
+    }
+}
+
 function getToUser(str) {
     if (str.startsWith(`@`)) {
         return str.substring(1)
@@ -1205,5 +1316,5 @@ function getToUser(str) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    // client.say(CHANNEL_2, `I have been rebooted :)`)
+    client.say(CHANNEL_2, `I have been rebooted :)`)
 }

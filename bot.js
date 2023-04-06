@@ -277,7 +277,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 return
             }
         }
-        
+
         let response = `* ${sender} `
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
             response += `gave ${toUser} `
@@ -368,6 +368,27 @@ function onMessageHandler(channel, tags, msg, self) {
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+    }
+
+    // SPEND
+    if (command === `!spend`) {
+        if (players[sender.toLowerCase()][`dead`]) {
+            const reply = `Sorry ${sender}, you are dead! :(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
+
+        if (players[sender.toLowerCase()][`gold`] > 0) {
+            const response = `${sender} spent all their gold. Thanks! :)`
+            players[sender.toLowerCase()][`gold`] = 0
+            client.say(channel, response)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+        } else {
+            const response = `${sender}, you have no gold :(`
+            client.say(channel, response)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+        }
     }
 
     // AM I SUBBED

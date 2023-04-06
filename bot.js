@@ -91,7 +91,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (sender === `JPEGSTRIPES`) {
             console.log(`\x1b[31m%s\x1b[0m`, players)
             for (const player in players) {
-                players[player][`hp`] = 500
+                players[player][`hp`] = maxHP
                 players[player][`dead`] = false
                 console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
             }
@@ -195,6 +195,30 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ITEM
     if (command === `!item`) {
+        if (players[sender.toLowerCase()][`dead`]) {
+            const reply = `Sorry ${sender}, you are dead! :(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
+
+        if (toUser) {
+            let reply
+            if (toUser.toLowerCase() in players) {
+                if (players[toUser.toLowerCase()][`dead`]) {
+                    reply = `${toUser} is already dead! :(`
+                    client.say(channel, reply)
+                    console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+                    return
+                }
+            } else {
+                reply = `${toUser} is not registered yet :(`
+                client.say(channel, reply)
+                console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+                return
+            }
+        }
+
         let response
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
         client.say(channel, response)
@@ -915,47 +939,6 @@ function fetchItemText(user) {
     if (randItem === 162) { userHealAmt = 28 }
     // if (randItem === 163) { userHealAmt = 0 }
 
-    /*
-    index results from pastebin (subtract 1 from line number for index number)
-    lines 1-13: +10
-    lines 14-21: +12
-    lines 22-29: +24
-    lines 30-32: full heal
-    lines 33-37: +45
-    lines 38-45: +15
-    lines 46-49: +22
-    lines 50-53: +11
-    lines 54-61: +22
-    lines 62-69: +21
-    lines 70-77: +18
-    lines 78-84: +10
-    lines 85-89: +34
-    lines 90-99: +2
-    lines 100-101: +10
-    lines 102-103: +30
-    lines 104-105: full heal
-    lines 106-107: +90
-    lines 108-109: +15
-    lines 110-111: +4
-    lines 112-114: +20
-    lines 115-117: +21
-    lines 118-124: +17
-    lines 125-127: +65
-    lines 128-134: +14
-    lines 135-141: +27
-    lines 142-148: +40
-    lines 149-151: +60
-    lines 152-156: +13
-    line 157: full heal
-    line 158: +15
-    line 159: +1
-    line 160: +8
-    line 161: +5
-    line 162: +16
-    line 163: +28
-    line 164: +0
-    */
-
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
 
     players[user.toLowerCase()][`hp`] += userHealAmt
@@ -1175,49 +1158,6 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem === 161) { targetHealAmt = 16 }
     if (randGivenItem === 162) { targetHealAmt = 28 }
     // if (randGivenItem === 163) { targetHealAmt = 0 }
-
-    /*
-    index results from pastebin (subtract 1 from line number for index number)
-    lines 1-13: +10
-    lines 14-21: +12
-    lines 22-29: +24
-    lines 30-32: full heal
-    lines 33-37: +45
-    lines 38-45: +15
-    lines 46-47: +22
-    lines 48-49: +11
-    lines 50-51: both users recover +11!
-    lines 52-53: +11
-    lines 54-61: +22
-    lines 62-69: +21
-    lines 70-77: +18
-    lines 78-84: +10
-    lines 85-89: +34
-    lines 90-99: +2
-    lines 100-101: +10
-    lines 102-103: +30
-    lines 104-105: full heal
-    lines 106-107: +90
-    lines 108-109: +15
-    lines 110-111: +4
-    lines 112-114: +20
-    lines 115-117: +21
-    lines 118-124: +17
-    lines 125-127: +65
-    lines 128-134: +14
-    lines 135-141: +27
-    lines 142-148: +40
-    lines 149-151: +60
-    lines 152-156: +13
-    line 157: full heal
-    line 158: +15
-    line 159: +1
-    line 160: +8
-    line 161: +5
-    line 162: +16
-    line 163: +28
-    line 164: +0
-    */
 
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
     console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${players[target.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
@@ -1504,7 +1444,7 @@ function deathCheck(chatroom, user) {
         players[user.toLowerCase()][`dead`] = true
         setTimeout(function () {
             client.say(chatroom, response)
-            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+            console.log(`\x1b[33m%s\x1b[0m`, `${chatroom} UndertaleBot: ${response}`)
         }, 2000)
     }
 }

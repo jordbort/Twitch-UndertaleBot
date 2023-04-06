@@ -33,7 +33,8 @@ const maxHP = 1000
 let players = {
     dummy: {
         hp: 500,
-        dead: false
+        dead: false,
+        gold: 0
     }
 }
 
@@ -67,7 +68,8 @@ function onMessageHandler(channel, tags, msg, self) {
     if (!(sender.toLowerCase() in players)) {
         players[`${sender.toLowerCase()}`] = {
             hp: maxHP,
-            dead: false
+            dead: false,
+            gold: 0
         }
     }
 
@@ -206,7 +208,7 @@ function onMessageHandler(channel, tags, msg, self) {
             let reply
             if (toUser.toLowerCase() in players) {
                 if (players[toUser.toLowerCase()][`dead`]) {
-                    reply = `${toUser} is already dead! :(`
+                    reply = `Sorry ${sender}, ${toUser} is dead! :(`
                     client.say(channel, reply)
                     console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                     return
@@ -240,13 +242,36 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // MERCY
     if (command === `!mercy`) {
+        if (players[sender.toLowerCase()][`dead`]) {
+            const reply = `Sorry ${sender}, you are dead! :(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
+
         const randNum = Math.ceil(Math.random() * 20)
-        const gold = Math.floor(Math.random() * 100)
+        const randGoldAmt = Math.floor(Math.random() * 100)
         let response = `* `
 
+        // Check if toUser is the sender
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
-            if (randNum === 20) {
-                response += `YOU WON! ${toUser} was spared. ${sender} earned 0 XP and ${gold} gold.`
+            // If toUser not registered
+            if (!(toUser.toLowerCase() in players)) {
+                response = `${toUser} is not registered yet :(`
+                client.say(channel, response)
+                console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+                return
+            // If toUser is dead
+            } else if (players[toUser.toLowerCase()][`dead`]) {
+                response = `Sorry ${sender}, ${toUser} is dead! :(`
+                client.say(channel, response)
+                console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+                return
+            } else if (randNum === 20) {
+                response += `YOU WON! ${toUser} was spared. ${sender} earned 0 XP and ${randGoldAmt} gold.`
+                players[sender.toLowerCase()][`gold`] += randGoldAmt
+                players[sender.toLowerCase()][`hp`] = maxHP
+                players[toUser.toLowerCase()][`hp`] = maxHP
             } else {
                 response += `${sender} tried to spare ${toUser}. ${toUser} `
                 response += getThirdPersonFlavorText()
@@ -257,6 +282,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+        console.log(`\x1b[31m%s\x1b[0m`, `sender: ${sender}, toUser: ${toUser}, randNum: ${randNum}`)
     }
 
     // HP
@@ -273,6 +299,23 @@ function onMessageHandler(channel, tags, msg, self) {
         } else {
             response = `${sender} has ${senderHP} HP :)`
             if (players[sender.toLowerCase()][`dead`]) { response += ` You are dead :(` }
+        }
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+    }
+
+    // GOLD
+    if (command === `!gold`) {
+        const senderGold = players[sender.toLowerCase()][`gold`]
+        let response
+        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
+            if (toUser.toLowerCase() in players) {
+                response = `${toUser} has ${players[toUser.toLowerCase()][`gold`]}G :)`
+            } else {
+                response = `${toUser} isn't registered :(`
+            }
+        } else {
+            response = `${sender} has ${senderGold}G :)`
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)

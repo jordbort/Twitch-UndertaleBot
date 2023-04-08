@@ -14,7 +14,7 @@ const opts = {
     },
     channels: [
         CHANNEL_1,
-        // CHANNEL_2,
+        CHANNEL_2,
         CHANNEL_3
     ]
 }
@@ -29,12 +29,12 @@ client.on('connected', onConnectedHandler)
 // Connect to Twitch:
 client.connect()
 
-const maxHP = 1000
+const maxHP = 500
 let players = {
     dummy: {
-        hp: 500,
+        hp: 100,
         dead: false,
-        gold: 0
+        gold: 50
     }
 }
 
@@ -144,9 +144,9 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `* ${sender} attacks `
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += `${toUser}, ` : response += `themself, `
 
-        const smallDamage = Math.ceil(Math.random() * 99)
-        const mediumDamage = Math.ceil(Math.random() * 299)
-        const bigDamage = Math.ceil(Math.random() * 999)
+        const smallDamage = Math.ceil(Math.random() * 100)
+        const mediumDamage = Math.ceil(Math.random() * 300)
+        const bigDamage = Math.ceil(Math.random() * 400)
 
         outcome = [
             `and deals ${smallDamage} damage!`,
@@ -157,11 +157,11 @@ function onMessageHandler(channel, tags, msg, self) {
         const randNum = Math.floor(Math.random() * outcome.length)
         response += outcome[randNum]
 
-        if (randNum === 1 && mediumDamage >= 200) {
+        if (randNum === 1 && mediumDamage >= 100) {
             response += ` Critical hit!`
-        } else if (randNum === 2 && bigDamage >= 500) {
+        } else if (randNum === 2 && bigDamage >= 300) {
             response += ` Ouch!`
-        } else if (randNum === 2 && bigDamage >= 200) {
+        } else if (randNum === 2 && bigDamage >= 100) {
             response += ` Critical hit!`
         }
         client.say(channel, response)
@@ -175,7 +175,7 @@ function onMessageHandler(channel, tags, msg, self) {
             } else if (randNum === 2) {
                 players[toUser.toLowerCase()][`hp`] -= bigDamage
             }
-            deathCheck(channel, toUser)
+            deathCheck(channel, sender, toUser)
         } else if (!toUser) {
             if (randNum === 0) {
                 players[sender.toLowerCase()][`hp`] -= smallDamage
@@ -184,7 +184,7 @@ function onMessageHandler(channel, tags, msg, self) {
             } else if (randNum === 2) {
                 players[sender.toLowerCase()][`hp`] -= bigDamage
             }
-            deathCheck(channel, sender)
+            deathCheck(channel, sender, sender)
         }
     }
 
@@ -313,7 +313,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         const randNum = Math.ceil(Math.random() * 20)
-        const randGoldAmt = Math.floor(Math.random() * 100)
+        const randGoldAmt = Math.floor(Math.random() * 99) + 1
         let response = `* `
 
         // Check if toUser is dummy
@@ -1554,9 +1554,8 @@ function fetchGivenWeaponOrArmor() {
     return givenEquipText[Math.floor(Math.random() * givenEquipText.length)]
 }
 
-function deathCheck(chatroom, user) {
-    console.log(`\x1b[31m%s\x1b[0m`, `${chatroom}, user: ${user}, hp: ${players[user.toLowerCase()][`hp`]}`)
-    // if (players[user.toLowerCase()][`dead`]) { return } // So as not to die again (is this necessary?)
+function deathCheck(chatroom, user, target) {
+    console.log(`\x1b[31m%s\x1b[0m`, `${chatroom}, user: ${user}, target: ${target}, hp: ${players[target.toLowerCase()][`hp`]}`)
 
     const deathText = [
         `The future of monsters depends on you!`,
@@ -1566,11 +1565,21 @@ function deathCheck(chatroom, user) {
         `It cannot end now!`,
         `You're going to be alright!`
     ]
-    if (players[user.toLowerCase()][`hp`] <= 0) {
+    if (players[target.toLowerCase()][`hp`] <= 0) {
         let response = `* `
         response += deathText[Math.floor(Math.random() * deathText.length)]
-        response += ` ${user}! Stay determined...`
-        players[user.toLowerCase()][`dead`] = true
+        response += ` ${target}! Stay determined...`
+        players[target.toLowerCase()][`dead`] = true
+
+        const randGold = Math.ceil(Math.random() * 100)
+        players[user.toLowerCase()][`gold`] += randGold
+        if (players[target.toLowerCase()][`gold`] > 0) {
+            players[user.toLowerCase()][`gold`] += players[target.toLowerCase()][`gold`]
+            players[target.toLowerCase()][`gold`] = 0
+            response += ` ${user} got ${target}'s gold, and found ${randGold}G.`
+        } else {
+            response += ` ${user} found ${randGold}G!`
+        }
         setTimeout(function () {
             client.say(chatroom, response)
             console.log(`\x1b[33m%s\x1b[0m`, `${chatroom} UndertaleBot: ${response}`)
@@ -1589,5 +1598,5 @@ function getToUser(str) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    client.say(CHANNEL_3, `I have been rebooted :)`)
+    client.say(CHANNEL_2, `I have been rebooted :)`)
 }

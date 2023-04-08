@@ -14,7 +14,7 @@ const opts = {
     },
     channels: [
         CHANNEL_1,
-        CHANNEL_2,
+        // CHANNEL_2,
         CHANNEL_3
     ]
 }
@@ -214,6 +214,20 @@ function onMessageHandler(channel, tags, msg, self) {
             }
         }
 
+        // Check if toUser is dummy
+        if (toUser.toLowerCase() === `dummy`) {
+            const flavorText = [
+                `* ${sender} encountered the Dummy. Dummy stands around absentmindedly.`,
+                `* ${sender} tried to talk to the DUMMY. It doesn't seem much for conversation. TORIEL seems happy with you.`,
+                `* ${sender} checked the Dummy: A cotton heart and a button eye, you are the apple of my eye`
+            ]
+            const reply = flavorText[Math.floor(Math.random() * flavorText.length)]
+
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
+
         let response = `* ${sender} `
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
         client.say(channel, response)
@@ -301,6 +315,22 @@ function onMessageHandler(channel, tags, msg, self) {
         const randNum = Math.ceil(Math.random() * 20)
         const randGoldAmt = Math.floor(Math.random() * 100)
         let response = `* `
+
+        // Check if toUser is dummy
+        if (toUser.toLowerCase() === `dummy`) {
+            let reply = `* ${sender} tried to spare the Dummy. `
+            
+            const flavorText = [
+                `Dummy stands around absentmindedly.`,
+                `Dummy looks like it's about to fall over.`,
+                `Dummy tires of your aimless shenanigans.`
+            ]
+
+            reply += flavorText[Math.floor(Math.random() * flavorText.length)]
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
 
         // Check if toUser is the sender
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
@@ -427,13 +457,6 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
-    // Notice bits cheer message (Not working?)
-    // if (bits || msg.toLowerCase().includes(`bits`)) {
-    //     const response = `bits: ${bits}`
-    //     client.say(channel, response)
-    //     console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-    // }
-
     // Contains MY MESSAGE ID
     if (msg.toLowerCase().includes(`my message id`)) {
         const response = `${sender}, your message ID was ${msgID} :)`
@@ -448,13 +471,6 @@ function onMessageHandler(channel, tags, msg, self) {
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
-
-    // Notice a reply
-    // if (replyMsgSender) {
-    //     const response = `I just noticed ${sender} reply to ${replyMsgSender}! :O`
-    //     client.say(channel, response)
-    //     console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-    // }
 
     // HELLO BOT
     if (msg.toLowerCase().includes(`hello bot`)
@@ -894,7 +910,7 @@ function fetchItemText(user) {
         `* ${user} ate a Bisicle. ${user} recovered 11 HP!`,
         `* ${user} ate a Bisicle. It's a two-pronged popsicle, so you can eat it twice. ${user} recovered 11 HP!`,
         `* ${user} ate both halves of a Bisicle. ${user} recovered 22 HP!`,
-        `* ${user} ate one half of a Bisicle ${user} recovered 11 HP!`,
+        `* ${user} ate one half of a Bisicle. ${user} recovered 11 HP!`,
         `* ${user} ate a Unisicle. ${user} recovered 11 HP!`,
         `* ${user} ate a Unisicle. ${user} recovered 11 HP!`,
         `* ${user} ate a Unisicle. It's a SINGLE-pronged popsicle. Wait, that's just normal... ${user} recovered 11 HP!`,
@@ -1573,5 +1589,5 @@ function getToUser(str) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    client.say(CHANNEL_1, `I have been rebooted :)`)
+    client.say(CHANNEL_3, `I have been rebooted :)`)
 }

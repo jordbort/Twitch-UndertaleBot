@@ -29,13 +29,45 @@ client.on('connected', onConnectedHandler)
 // Connect to Twitch:
 client.connect()
 
-const maxHP = 500
+const baseHP = 10
 let players = {
     dummy: {
-        hp: 100,
+        lv: 1,
+        hp: 20,
         dead: false,
-        gold: 50
+        at: 0,
+        df: 0,
+        exp: 0,
+        next: 10,
+        weapon: `None`,
+        armor: `None`,
+        gold: 0
     }
+}
+
+const weaponsATK = {
+    'Stick': 0,
+    'Toy Knife': 3,
+    'Tough Glove': 5,
+    'Ballet Shoes': 7,
+    'Torn Notebook': 2,
+    'Burnt Pan': 10,
+    'Empty Gun': 12,
+    'Worn Dagger': 15,
+    'Real Knife': 99
+}
+
+const armorDEF = {
+    'Bandage': 0,
+    'Faded Ribbon': 3,
+    'Manly Bandanna': 7,
+    'Old Tutu': 10,
+    'Cloudy Glasses': 5,
+    'Temmie Armor': 20,
+    'Stained Apron': 11,
+    'Cowboy Hat': 12,
+    'Heart Locket': 15,
+    'The Locket': 99
 }
 
 // Called every time a message comes in
@@ -67,8 +99,15 @@ function onMessageHandler(channel, tags, msg, self) {
 
     if (!(sender.toLowerCase() in players)) {
         players[`${sender.toLowerCase()}`] = {
-            hp: maxHP,
+            lv: 1,
+            hp: 20,
             dead: false,
+            at: 0,
+            df: 0,
+            exp: 0,
+            next: 10,
+            weapon: `Stick`,
+            armor: `Bandage`,
             gold: 0
         }
     }
@@ -88,13 +127,31 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
+    // STATS
+    if (command === `!stats`) {
+        let response
+        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
+            if (toUser.toLowerCase() in players) {
+                const chosenUser = players[toUser.toLowerCase()]
+                response = `"${toUser}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${baseHP + (chosenUser[`lv`] * 10)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
+            } else {
+                response = `${toUser} isn't registered :(`
+            }
+        } else {
+            const chosenUser = players[sender.toLowerCase()]
+            response = `"${sender}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${baseHP + (chosenUser[`lv`] * 10)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
+        }
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+    }
+
     // REVIVE (for testing)
     if (command === `!revive`) {
         let response
         if (sender === `JPEGSTRIPES`) {
             // console.log(`\x1b[31m%s\x1b[0m`, players)
             for (const player in players) {
-                players[player][`hp`] = maxHP
+                players[player][`hp`] = baseHP
                 players[player][`dead`] = false
                 // console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
             }
@@ -347,10 +404,10 @@ function onMessageHandler(channel, tags, msg, self) {
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
                 return
             } else if (randNum === 20) {
-                response += `YOU WON! ${toUser} was spared. ${sender} earned 0 XP and ${randGoldAmt} gold.`
+                response += `YOU WON! ${toUser} was spared. ${sender} earned 0 EXP and ${randGoldAmt} gold.`
                 players[sender.toLowerCase()][`gold`] += randGoldAmt
-                players[sender.toLowerCase()][`hp`] = maxHP
-                players[toUser.toLowerCase()][`hp`] = maxHP
+                players[sender.toLowerCase()][`hp`] = baseHP
+                players[toUser.toLowerCase()][`hp`] = baseHP
             } else {
                 response += `${sender} tried to spare ${toUser}. ${toUser} `
                 response += getThirdPersonFlavorText()
@@ -1033,7 +1090,7 @@ function fetchItemText(user) {
     if (randItem >= 0 && randItem <= 12) { userHealAmt = 10 }
     if (randItem >= 13 && randItem <= 20) { userHealAmt = 12 }
     if (randItem >= 21 && randItem <= 28) { userHealAmt = 24 }
-    if (randItem >= 29 && randItem <= 31) { userHealAmt = maxHP }
+    if (randItem >= 29 && randItem <= 31) { userHealAmt = baseHP }
     if (randItem >= 32 && randItem <= 36) { userHealAmt = 45 }
     if (randItem >= 37 && randItem <= 44) { userHealAmt = 15 }
     if (randItem >= 45 && randItem <= 48) { userHealAmt = 22 }
@@ -1046,7 +1103,7 @@ function fetchItemText(user) {
     if (randItem >= 89 && randItem <= 98) { userHealAmt = 2 }
     if (randItem >= 99 && randItem <= 100) { userHealAmt = 10 }
     if (randItem >= 101 && randItem <= 102) { userHealAmt = 30 }
-    if (randItem >= 103 && randItem <= 104) { userHealAmt = maxHP }
+    if (randItem >= 103 && randItem <= 104) { userHealAmt = baseHP }
     if (randItem >= 105 && randItem <= 106) { userHealAmt = 90 }
     if (randItem >= 107 && randItem <= 108) { userHealAmt = 15 }
     if (randItem >= 109 && randItem <= 110) { userHealAmt = 4 }
@@ -1059,7 +1116,7 @@ function fetchItemText(user) {
     if (randItem >= 141 && randItem <= 147) { userHealAmt = 40 }
     if (randItem >= 148 && randItem <= 150) { userHealAmt = 60 }
     if (randItem >= 151 && randItem <= 155) { userHealAmt = 13 }
-    if (randItem === 156) { userHealAmt = maxHP }
+    if (randItem === 156) { userHealAmt = baseHP }
     if (randItem === 157) { userHealAmt = 15 }
     if (randItem === 158) { userHealAmt = 1 }
     if (randItem === 159) { userHealAmt = 8 }
@@ -1071,7 +1128,7 @@ function fetchItemText(user) {
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
 
     players[user.toLowerCase()][`hp`] += userHealAmt
-    if (players[user.toLowerCase()][`hp`] > maxHP) { players[user.toLowerCase()][`hp`] = maxHP }
+    if (players[user.toLowerCase()][`hp`] > baseHP) { players[user.toLowerCase()][`hp`] = baseHP }
 
     return itemText[randItem]
 }
@@ -1251,7 +1308,7 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem >= 0 && randGivenItem <= 12) { targetHealAmt = 10 }
     if (randGivenItem >= 13 && randGivenItem <= 20) { targetHealAmt = 12 }
     if (randGivenItem >= 21 && randGivenItem <= 28) { targetHealAmt = 24 }
-    if (randGivenItem >= 29 && randGivenItem <= 31) { targetHealAmt = maxHP }
+    if (randGivenItem >= 29 && randGivenItem <= 31) { targetHealAmt = baseHP }
     if (randGivenItem >= 32 && randGivenItem <= 36) { targetHealAmt = 45 }
     if (randGivenItem >= 37 && randGivenItem <= 44) { targetHealAmt = 15 }
     if (randGivenItem >= 45 && randGivenItem <= 46) { targetHealAmt = 22 }
@@ -1266,7 +1323,7 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem >= 89 && randGivenItem <= 98) { targetHealAmt = 2 }
     if (randGivenItem >= 99 && randGivenItem <= 100) { targetHealAmt = 10 }
     if (randGivenItem >= 101 && randGivenItem <= 102) { targetHealAmt = 30 }
-    if (randGivenItem >= 103 && randGivenItem <= 104) { targetHealAmt = maxHP }
+    if (randGivenItem >= 103 && randGivenItem <= 104) { targetHealAmt = baseHP }
     if (randGivenItem >= 105 && randGivenItem <= 106) { targetHealAmt = 90 }
     if (randGivenItem >= 107 && randGivenItem <= 108) { targetHealAmt = 15 }
     if (randGivenItem >= 109 && randGivenItem <= 110) { targetHealAmt = 4 }
@@ -1279,7 +1336,7 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem >= 141 && randGivenItem <= 147) { targetHealAmt = 40 }
     if (randGivenItem >= 148 && randGivenItem <= 150) { targetHealAmt = 60 }
     if (randGivenItem >= 151 && randGivenItem <= 155) { targetHealAmt = 13 }
-    if (randGivenItem === 156) { targetHealAmt = maxHP }
+    if (randGivenItem === 156) { targetHealAmt = baseHP }
     if (randGivenItem === 157) { targetHealAmt = 15 }
     if (randGivenItem === 158) { targetHealAmt = 1 }
     if (randGivenItem === 159) { targetHealAmt = 8 }
@@ -1292,10 +1349,10 @@ function fetchGivenItemText(user, target) {
     console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${players[target.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
 
     players[user.toLowerCase()][`hp`] += userHealAmt
-    if (players[user.toLowerCase()][`hp`] > maxHP) { players[user.toLowerCase()][`hp`] = maxHP }
+    if (players[user.toLowerCase()][`hp`] > baseHP) { players[user.toLowerCase()][`hp`] = baseHP }
 
     players[target.toLowerCase()][`hp`] += targetHealAmt
-    if (players[target.toLowerCase()][`hp`] > maxHP) { players[target.toLowerCase()][`hp`] = maxHP }
+    if (players[target.toLowerCase()][`hp`] > baseHP) { players[target.toLowerCase()][`hp`] = baseHP }
 
     return givenItemText[randGivenItem]
 }
@@ -1598,5 +1655,5 @@ function getToUser(str) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    client.say(CHANNEL_2, `I have been rebooted :)`)
+    client.say(CHANNEL_1, `I have been rebooted :)`)
 }

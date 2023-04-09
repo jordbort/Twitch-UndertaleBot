@@ -352,9 +352,9 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `* ${sender} `
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
             response += `gave ${toUser} `
-            response += fetchGivenWeaponOrArmor()
+            response += fetchGivenWeaponOrArmor(toUser.toLowerCase())
         } else {
-            response += fetchWeaponOrArmor()
+            response += fetchWeaponOrArmor(sender.toLowerCase())
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -376,7 +376,7 @@ function onMessageHandler(channel, tags, msg, self) {
         // Check if toUser is dummy
         if (toUser.toLowerCase() === `dummy`) {
             let reply = `* ${sender} tried to spare the Dummy. `
-            
+
             const flavorText = [
                 `Dummy stands around absentmindedly.`,
                 `Dummy looks like it's about to fall over.`,
@@ -397,7 +397,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 client.say(channel, response)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
                 return
-            // If toUser is dead
+                // If toUser is dead
             } else if (players[toUser.toLowerCase()][`dead`]) {
                 response = `Sorry ${sender}, ${toUser} is dead! :(`
                 client.say(channel, response)
@@ -1357,7 +1357,7 @@ function fetchGivenItemText(user, target) {
     return givenItemText[randGivenItem]
 }
 
-function fetchWeaponOrArmor() {
+function fetchWeaponOrArmor(user) {
     const equipText = [
         `threw the Stick away. Then picked it back up.`,
         `threw the Stick away. Then picked it back up.`,
@@ -1481,10 +1481,42 @@ function fetchWeaponOrArmor() {
         `got the Mystery Key. It is too bent to fit on their keychain.`,
         `used 0. If you are reading this, I messed up somehow.`
     ]
-    return equipText[Math.floor(Math.random() * equipText.length)]
+
+    const randEquipment = Math.floor(Math.random() * equipText.length)
+    const chosenUser = players[user]
+
+    if (randEquipment >= 0 && randEquipment <= 7) { chosenUser[`weapon`] = `Stick` }
+    if (randEquipment >= 8 && randEquipment <= 15) { chosenUser[`weapon`] = `Toy Knife` }
+    if (randEquipment >= 16 && randEquipment <= 23) { chosenUser[`weapon`] = `Tough Glove` }
+    if (randEquipment >= 24 && randEquipment <= 31) { chosenUser[`weapon`] = `Ballet Shoes` }
+    if (randEquipment >= 32 && randEquipment <= 39) { chosenUser[`weapon`] = `Torn Notebook` }
+    if (randEquipment >= 40 && randEquipment <= 47) { chosenUser[`weapon`] = `Burnt Pan` }
+    if (randEquipment >= 48 && randEquipment <= 53) { chosenUser[`weapon`] = `Empty Gun` }
+    if (randEquipment >= 54 && randEquipment <= 57) { chosenUser[`weapon`] = `Worn Dagger` }
+    if (randEquipment === 58) { chosenUser[`weapon`] = `Real Knife` }
+    if (randEquipment >= 59 && randEquipment <= 62) {
+        chosenUser[`hp`] += 10 // Bandage
+        if (chosenUser[`hp`] > (baseHP + (chosenUser[`lv`] * 10))) { chosenUser[`hp`] = (baseHP + (chosenUser[`lv`] * 10)) }
+    }
+    if (randEquipment >= 63 && randEquipment <= 70) { chosenUser[`armor`] = `Faded Ribbon` }
+    if (randEquipment >= 71 && randEquipment <= 78) { chosenUser[`armor`] = `Manly Bandanna` }
+    if (randEquipment >= 79 && randEquipment <= 86) { chosenUser[`armor`] = `Old Tutu` }
+    if (randEquipment >= 87 && randEquipment <= 94) { chosenUser[`armor`] = `Cloudy Glasses` }
+    if (randEquipment >= 95 && randEquipment <= 96) { chosenUser[`armor`] = `Temmie Armor` }
+    if (randEquipment >= 97 && randEquipment <= 104) { chosenUser[`armor`] = `Stained Apron` }
+    if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
+    if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
+    if (randEquipment === 113) { chosenUser[`armor`] = `Locket` }
+    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`\x1b[31m%s\x1b[0m`, `(Dog Residue doesn't do anything)`) }
+    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`\x1b[31m%s\x1b[0m`, `(Punch Card doesn't do anything)`) }
+    if (randEquipment === 118) { console.log(`\x1b[31m%s\x1b[0m`, `(Annoying Dog doesn't do anything)`) }
+    if (randEquipment === 119) { console.log(`\x1b[31m%s\x1b[0m`, `(Mystery Key doesn't do anything)`) }
+    if (randEquipment === 120) { console.log(`\x1b[31m%s\x1b[0m`, `(0 doesn't do anything)`) }
+
+    return equipText[randEquipment]
 }
 
-function fetchGivenWeaponOrArmor() {
+function fetchGivenWeaponOrArmor(target) {
     const givenEquipText = [
         `the Stick. They ran and picked it up.`,
         `the Stick. They ran and picked it up.`,
@@ -1608,7 +1640,39 @@ function fetchGivenWeaponOrArmor() {
         `the Mystery Key. ????? Probably to someone's house LOL.`,
         `0. If you are reading this, I messed up somehow.`
     ]
-    return givenEquipText[Math.floor(Math.random() * givenEquipText.length)]
+
+    const randEquipment = Math.floor(Math.random() * givenEquipText.length)
+    const chosenUser = players[target]
+
+    if (randEquipment >= 0 && randEquipment <= 7) { chosenUser[`weapon`] = `Stick` }
+    if (randEquipment >= 8 && randEquipment <= 15) { chosenUser[`weapon`] = `Toy Knife` }
+    if (randEquipment >= 16 && randEquipment <= 23) { chosenUser[`weapon`] = `Tough Glove` }
+    if (randEquipment >= 24 && randEquipment <= 31) { chosenUser[`weapon`] = `Ballet Shoes` }
+    if (randEquipment >= 32 && randEquipment <= 39) { chosenUser[`weapon`] = `Torn Notebook` }
+    if (randEquipment >= 40 && randEquipment <= 47) { chosenUser[`weapon`] = `Burnt Pan` }
+    if (randEquipment >= 48 && randEquipment <= 53) { chosenUser[`weapon`] = `Empty Gun` }
+    if (randEquipment >= 54 && randEquipment <= 57) { chosenUser[`weapon`] = `Worn Dagger` }
+    if (randEquipment === 58) { chosenUser[`weapon`] = `Real Knife` }
+    if (randEquipment >= 59 && randEquipment <= 62) {
+        chosenUser[`hp`] += 10 // Bandage
+        if (chosenUser[`hp`] > (baseHP + (chosenUser[`lv`] * 10))) { chosenUser[`hp`] = (baseHP + (chosenUser[`lv`] * 10)) }
+    }
+    if (randEquipment >= 63 && randEquipment <= 70) { chosenUser[`armor`] = `Faded Ribbon` }
+    if (randEquipment >= 71 && randEquipment <= 78) { chosenUser[`armor`] = `Manly Bandanna` }
+    if (randEquipment >= 79 && randEquipment <= 86) { chosenUser[`armor`] = `Old Tutu` }
+    if (randEquipment >= 87 && randEquipment <= 94) { chosenUser[`armor`] = `Cloudy Glasses` }
+    if (randEquipment >= 95 && randEquipment <= 96) { chosenUser[`armor`] = `Temmie Armor` }
+    if (randEquipment >= 97 && randEquipment <= 104) { chosenUser[`armor`] = `Stained Apron` }
+    if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
+    if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
+    if (randEquipment === 113) { chosenUser[`armor`] = `Locket` }
+    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`\x1b[31m%s\x1b[0m`, `(Dog Residue doesn't do anything)`) }
+    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`\x1b[31m%s\x1b[0m`, `(Punch Card doesn't do anything)`) }
+    if (randEquipment === 118) { console.log(`\x1b[31m%s\x1b[0m`, `(Annoying Dog doesn't do anything)`) }
+    if (randEquipment === 119) { console.log(`\x1b[31m%s\x1b[0m`, `(Mystery Key doesn't do anything)`) }
+    if (randEquipment === 120) { console.log(`\x1b[31m%s\x1b[0m`, `(0 doesn't do anything)`) }
+    
+    return givenEquipText[randEquipment]
 }
 
 function deathCheck(chatroom, user, target) {

@@ -201,45 +201,59 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `* ${sender} attacks `
         toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += `${toUser}, ` : response += `themself, `
 
-        const smallDamage = Math.ceil(Math.random() * 100)
-        const mediumDamage = Math.ceil(Math.random() * 300)
-        const bigDamage = Math.ceil(Math.random() * 400)
+        const smallDamage = Math.ceil(Math.random() * 5)
+        const mediumDamage = Math.ceil(Math.random() * 10)
+        const bigDamage = Math.ceil(Math.random() * 15)
+        const weaponDamage = weaponsATK[players[sender.toLowerCase()][`weapon`]]
+        let armorDeduction = 0
+        toUser && toUser.toLowerCase() !== sender.toLowerCase() ? armorDeduction = armorDEF[players[toUser.toLowerCase()][`armor`]] : armorDeduction = armorDEF[players[sender.toLowerCase()][`armor`]]
+
+        let smallDamageDealt = (smallDamage + weaponDamage) - armorDeduction
+        let mediumDamageDealt = (mediumDamage + weaponDamage) - armorDeduction
+        let bigDamageDealt = (bigDamage + weaponDamage) - armorDeduction
+        if (smallDamageDealt < 0) { smallDamageDealt = 0 }
+        if (mediumDamageDealt < 0) { mediumDamageDealt = 0 }
+        if (bigDamageDealt < 0) { bigDamageDealt = 0 }
 
         outcome = [
-            `and deals ${smallDamage} damage!`,
-            `and deals ${mediumDamage} damage!`,
-            `and deals ${bigDamage} damage!`,
+            `and deals ${smallDamageDealt} damage!`,
+            `and deals ${mediumDamageDealt} damage!`,
+            `and deals ${bigDamageDealt} damage!`,
             `but misses!`
         ]
         const randNum = Math.floor(Math.random() * outcome.length)
         response += outcome[randNum]
 
-        if (randNum === 1 && mediumDamage >= 100) {
-            response += ` Critical hit!`
-        } else if (randNum === 2 && bigDamage >= 300) {
-            response += ` Ouch!`
-        } else if (randNum === 2 && bigDamage >= 100) {
-            response += ` Critical hit!`
+        if (randNum === 1) {
+            if (mediumDamage >= 10) { response += ` Critical hit!` }
+        } else if (randNum === 2) {
+            if (bigDamage >= 10) { response += ` Critical hit!` }
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
 
         if (toUser && toUser.toLowerCase() in players) {
             if (randNum === 0) {
-                players[toUser.toLowerCase()][`hp`] -= smallDamage
+                players[toUser.toLowerCase()][`hp`] -= smallDamageDealt
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 1) {
-                players[toUser.toLowerCase()][`hp`] -= mediumDamage
+                players[toUser.toLowerCase()][`hp`] -= mediumDamageDealt
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 2) {
-                players[toUser.toLowerCase()][`hp`] -= bigDamage
+                players[toUser.toLowerCase()][`hp`] -= bigDamageDealt
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, armorDeduction: ${armorDeduction}`)
             }
             deathCheck(channel, sender, toUser)
         } else if (!toUser) {
             if (randNum === 0) {
-                players[sender.toLowerCase()][`hp`] -= smallDamage
+                players[sender.toLowerCase()][`hp`] -= ((smallDamage + weaponDamage) - armorDeduction)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 1) {
-                players[sender.toLowerCase()][`hp`] -= mediumDamage
+                players[sender.toLowerCase()][`hp`] -= ((mediumDamage + weaponDamage) - armorDeduction)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 2) {
-                players[sender.toLowerCase()][`hp`] -= bigDamage
+                players[sender.toLowerCase()][`hp`] -= ((bigDamage + weaponDamage) - armorDeduction)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, armorDeduction: ${armorDeduction}`)
             }
             deathCheck(channel, sender, sender)
         }
@@ -1125,10 +1139,11 @@ function fetchItemText(user) {
     if (randItem === 162) { userHealAmt = 28 }
     // if (randItem === 163) { userHealAmt = 0 }
 
-    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
+    const chosenUser = players[user.toLowerCase()]
+    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${chosenUser[`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
 
-    players[user.toLowerCase()][`hp`] += userHealAmt
-    if (players[user.toLowerCase()][`hp`] > baseHP) { players[user.toLowerCase()][`hp`] = baseHP }
+    chosenUser[`hp`] += userHealAmt
+    if (chosenUser[`hp`] > (baseHP + (chosenUser[`lv`] * 10))) { chosenUser[`hp`] = (baseHP + (chosenUser[`lv`] * 10)) }
 
     return itemText[randItem]
 }
@@ -1345,14 +1360,16 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem === 162) { targetHealAmt = 28 }
     // if (randGivenItem === 163) { targetHealAmt = 0 }
 
-    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${players[user.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
-    console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${players[target.toLowerCase()][`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
+    const sendingPlayer = players[user.toLowerCase()]
+    const targetPlayer = players[target.toLowerCase()]
+    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${sendingPlayer[`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
+    console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${targetPlayer[`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
 
-    players[user.toLowerCase()][`hp`] += userHealAmt
-    if (players[user.toLowerCase()][`hp`] > baseHP) { players[user.toLowerCase()][`hp`] = baseHP }
+    sendingPlayer[`hp`] += userHealAmt
+    if (sendingPlayer[`hp`] > (baseHP + (sendingPlayer[`lv`] * 10))) { sendingPlayer[`hp`] = (baseHP + (sendingPlayer[`lv`] * 10)) }
 
-    players[target.toLowerCase()][`hp`] += targetHealAmt
-    if (players[target.toLowerCase()][`hp`] > baseHP) { players[target.toLowerCase()][`hp`] = baseHP }
+    targetPlayer[`hp`] += targetHealAmt
+    if (targetPlayer[`hp`] > (baseHP + (targetPlayer[`lv`] * 10))) { targetPlayer[`hp`] = (baseHP + (targetPlayer[`lv`] * 10)) }
 
     return givenItemText[randGivenItem]
 }

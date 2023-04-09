@@ -151,7 +151,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (sender === `JPEGSTRIPES`) {
             // console.log(`\x1b[31m%s\x1b[0m`, players)
             for (const player in players) {
-                players[player][`hp`] = baseHP
+                players[player][`hp`] = (baseHP + (players[player][`lv`] * 10))
                 players[player][`dead`] = false
                 // console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
             }

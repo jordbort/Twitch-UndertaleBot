@@ -1671,7 +1671,7 @@ function fetchGivenWeaponOrArmor(target) {
     if (randEquipment === 118) { console.log(`\x1b[31m%s\x1b[0m`, `(Annoying Dog doesn't do anything)`) }
     if (randEquipment === 119) { console.log(`\x1b[31m%s\x1b[0m`, `(Mystery Key doesn't do anything)`) }
     if (randEquipment === 120) { console.log(`\x1b[31m%s\x1b[0m`, `(0 doesn't do anything)`) }
-    
+
     return givenEquipText[randEquipment]
 }
 
@@ -1693,14 +1693,22 @@ function deathCheck(chatroom, user, target) {
         players[target.toLowerCase()][`dead`] = true
 
         const randGold = Math.ceil(Math.random() * 100)
-        players[user.toLowerCase()][`gold`] += randGold
-        if (players[target.toLowerCase()][`gold`] > 0) {
-            players[user.toLowerCase()][`gold`] += players[target.toLowerCase()][`gold`]
-            players[target.toLowerCase()][`gold`] = 0
-            response += ` ${user} got ${target}'s gold, and found ${randGold}G.`
+        if (user !== target) {
+            players[user.toLowerCase()][`gold`] += randGold
+            if (players[target.toLowerCase()][`gold`] > 0) {
+                players[user.toLowerCase()][`gold`] += players[target.toLowerCase()][`gold`]
+                players[target.toLowerCase()][`gold`] = 0
+                response += ` ${user} got ${target}'s gold, and found ${randGold}G.`
+            } else {
+                response += ` ${user} found ${randGold}G!`
+            }
         } else {
-            response += ` ${user} found ${randGold}G!`
+            if (players[user.toLowerCase()][`gold`] > 0) {
+                players[user.toLowerCase()][`gold`] = 0
+                response += ` ${user} lost all their gold!`
+            }
         }
+
         setTimeout(function () {
             client.say(chatroom, response)
             console.log(`\x1b[33m%s\x1b[0m`, `${chatroom} UndertaleBot: ${response}`)

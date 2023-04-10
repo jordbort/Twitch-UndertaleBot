@@ -847,6 +847,7 @@ function getThirdPersonFlavorText() {
 }
 
 function getAction(user, target) {
+    const randGold = Math.ceil(Math.random() * 10) * 5
     const actions = [
         `and the others celebrate ${target}'s disappearance.`,
         `and the others ditch ${target} when they look away!`,
@@ -888,7 +889,7 @@ function getAction(user, target) {
         `manages to tear their eyes away from ${target}'s hat. They look annoyed...`,
         `pats ${target}'s chest like a muscular bongo.`,
         `pats their stomach. ${target} offers a healthy meal.`,
-        `pays ${Math.ceil(Math.random() * 20) * 5}G. ${target} reduces their ATTACK for this turn!`,
+        `pays ${randGold}G. ${target} reduces their ATTACK for this turn!`,
         `pets ${target}. Their excitement knows no bounds.`,
         `pets the ${target}. They start to generate a Stage I Happiness Froth.`,
         `picks on ${target}.`,
@@ -929,7 +930,25 @@ function getAction(user, target) {
         `tries to console ${target}...`,
         `wiggles their hips. ${target} wiggles back. What a meaningful conversation!`
     ]
-    return actions[Math.floor(Math.random() * actions.length)]
+
+    // If user paid the target gold
+    const randAction = Math.floor(Math.random() * actions.length)
+    if (randAction === 40) {
+        const senderGold = players[user.toLowerCase()][`gold`]
+        const differenceInGold = senderGold - randGold
+        console.log(`randGold: ${randGold}, senderGold: ${senderGold}, differenceInGold: ${differenceInGold}`)
+        if (senderGold <= 0) {
+            return `is out of money. ${target} shakes their head.`
+        } else if (differenceInGold < 0) {
+            players[target.toLowerCase()][`gold`] += senderGold
+            players[user.toLowerCase()][`gold`] = 0
+            return `empties their pockets. ${target} lowers the price.`
+        } else {
+            players[user.toLowerCase()][`gold`] -= randGold
+            players[target.toLowerCase()][`gold`] += randGold
+        }
+    }
+    return actions[randAction]
 }
 
 function fetchItemText(user) {

@@ -386,9 +386,8 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let randNum = Math.ceil(Math.random() * 10)
         if (targetPlayer) {
-            if (targetPlayer[`hp`] <= 5) {
-                randNum = Math.ceil(Math.random() * 3)
-            }
+            if (targetPlayer[`hp`] <= 10) { randNum = Math.ceil(Math.random() * 4) }
+            if (targetPlayer[`hp`] <= 5) { randNum = Math.ceil(Math.random() * 2) }
         }
         const randGoldAmt = Math.floor(Math.random() * 101)
         let response = `* `
@@ -422,7 +421,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-        console.log(`\x1b[31m%s\x1b[0m`, `sender: ${sender}, toUser: ${toUser}, randNum: ${randNum}`)
+        console.log(`\x1b[31m%s\x1b[0m`, `sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum}`)
     }
 
     // HP

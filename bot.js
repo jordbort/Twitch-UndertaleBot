@@ -208,10 +208,12 @@ function onMessageHandler(channel, tags, msg, self) {
         const bigDamage = Math.ceil(Math.random() * 15)
         const weaponDamage = weaponsATK[sendingPlayer[`weapon`]]
         const armorDeduction = targetPlayer ? armorDEF[targetPlayer[`armor`]] : armorDEF[sendingPlayer[`armor`]]
+        const attackBonus = sendingPlayer[`at`]
+        const defenseBonus = targetPlayer ? targetPlayer[`df`] : sendingPlayer[`df`]
 
-        let smallDamageDealt = (smallDamage + weaponDamage) - armorDeduction
-        let mediumDamageDealt = (mediumDamage + weaponDamage) - armorDeduction
-        let bigDamageDealt = (bigDamage + weaponDamage) - armorDeduction
+        let smallDamageDealt = (smallDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
+        let mediumDamageDealt = (mediumDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
+        let bigDamageDealt = (bigDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
         if (smallDamageDealt < 0) { smallDamageDealt = 0 }
         if (mediumDamageDealt < 0) { mediumDamageDealt = 0 }
         if (bigDamageDealt < 0) { bigDamageDealt = 0 }
@@ -236,25 +238,25 @@ function onMessageHandler(channel, tags, msg, self) {
         if (targetPlayer) {
             if (randNum === 0) {
                 targetPlayer[`hp`] -= smallDamageDealt
-                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, armorDeduction: ${armorDeduction}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             } else if (randNum === 1) {
                 targetPlayer[`hp`] -= mediumDamageDealt
-                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, armorDeduction: ${armorDeduction}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             } else if (randNum === 2) {
                 targetPlayer[`hp`] -= bigDamageDealt
-                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, armorDeduction: ${armorDeduction}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             }
             deathCheck(channel, sender, toUser)
         } else if (!toUser) {
             if (randNum === 0) {
                 sendingPlayer[`hp`] -= ((smallDamage + weaponDamage) - armorDeduction)
-                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, armorDeduction: ${armorDeduction}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             } else if (randNum === 1) {
                 sendingPlayer[`hp`] -= ((mediumDamage + weaponDamage) - armorDeduction)
-                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, armorDeduction: ${armorDeduction}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             } else if (randNum === 2) {
                 sendingPlayer[`hp`] -= ((bigDamage + weaponDamage) - armorDeduction)
-                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, armorDeduction: ${armorDeduction}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             }
             deathCheck(channel, sender, sender)
         }

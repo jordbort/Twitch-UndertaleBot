@@ -193,7 +193,7 @@ function onMessageHandler(channel, tags, msg, self) {
                     return
                 }
             } else {
-                reply = `${toUser} is not registered yet :(`
+                reply = `${toUser} is not a registered player :(`
                 client.say(channel, reply)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                 return
@@ -279,7 +279,7 @@ function onMessageHandler(channel, tags, msg, self) {
                     return
                 }
             } else {
-                reply = `${toUser} is not registered yet :(`
+                reply = `${toUser} is not a registered player :(`
                 client.say(channel, reply)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                 return
@@ -325,7 +325,7 @@ function onMessageHandler(channel, tags, msg, self) {
                     return
                 }
             } else {
-                reply = `${toUser} is not registered yet :(`
+                reply = `${toUser} is not a registered player :(`
                 client.say(channel, reply)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                 return
@@ -357,7 +357,7 @@ function onMessageHandler(channel, tags, msg, self) {
                     return
                 }
             } else {
-                reply = `${toUser} is not registered yet :(`
+                reply = `${toUser} is not a registered player :(`
                 client.say(channel, reply)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
                 return
@@ -397,7 +397,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
             // If toUser not registered
             if (!(toUser.toLowerCase() in players)) {
-                response = `${toUser} is not registered yet :(`
+                response = `${toUser} is not a registered player :(`
                 client.say(channel, response)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
                 return
@@ -410,8 +410,8 @@ function onMessageHandler(channel, tags, msg, self) {
             } else if (randNum === 1) {
                 response += `YOU WON! ${toUser} was spared. ${sender} earned 0 EXP and ${randGoldAmt} gold.`
                 sendingPlayer[`gold`] += randGoldAmt
-                sendingPlayer[`hp`] = baseHP
-                targetPlayer[`hp`] = baseHP
+                sendingPlayer[`hp`] = getUserMaxHP(sender)
+                targetPlayer[`hp`] = getUserMaxHP(toUser)
             } else {
                 response += `${sender} tried to spare ${toUser}. ${toUser} `
                 response += getThirdPersonFlavorText()
@@ -464,16 +464,39 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        if (sendingPlayer[`gold`] > 0) {
-            const response = `${sender} spent all their gold. Thanks! :)`
-            sendingPlayer[`gold`] = 0
-            client.say(channel, response)
-            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-        } else {
-            const response = `${sender}, you have no gold :(`
-            client.say(channel, response)
-            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+        // User has no gold
+        if (sendingPlayer[`gold`] <= 0) {
+            const reply = `You don't have any gold, ${sender}! :(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
         }
+
+        // No amount specified
+        if (!args.length) {
+            const reply = `You must provide an amount, ${sender}! >(`
+            client.say(channel, reply)
+            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
+            return
+        }
+
+        let response
+        const spendingAmt = Number(args[0])
+
+        if (!Number.isNaN(spendingAmt)) {
+            if (spendingAmt <= 0) {
+                response = `You must specify a positive amount of gold, ${sender} ;)`
+            } else if (spendingAmt > sendingPlayer[`gold`]) {
+                response = `You don't have that much gold, ${sender}! :(`
+            } else {
+                sendingPlayer[`gold`] -= spendingAmt
+                response = `${sender} spent ${spendingAmt} gold :)`
+            }
+        } else {
+            response = `That isn't a number, ${sender}! ;)`
+        }
+        client.say(channel, response)
+        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // AM I SUBBED
@@ -1107,7 +1130,7 @@ function fetchItemText(user) {
     if (randItem >= 0 && randItem <= 12) { userHealAmt = 10 }
     if (randItem >= 13 && randItem <= 20) { userHealAmt = 12 }
     if (randItem >= 21 && randItem <= 28) { userHealAmt = 24 }
-    if (randItem >= 29 && randItem <= 31) { userHealAmt = baseHP }
+    if (randItem >= 29 && randItem <= 31) { userHealAmt = getUserMaxHP(user) }
     if (randItem >= 32 && randItem <= 36) { userHealAmt = 45 }
     if (randItem >= 37 && randItem <= 44) { userHealAmt = 15 }
     if (randItem >= 45 && randItem <= 48) { userHealAmt = 22 }
@@ -1120,7 +1143,7 @@ function fetchItemText(user) {
     if (randItem >= 89 && randItem <= 98) { userHealAmt = 2 }
     if (randItem >= 99 && randItem <= 100) { userHealAmt = 10 }
     if (randItem >= 101 && randItem <= 102) { userHealAmt = 30 }
-    if (randItem >= 103 && randItem <= 104) { userHealAmt = baseHP }
+    if (randItem >= 103 && randItem <= 104) { userHealAmt = getUserMaxHP(user) }
     if (randItem >= 105 && randItem <= 106) { userHealAmt = 90 }
     if (randItem >= 107 && randItem <= 108) { userHealAmt = 15 }
     if (randItem >= 109 && randItem <= 110) { userHealAmt = 4 }
@@ -1133,7 +1156,7 @@ function fetchItemText(user) {
     if (randItem >= 141 && randItem <= 147) { userHealAmt = 40 }
     if (randItem >= 148 && randItem <= 150) { userHealAmt = 60 }
     if (randItem >= 151 && randItem <= 155) { userHealAmt = 13 }
-    if (randItem === 156) { userHealAmt = baseHP }
+    if (randItem === 156) { userHealAmt = getUserMaxHP(user) }
     if (randItem === 157) { userHealAmt = 15 }
     if (randItem === 158) { userHealAmt = 1 }
     if (randItem === 159) { userHealAmt = 8 }
@@ -1326,7 +1349,7 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem >= 0 && randGivenItem <= 12) { targetHealAmt = 10 }
     if (randGivenItem >= 13 && randGivenItem <= 20) { targetHealAmt = 12 }
     if (randGivenItem >= 21 && randGivenItem <= 28) { targetHealAmt = 24 }
-    if (randGivenItem >= 29 && randGivenItem <= 31) { targetHealAmt = baseHP }
+    if (randGivenItem >= 29 && randGivenItem <= 31) { targetHealAmt = getUserMaxHP(target) }
     if (randGivenItem >= 32 && randGivenItem <= 36) { targetHealAmt = 45 }
     if (randGivenItem >= 37 && randGivenItem <= 44) { targetHealAmt = 15 }
     if (randGivenItem >= 45 && randGivenItem <= 46) { targetHealAmt = 22 }
@@ -1341,7 +1364,7 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem >= 89 && randGivenItem <= 98) { targetHealAmt = 2 }
     if (randGivenItem >= 99 && randGivenItem <= 100) { targetHealAmt = 10 }
     if (randGivenItem >= 101 && randGivenItem <= 102) { targetHealAmt = 30 }
-    if (randGivenItem >= 103 && randGivenItem <= 104) { targetHealAmt = baseHP }
+    if (randGivenItem >= 103 && randGivenItem <= 104) { targetHealAmt = getUserMaxHP(target) }
     if (randGivenItem >= 105 && randGivenItem <= 106) { targetHealAmt = 90 }
     if (randGivenItem >= 107 && randGivenItem <= 108) { targetHealAmt = 15 }
     if (randGivenItem >= 109 && randGivenItem <= 110) { targetHealAmt = 4 }
@@ -1354,7 +1377,7 @@ function fetchGivenItemText(user, target) {
     if (randGivenItem >= 141 && randGivenItem <= 147) { targetHealAmt = 40 }
     if (randGivenItem >= 148 && randGivenItem <= 150) { targetHealAmt = 60 }
     if (randGivenItem >= 151 && randGivenItem <= 155) { targetHealAmt = 13 }
-    if (randGivenItem === 156) { targetHealAmt = baseHP }
+    if (randGivenItem === 156) { targetHealAmt = getUserMaxHP(target) }
     if (randGivenItem === 157) { targetHealAmt = 15 }
     if (randGivenItem === 158) { targetHealAmt = 1 }
     if (randGivenItem === 159) { targetHealAmt = 8 }

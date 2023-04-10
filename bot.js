@@ -895,7 +895,7 @@ function getAction(user, target) {
         `manages to tear their eyes away from ${target}'s hat. They look annoyed...`,
         `pats ${target}'s chest like a muscular bongo.`,
         `pats their stomach. ${target} offers a healthy meal.`,
-        `pays ${randGold}G. ${target} reduces their ATTACK for this turn!`,
+        `pays ${randGold} G. ${target} reduces their ATTACK for this turn!`,
         `pets ${target}. Their excitement knows no bounds.`,
         `pets the ${target}. They start to generate a Stage I Happiness Froth.`,
         `picks on ${target}.`,
@@ -1751,7 +1751,7 @@ function deathCheck(chatroom, user, target) {
             if (targetPlayer[`gold`] > 0) {
                 sendingPlayer[`gold`] += targetPlayer[`gold`]
                 targetPlayer[`gold`] = 0
-                response += `, got ${target}'s gold, and found ${randGold}G.`
+                response += `, got ${target}'s gold, and found ${randGold} G.`
             } else {
                 response += ` and ${randGold} gold.`
             }
@@ -1849,14 +1849,14 @@ function calculateUserNextLV(user) {
 function calculateUserLV(user) {
     const player = players[user.toLowerCase()]
     while (player[`next`] <= 0) {
-        // console.log(`\x1b[31m%s\x1b[0m`, `user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]}`)
+        console.log(`\x1b[31m%s\x1b[0m`, `user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]}`)
         player[`lv`] += 1
         player[`next`] += calculateUserNextLV(user)
         player[`at`] = calculateUserATK(user)
         player[`df`] = calculateUserDEF(user)
-        player[`hp`] += (getUserMaxHP(user) - player[`hp`])
+        player[`hp`] += 4
     }
-    console.log(`\x1b[31m%s\x1b[0m`, `${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}`)
+    console.log(`\x1b[31m%s\x1b[0m`, `${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]}`)
 }
 
 // Called every time the bot connects to Twitch chat

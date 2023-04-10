@@ -29,7 +29,9 @@ client.on('connected', onConnectedHandler)
 // Connect to Twitch:
 client.connect()
 
-const baseHP = 10
+const baseHP = 16
+const baseAT = -2
+const baseDF = 0.25
 let players = {
     dummy: {
         lv: 1,
@@ -37,10 +39,10 @@ let players = {
         dead: false,
         at: 0,
         df: 0,
-        exp: 0,
+        exp: 100,
         next: 10,
-        weapon: `None`,
-        armor: `None`,
+        weapon: `Stick`,
+        armor: `Bandage`,
         gold: 0
     }
 }
@@ -133,13 +135,13 @@ function onMessageHandler(channel, tags, msg, self) {
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
             if (toUser.toLowerCase() in players) {
                 const chosenUser = players[toUser.toLowerCase()]
-                response = `"${toUser}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${baseHP + (chosenUser[`lv`] * 10)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
+                response = `"${toUser}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${getUserMaxHP(toUser)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, NEXT: ${chosenUser[`next`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
             } else {
                 response = `${toUser} isn't registered :(`
             }
         } else {
             const chosenUser = players[sender.toLowerCase()]
-            response = `"${sender}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${baseHP + (chosenUser[`lv`] * 10)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
+            response = `"${sender}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${getUserMaxHP(sender)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, NEXT: ${chosenUser[`next`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -151,7 +153,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (sender === `JPEGSTRIPES`) {
             // console.log(`\x1b[31m%s\x1b[0m`, players)
             for (const player in players) {
-                players[player][`hp`] = (baseHP + (players[player][`lv`] * 10))
+                players[player][`hp`] = getUserMaxHP(player)
                 players[player][`dead`] = false
                 // console.log(`\x1b[31m%s\x1b[0m`, `${player}: ${players[player][`hp`]}, dead: ${players[player][`dead`]}`)
             }
@@ -1143,7 +1145,7 @@ function fetchItemText(user) {
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${chosenUser[`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
 
     chosenUser[`hp`] += userHealAmt
-    if (chosenUser[`hp`] > (baseHP + (chosenUser[`lv`] * 10))) { chosenUser[`hp`] = (baseHP + (chosenUser[`lv`] * 10)) }
+    if (chosenUser[`hp`] > getUserMaxHP(user)) { chosenUser[`hp`] = getUserMaxHP(user) }
 
     return itemText[randItem]
 }
@@ -1366,10 +1368,10 @@ function fetchGivenItemText(user, target) {
     console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${targetPlayer[`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
 
     sendingPlayer[`hp`] += userHealAmt
-    if (sendingPlayer[`hp`] > (baseHP + (sendingPlayer[`lv`] * 10))) { sendingPlayer[`hp`] = (baseHP + (sendingPlayer[`lv`] * 10)) }
+    if (sendingPlayer[`hp`] > getUserMaxHP(user)) { sendingPlayer[`hp`] = getUserMaxHP(user) }
 
     targetPlayer[`hp`] += targetHealAmt
-    if (targetPlayer[`hp`] > (baseHP + (targetPlayer[`lv`] * 10))) { targetPlayer[`hp`] = (baseHP + (targetPlayer[`lv`] * 10)) }
+    if (targetPlayer[`hp`] > getUserMaxHP(target)) { targetPlayer[`hp`] = getUserMaxHP(target) }
 
     return givenItemText[randGivenItem]
 }
@@ -1513,7 +1515,7 @@ function fetchWeaponOrArmor(user) {
     if (randEquipment === 58) { chosenUser[`weapon`] = `Real Knife` }
     if (randEquipment >= 59 && randEquipment <= 62) {
         chosenUser[`hp`] += 10 // Bandage
-        if (chosenUser[`hp`] > (baseHP + (chosenUser[`lv`] * 10))) { chosenUser[`hp`] = (baseHP + (chosenUser[`lv`] * 10)) }
+        if (chosenUser[`hp`] > getUserMaxHP(user)) { chosenUser[`hp`] = getUserMaxHP(user) }
     }
     if (randEquipment >= 63 && randEquipment <= 70) { chosenUser[`armor`] = `Faded Ribbon` }
     if (randEquipment >= 71 && randEquipment <= 78) { chosenUser[`armor`] = `Manly Bandanna` }
@@ -1672,7 +1674,7 @@ function fetchGivenWeaponOrArmor(target) {
     if (randEquipment === 58) { chosenUser[`weapon`] = `Real Knife` }
     if (randEquipment >= 59 && randEquipment <= 62) {
         chosenUser[`hp`] += 10 // Bandage
-        if (chosenUser[`hp`] > (baseHP + (chosenUser[`lv`] * 10))) { chosenUser[`hp`] = (baseHP + (chosenUser[`lv`] * 10)) }
+        if (chosenUser[`hp`] > getUserMaxHP(target)) { chosenUser[`hp`] = getUserMaxHP(target) }
     }
     if (randEquipment >= 63 && randEquipment <= 70) { chosenUser[`armor`] = `Faded Ribbon` }
     if (randEquipment >= 71 && randEquipment <= 78) { chosenUser[`armor`] = `Manly Bandanna` }
@@ -1694,6 +1696,8 @@ function fetchGivenWeaponOrArmor(target) {
 
 function deathCheck(chatroom, user, target) {
     console.log(`\x1b[31m%s\x1b[0m`, `${chatroom}, user: ${user}, target: ${target}, hp: ${players[target.toLowerCase()][`hp`]}`)
+    const sendingPlayer = players[user.toLowerCase()]
+    const targetPlayer = players[target.toLowerCase()]
 
     const deathText = [
         `The future of monsters depends on you!`,
@@ -1703,28 +1707,52 @@ function deathCheck(chatroom, user, target) {
         `It cannot end now!`,
         `You're going to be alright!`
     ]
-    if (players[target.toLowerCase()][`hp`] <= 0) {
+
+    if (targetPlayer[`hp`] <= 0) {
+        // Building death response
         let response = `* `
         response += deathText[Math.floor(Math.random() * deathText.length)]
-        response += ` ${target}! Stay determined...`
-        players[target.toLowerCase()][`dead`] = true
+        response += ` ${target}! Stay determined... `
 
-        const randGold = Math.ceil(Math.random() * 100)
+        // Checking if user killed a different user
         if (user !== target) {
-            players[user.toLowerCase()][`gold`] += randGold
-            if (players[target.toLowerCase()][`gold`] > 0) {
-                players[user.toLowerCase()][`gold`] += players[target.toLowerCase()][`gold`]
-                players[target.toLowerCase()][`gold`] = 0
-                response += ` ${user} got ${target}'s gold, and found ${randGold}G.`
+            // Appending awarded EXP
+            const awardedEXP = 10 + targetPlayer[`exp`]
+            response += `${user} earned ${awardedEXP} EXP`
+
+            // Appending awarded gold
+            const randGold = Math.ceil(Math.random() * 100)
+            sendingPlayer[`gold`] += randGold
+            if (targetPlayer[`gold`] > 0) {
+                sendingPlayer[`gold`] += targetPlayer[`gold`]
+                targetPlayer[`gold`] = 0
+                response += `, got ${target}'s gold, and found ${randGold}G.`
             } else {
-                response += ` ${user} found ${randGold}G!`
+                response += ` and ${randGold} gold.`
+            }
+
+            // Checking for LV threshold
+            sendingPlayer[`exp`] += awardedEXP
+            sendingPlayer[`next`] -= awardedEXP
+            if (sendingPlayer[`next`] <= 0) {
+                response += ` ${user}'s LOVE increased.`
+                calculateUserLV(user)
             }
         } else {
-            if (players[user.toLowerCase()][`gold`] > 0) {
-                players[user.toLowerCase()][`gold`] = 0
+            if (sendingPlayer[`gold`] > 0) {
+                sendingPlayer[`gold`] = 0
                 response += ` ${user} lost all their gold!`
             }
         }
+
+        // Resetting target user's stats
+        targetPlayer[`dead`] = true
+        targetPlayer[`hp`] = 0
+        targetPlayer[`lv`] = 1
+        targetPlayer[`exp`] = 0
+        targetPlayer[`next`] = 10
+        targetPlayer[`at`] = 0
+        targetPlayer[`df`] = 0
 
         setTimeout(function () {
             client.say(chatroom, response)
@@ -1739,6 +1767,71 @@ function getToUser(str) {
     } else {
         return str
     }
+}
+
+function getUserMaxHP(user) {
+    const userLV = players[user.toLowerCase()][`lv`]
+    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s max HP is ${baseHP + (4 * userLV)}`)
+    let maxHP = baseHP + (4 * userLV)
+    if (userLV >= 20) { maxHP = 99 }
+    return maxHP
+}
+
+function calculateUserATK(user) {
+    const userLV = players[user.toLowerCase()][`lv`]
+    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s ATK is ${Math.floor((userLV - 1) * baseDF)}`)
+    let attack = baseAT + (2 * userLV)
+    if (userLV >= 20) { attack = 38 }
+    return attack
+}
+
+function calculateUserDEF(user) {
+    const userLV = players[user.toLowerCase()][`lv`]
+    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s DEF is ${Math.floor((userLV - 1) * baseDF)}`)
+    let defense = Math.floor((userLV - 1) * baseDF)
+    if (userLV >= 20) { defense = 4 }
+    return defense
+}
+
+function calculateUserNextLV(user) {
+    const userLV = players[user.toLowerCase()][`lv`]
+    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s LV is ${userLV}`)
+
+    let userNext = 0
+    if (userLV === 1) { userNext = 10 }
+    if (userLV === 2) { userNext = 20 }
+    if (userLV === 3) { userNext = 40 }
+    if (userLV === 4) { userNext = 50 }
+    if (userLV === 5) { userNext = 80 }
+    if (userLV === 6) { userNext = 100 }
+    if (userLV === 7) { userNext = 200 }
+    if (userLV === 8) { userNext = 300 }
+    if (userLV === 9) { userNext = 400 }
+    if (userLV === 10) { userNext = 500 }
+    if (userLV === 11) { userNext = 800 }
+    if (userLV === 12) { userNext = 1000 }
+    if (userLV === 13) { userNext = 1500 }
+    if (userLV === 14) { userNext = 2000 }
+    if (userLV === 15) { userNext = 3000 }
+    if (userLV === 16) { userNext = 5000 }
+    if (userLV === 17) { userNext = 10000 }
+    if (userLV === 18) { userNext = 25000 }
+    if (userLV === 19) { userNext = 49999 }
+    if (userLV >= 20) { userNext = 999999 }
+    return userNext
+}
+
+function calculateUserLV(user) {
+    const player = players[user.toLowerCase()]
+    while (player[`next`] <= 0) {
+        // console.log(`\x1b[31m%s\x1b[0m`, `user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]}`)
+        player[`lv`] += 1
+        player[`next`] += calculateUserNextLV(user)
+        player[`at`] = calculateUserATK(user)
+        player[`df`] = calculateUserDEF(user)
+        player[`hp`] += (getUserMaxHP(user) - player[`hp`])
+    }
+    console.log(`\x1b[31m%s\x1b[0m`, `${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}`)
 }
 
 // Called every time the bot connects to Twitch chat

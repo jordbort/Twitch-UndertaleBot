@@ -99,6 +99,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // console.log(`args:`, args)
     // console.log(`toUser:`, toUser)
 
+    // Add/manage players
     if (!(sender.toLowerCase() in players)) {
         players[`${sender.toLowerCase()}`] = {
             lv: 1,
@@ -113,6 +114,9 @@ function onMessageHandler(channel, tags, msg, self) {
             gold: 0
         }
     }
+    const sendingPlayer = players[sender.toLowerCase()]
+    const targetPlayer = toUser && toUser.toLowerCase() !== sender.toLowerCase() && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
+    // console.log(sendingPlayer, targetPlayer)
 
     // *****************
     // ** REPLY CASES **
@@ -132,16 +136,12 @@ function onMessageHandler(channel, tags, msg, self) {
     // STATS
     if (command === `!stats`) {
         let response
-        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
-            if (toUser.toLowerCase() in players) {
-                const chosenUser = players[toUser.toLowerCase()]
-                response = `"${toUser}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${getUserMaxHP(toUser)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, NEXT: ${chosenUser[`next`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
-            } else {
-                response = `${toUser} isn't registered :(`
-            }
+        if (targetPlayer) {
+            response = `"${toUser}" LV: ${targetPlayer[`lv`]}, HP: ${targetPlayer[`hp`]}/${getUserMaxHP(toUser)}, AT: ${targetPlayer[`at`]}(${weaponsATK[targetPlayer[`weapon`]]}), DF: ${targetPlayer[`df`]}(${armorDEF[targetPlayer[`armor`]]}), EXP: ${targetPlayer[`exp`]}, NEXT: ${targetPlayer[`next`]}, WEAPON: ${targetPlayer[`weapon`]}, ARMOR: ${targetPlayer[`armor`]}, GOLD: ${targetPlayer[`gold`]}`
+        } else if (toUser) {
+            response = `${toUser} isn't registered :(`
         } else {
-            const chosenUser = players[sender.toLowerCase()]
-            response = `"${sender}" LV: ${chosenUser[`lv`]}, HP: ${chosenUser[`hp`]}/${getUserMaxHP(sender)}, AT: ${chosenUser[`at`]}(${weaponsATK[chosenUser[`weapon`]]}), DF: ${chosenUser[`df`]}(${armorDEF[chosenUser[`armor`]]}), EXP: ${chosenUser[`exp`]}, NEXT: ${chosenUser[`next`]}, WEAPON: ${chosenUser[`weapon`]}, ARMOR: ${chosenUser[`armor`]}, GOLD: ${chosenUser[`gold`]}`
+            response = `"${sender}" LV: ${sendingPlayer[`lv`]}, HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(sender)}, AT: ${sendingPlayer[`at`]}(${weaponsATK[sendingPlayer[`weapon`]]}), DF: ${sendingPlayer[`df`]}(${armorDEF[sendingPlayer[`armor`]]}), EXP: ${sendingPlayer[`exp`]}, NEXT: ${sendingPlayer[`next`]}, WEAPON: ${sendingPlayer[`weapon`]}, ARMOR: ${sendingPlayer[`armor`]}, GOLD: ${sendingPlayer[`gold`]}`
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -176,7 +176,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // FIGHT
     if (command === `!fight`) {
-        if (players[sender.toLowerCase()][`dead`]) {
+        if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
@@ -201,14 +201,13 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response = `* ${sender} attacks `
-        toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += `${toUser}, ` : response += `themself, `
+        targetPlayer ? response += `${toUser}, ` : response += `themself, `
 
         const smallDamage = Math.ceil(Math.random() * 5)
         const mediumDamage = Math.ceil(Math.random() * 10)
         const bigDamage = Math.ceil(Math.random() * 15)
-        const weaponDamage = weaponsATK[players[sender.toLowerCase()][`weapon`]]
-        let armorDeduction = 0
-        toUser && toUser.toLowerCase() !== sender.toLowerCase() ? armorDeduction = armorDEF[players[toUser.toLowerCase()][`armor`]] : armorDeduction = armorDEF[players[sender.toLowerCase()][`armor`]]
+        const weaponDamage = weaponsATK[sendingPlayer[`weapon`]]
+        const armorDeduction = targetPlayer ? armorDEF[targetPlayer[`armor`]] : armorDEF[sendingPlayer[`armor`]]
 
         let smallDamageDealt = (smallDamage + weaponDamage) - armorDeduction
         let mediumDamageDealt = (mediumDamage + weaponDamage) - armorDeduction
@@ -234,27 +233,27 @@ function onMessageHandler(channel, tags, msg, self) {
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
 
-        if (toUser && toUser.toLowerCase() in players) {
+        if (targetPlayer) {
             if (randNum === 0) {
-                players[toUser.toLowerCase()][`hp`] -= smallDamageDealt
+                targetPlayer[`hp`] -= smallDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 1) {
-                players[toUser.toLowerCase()][`hp`] -= mediumDamageDealt
+                targetPlayer[`hp`] -= mediumDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 2) {
-                players[toUser.toLowerCase()][`hp`] -= bigDamageDealt
+                targetPlayer[`hp`] -= bigDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, armorDeduction: ${armorDeduction}`)
             }
             deathCheck(channel, sender, toUser)
         } else if (!toUser) {
             if (randNum === 0) {
-                players[sender.toLowerCase()][`hp`] -= ((smallDamage + weaponDamage) - armorDeduction)
+                sendingPlayer[`hp`] -= ((smallDamage + weaponDamage) - armorDeduction)
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 1) {
-                players[sender.toLowerCase()][`hp`] -= ((mediumDamage + weaponDamage) - armorDeduction)
+                sendingPlayer[`hp`] -= ((mediumDamage + weaponDamage) - armorDeduction)
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, armorDeduction: ${armorDeduction}`)
             } else if (randNum === 2) {
-                players[sender.toLowerCase()][`hp`] -= ((bigDamage + weaponDamage) - armorDeduction)
+                sendingPlayer[`hp`] -= ((bigDamage + weaponDamage) - armorDeduction)
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, armorDeduction: ${armorDeduction}`)
             }
             deathCheck(channel, sender, sender)
@@ -263,7 +262,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ACT
     if (command === `!act`) {
-        if (players[sender.toLowerCase()][`dead`]) {
+        if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
@@ -302,14 +301,14 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response = `* ${sender} `
-        toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
+        targetPlayer ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // ITEM
     if (command === `!item`) {
-        if (players[sender.toLowerCase()][`dead`]) {
+        if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
@@ -334,14 +333,14 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response
-        toUser && toUser.toLowerCase() !== sender.toLowerCase() ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
+        targetPlayer ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
     // EQUIP
     if (command === `!equip`) {
-        if (players[sender.toLowerCase()][`dead`]) {
+        if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
@@ -378,32 +377,21 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // MERCY
     if (command === `!mercy`) {
-        if (players[sender.toLowerCase()][`dead`]) {
+        if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
             return
         }
 
-        const randNum = Math.ceil(Math.random() * 20)
-        const randGoldAmt = Math.floor(Math.random() * 99) + 1
-        let response = `* `
-
-        // Check if toUser is dummy
-        if (toUser.toLowerCase() === `dummy`) {
-            let reply = `* ${sender} tried to spare the Dummy. `
-
-            const flavorText = [
-                `Dummy stands around absentmindedly.`,
-                `Dummy looks like it's about to fall over.`,
-                `Dummy tires of your aimless shenanigans.`
-            ]
-
-            reply += flavorText[Math.floor(Math.random() * flavorText.length)]
-            client.say(channel, reply)
-            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
-            return
+        let randNum = Math.ceil(Math.random() * 10)
+        if (targetPlayer) {
+            if (targetPlayer[`hp`] <= 5) {
+                randNum = Math.ceil(Math.random() * 3)
+            }
         }
+        const randGoldAmt = Math.floor(Math.random() * 101)
+        let response = `* `
 
         // Check if toUser is the sender
         if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
@@ -414,16 +402,16 @@ function onMessageHandler(channel, tags, msg, self) {
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
                 return
                 // If toUser is dead
-            } else if (players[toUser.toLowerCase()][`dead`]) {
+            } else if (targetPlayer[`dead`]) {
                 response = `Sorry ${sender}, ${toUser} is dead! :(`
                 client.say(channel, response)
                 console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
                 return
-            } else if (randNum === 20) {
+            } else if (randNum === 1) {
                 response += `YOU WON! ${toUser} was spared. ${sender} earned 0 EXP and ${randGoldAmt} gold.`
-                players[sender.toLowerCase()][`gold`] += randGoldAmt
-                players[sender.toLowerCase()][`hp`] = baseHP
-                players[toUser.toLowerCase()][`hp`] = baseHP
+                sendingPlayer[`gold`] += randGoldAmt
+                sendingPlayer[`hp`] = baseHP
+                targetPlayer[`hp`] = baseHP
             } else {
                 response += `${sender} tried to spare ${toUser}. ${toUser} `
                 response += getThirdPersonFlavorText()
@@ -439,18 +427,15 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // HP
     if (command === `!hp`) {
-        const senderHP = players[sender.toLowerCase()][`hp`]
         let response
-        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
-            if (toUser.toLowerCase() in players) {
-                response = `${toUser} has ${players[toUser.toLowerCase()][`hp`]} HP :)`
-                if (players[toUser.toLowerCase()][`dead`]) { response += ` ${toUser} is dead :(` }
-            } else {
-                response = `${toUser} isn't registered :(`
-            }
+        if (targetPlayer) {
+            response = `${toUser} has ${targetPlayer[`hp`]} HP :)`
+            if (targetPlayer[`dead`]) { response += ` ${toUser} is dead :(` }
+        } else if (toUser) {
+            response = `${toUser} isn't registered :(`
         } else {
-            response = `${sender} has ${senderHP} HP :)`
-            if (players[sender.toLowerCase()][`dead`]) { response += ` You are dead :(` }
+            response = `${sender} has ${sendingPlayer[`hp`]} HP :)`
+            if (sendingPlayer[`dead`]) { response += ` You are dead :(` }
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -458,16 +443,13 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // GOLD
     if (command === `!gold`) {
-        const senderGold = players[sender.toLowerCase()][`gold`]
         let response
-        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
-            if (toUser.toLowerCase() in players) {
-                response = `${toUser} has ${players[toUser.toLowerCase()][`gold`]}G :)`
-            } else {
-                response = `${toUser} isn't registered :(`
-            }
+        if (targetPlayer) {
+            response = `${toUser} has ${targetPlayer[`gold`]} G :)`
+        } else if (toUser) {
+            response = `${toUser} isn't registered :(`
         } else {
-            response = `${sender} has ${senderGold}G :)`
+            response = `${sender} has ${sendingPlayer[`gold`]} G :)`
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -475,16 +457,16 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // SPEND
     if (command === `!spend`) {
-        if (players[sender.toLowerCase()][`dead`]) {
+        if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
             return
         }
 
-        if (players[sender.toLowerCase()][`gold`] > 0) {
+        if (sendingPlayer[`gold`] > 0) {
             const response = `${sender} spent all their gold. Thanks! :)`
-            players[sender.toLowerCase()][`gold`] = 0
+            sendingPlayer[`gold`] = 0
             client.say(channel, response)
             console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
         } else {

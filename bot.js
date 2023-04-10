@@ -109,7 +109,7 @@ function onMessageHandler(channel, tags, msg, self) {
             df: 0,
             exp: 0,
             next: 10,
-            weapon: `Stick`,
+            weapon: `Burnt Pan`,
             armor: `Bandage`,
             gold: 0
         }
@@ -136,12 +136,17 @@ function onMessageHandler(channel, tags, msg, self) {
     // STATS
     if (command === `!stats`) {
         let response
+        let attackBoost = 0
         if (targetPlayer) {
-            response = `"${toUser}" LV: ${targetPlayer[`lv`]}, HP: ${targetPlayer[`hp`]}/${getUserMaxHP(toUser)}, AT: ${targetPlayer[`at`]}(${weaponsATK[targetPlayer[`weapon`]]}), DF: ${targetPlayer[`df`]}(${armorDEF[targetPlayer[`armor`]]}), EXP: ${targetPlayer[`exp`]}, NEXT: ${targetPlayer[`next`]}, WEAPON: ${targetPlayer[`weapon`]}, ARMOR: ${targetPlayer[`armor`]}, GOLD: ${targetPlayer[`gold`]}`
+            if (targetPlayer[`armor`] === `Cowboy Hat`) { attackBoost = 5 }
+            if (targetPlayer[`armor`] === `Temmie Armor`) { attackBoost = 10 }
+            response = `"${toUser}" LV: ${targetPlayer[`lv`]}, HP: ${targetPlayer[`hp`]}/${getUserMaxHP(toUser)}, AT: ${targetPlayer[`at`]}(${weaponsATK[targetPlayer[`weapon`]] + attackBoost}), DF: ${targetPlayer[`df`]}(${armorDEF[targetPlayer[`armor`]]}), EXP: ${targetPlayer[`exp`]}, NEXT: ${targetPlayer[`next`]}, WEAPON: ${targetPlayer[`weapon`]}, ARMOR: ${targetPlayer[`armor`]}, GOLD: ${targetPlayer[`gold`]}`
         } else if (toUser) {
             response = `${toUser} isn't registered :(`
         } else {
-            response = `"${sender}" LV: ${sendingPlayer[`lv`]}, HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(sender)}, AT: ${sendingPlayer[`at`]}(${weaponsATK[sendingPlayer[`weapon`]]}), DF: ${sendingPlayer[`df`]}(${armorDEF[sendingPlayer[`armor`]]}), EXP: ${sendingPlayer[`exp`]}, NEXT: ${sendingPlayer[`next`]}, WEAPON: ${sendingPlayer[`weapon`]}, ARMOR: ${sendingPlayer[`armor`]}, GOLD: ${sendingPlayer[`gold`]}`
+            if (sendingPlayer[`armor`] === `Cowboy Hat`) { attackBoost = 5 }
+            if (sendingPlayer[`armor`] === `Temmie Armor`) { attackBoost = 10 }
+            response = `"${sender}" LV: ${sendingPlayer[`lv`]}, HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(sender)}, AT: ${sendingPlayer[`at`]}(${weaponsATK[sendingPlayer[`weapon`]] + attackBoost}), DF: ${sendingPlayer[`df`]}(${armorDEF[sendingPlayer[`armor`]]}), EXP: ${sendingPlayer[`exp`]}, NEXT: ${sendingPlayer[`next`]}, WEAPON: ${sendingPlayer[`weapon`]}, ARMOR: ${sendingPlayer[`armor`]}, GOLD: ${sendingPlayer[`gold`]}`
         }
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
@@ -1166,6 +1171,9 @@ function fetchItemText(user) {
     if (randItem === 162) { userHealAmt = 28 }
     // if (randItem === 163) { userHealAmt = 0 }
 
+    // Burnt Pan weapon check
+    if (players[user.toLowerCase()][`weapon`] === `Burnt Pan`) { userHealAmt += 4 }
+
     const chosenUser = players[user.toLowerCase()]
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${chosenUser[`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
 
@@ -1391,6 +1399,9 @@ function fetchGivenItemText(user, target) {
     const targetPlayer = players[target.toLowerCase()]
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${sendingPlayer[`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
     console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${targetPlayer[`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
+    
+    // Burnt Pan weapon check
+    if (targetPlayer[`weapon`] === `Burnt Pan`) { targetHealAmt += 4 }
 
     sendingPlayer[`hp`] += userHealAmt
     if (sendingPlayer[`hp`] > getUserMaxHP(user)) { sendingPlayer[`hp`] = getUserMaxHP(user) }

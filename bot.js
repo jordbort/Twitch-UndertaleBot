@@ -39,11 +39,12 @@ let players = {
         dead: false,
         at: 0,
         df: 0,
-        exp: 100,
+        exp: 0,
         next: 10,
         weapon: `Stick`,
         armor: `Bandage`,
-        gold: 0
+        gold: 0,
+        stainedApronHealTime: false
     }
 }
 
@@ -105,7 +106,8 @@ function onMessageHandler(channel, tags, msg, self) {
             next: 10,
             weapon: `Stick`,
             armor: `Bandage`,
-            gold: 0
+            gold: 0,
+            stainedApronHealTime: false
         }
     }
     const sendingPlayer = players[sender.toLowerCase()]
@@ -146,10 +148,10 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
 
-    // REVIVE (for testing)
+    // REVIVE (for testing, mods can also use)
     if (command === `!revive`) {
         let response
-        if (sender === `JPEGSTRIPES`) {
+        if (sender === `JPEGSTRIPES` || senderIsAMod) {
             // console.log(`\x1b[31m%s\x1b[0m`, players)
             for (const player in players) {
                 players[player][`hp`] = getUserMaxHP(player)
@@ -240,6 +242,14 @@ function onMessageHandler(channel, tags, msg, self) {
         } else if (randNum === 2) {
             if (bigDamage >= 10) { response += ` Critical hit!` }
         }
+
+        // Stained Apron heal check
+        let stainedApronHealCheck
+        if (sendingPlayer[`armor`] === `Stained Apron`) {
+            stainedApronHealCheck = stainedApronHealToggle(sender)
+            if (stainedApronHealCheck) { response += ` ${sender} recovered 1 HP!` }
+        }
+
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
 
@@ -254,17 +264,25 @@ function onMessageHandler(channel, tags, msg, self) {
                 targetPlayer[`hp`] -= bigDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             }
+            if (stainedApronHealCheck) {
+                sendingPlayer[`hp`] += 1
+                if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
+            }
             deathCheck(channel, sender, toUser)
-        } else if (!toUser) {
+        } else {
             if (randNum === 0) {
-                sendingPlayer[`hp`] -= ((smallDamage + weaponDamage) - armorDeduction)
+                sendingPlayer[`hp`] -= smallDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, smallDamage: ${smallDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             } else if (randNum === 1) {
-                sendingPlayer[`hp`] -= ((mediumDamage + weaponDamage) - armorDeduction)
+                sendingPlayer[`hp`] -= mediumDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, mediumDamage: ${mediumDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
             } else if (randNum === 2) {
-                sendingPlayer[`hp`] -= ((bigDamage + weaponDamage) - armorDeduction)
+                sendingPlayer[`hp`] -= bigDamageDealt
                 console.log(`\x1b[31m%s\x1b[0m`, `weaponDamage: ${weaponDamage}, bigDamage: ${bigDamage}, attackBonus:, ${attackBonus}, armorDeduction: ${armorDeduction}, defenseBonus:, ${defenseBonus}`)
+            }
+            if (stainedApronHealCheck) {
+                sendingPlayer[`hp`] += 1
+                if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
             }
             deathCheck(channel, sender, sender)
         }
@@ -296,22 +314,19 @@ function onMessageHandler(channel, tags, msg, self) {
             }
         }
 
-        // Check if toUser is dummy
-        if (toUser.toLowerCase() === `dummy`) {
-            const flavorText = [
-                `* ${sender} encountered the Dummy. Dummy stands around absentmindedly.`,
-                `* ${sender} tried to talk to the DUMMY. It doesn't seem much for conversation. TORIEL seems happy with you.`,
-                `* ${sender} checked the Dummy: A cotton heart and a button eye, you are the apple of my eye`
-            ]
-            const reply = flavorText[Math.floor(Math.random() * flavorText.length)]
-
-            client.say(channel, reply)
-            console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${reply}`)
-            return
-        }
-
         let response = `* ${sender} `
         targetPlayer ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
+
+        // Stained Apron heal check
+        if (sendingPlayer[`armor`] === `Stained Apron`) {
+            const stainedApronHealCheck = stainedApronHealToggle(sender)
+            if (stainedApronHealCheck) {
+                response += ` ${sender} recovered 1 HP!`
+                sendingPlayer[`hp`] += 1
+                if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
+            }
+        }
+
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
@@ -381,6 +396,17 @@ function onMessageHandler(channel, tags, msg, self) {
         } else {
             response += fetchWeaponOrArmor(sender.toLowerCase())
         }
+        
+        // Stained Apron heal check (Not done for items or equip?)
+        // if (sendingPlayer[`armor`] === `Stained Apron`) {
+        //     const stainedApronHealCheck = stainedApronHealToggle(sender)
+        //     if (stainedApronHealCheck) {
+        //         response += ` ${sender} recovered 1 HP!`
+        //         sendingPlayer[`hp`] += 1
+        //         if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
+        //     }
+        // }
+
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
@@ -421,12 +447,27 @@ function onMessageHandler(channel, tags, msg, self) {
                 sendingPlayer[`gold`] += randGoldAmt
                 sendingPlayer[`hp`] = getUserMaxHP(sender)
                 targetPlayer[`hp`] = getUserMaxHP(toUser)
+
+                client.say(channel, response)
+                console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
+                console.log(`\x1b[31m%s\x1b[0m`, `sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum}`)
+                return
             } else {
                 response += `${sender} tried to spare ${toUser}. ${toUser} `
                 response += getThirdPersonFlavorText()
             }
         } else {
             response += `${sender} tried to spare themself. But nothing happened.`
+        }
+
+        // Stained Apron heal check
+        if (sendingPlayer[`armor`] === `Stained Apron`) {
+            const stainedApronHealCheck = stainedApronHealToggle(sender)
+            if (stainedApronHealCheck) {
+                response += ` ${sender} recovered 1 HP!`
+                sendingPlayer[`hp`] += 1
+                if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
+            }
         }
 
         client.say(channel, response)
@@ -1391,6 +1432,14 @@ function fetchGivenItemText(user, target) {
     if (targetPlayer[`hp`] > getUserMaxHP(target)) { targetPlayer[`hp`] = getUserMaxHP(target) }
 
     return givenItemText[randGivenItem]
+}
+
+function stainedApronHealToggle(user) {
+    const player = players[user.toLowerCase()]
+
+    // If it's time to heal, toggle and return original state
+    player[`stainedApronHealTime`] = !player[`stainedApronHealTime`]
+    return !player[`stainedApronHealTime`]
 }
 
 function fetchWeaponOrArmor(user) {

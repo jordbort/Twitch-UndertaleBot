@@ -81,12 +81,6 @@ function onMessageHandler(channel, tags, msg, self) {
     const senderIsSubbed = tags["subscriber"]
     const senderIsAMod = tags["mod"]
     const senderIsVIP = tags["vip"]
-    const senderHasTurbo = tags["turbo"]
-    const bits = tags["bits"]
-    const color = tags["color"]
-    const msgID = tags["id"]
-    const replyMsgSender = tags["reply-parent-display-name"]
-    const replyMsgBody = tags["reply-parent-msg-body"]
 
     // Command and arguments parser
     const args = msg.split(' ')
@@ -109,7 +103,7 @@ function onMessageHandler(channel, tags, msg, self) {
             df: 0,
             exp: 0,
             next: 10,
-            weapon: `Burnt Pan`,
+            weapon: `Stick`,
             armor: `Bandage`,
             gold: 0
         }
@@ -213,8 +207,17 @@ function onMessageHandler(channel, tags, msg, self) {
         const bigDamage = Math.ceil(Math.random() * 15)
         const weaponDamage = weaponsATK[sendingPlayer[`weapon`]]
         const armorDeduction = targetPlayer ? armorDEF[targetPlayer[`armor`]] : armorDEF[sendingPlayer[`armor`]]
-        const attackBonus = sendingPlayer[`at`]
         const defenseBonus = targetPlayer ? targetPlayer[`df`] : sendingPlayer[`df`]
+        let attackBonus = sendingPlayer[`at`]
+
+        // Attack bonus for Cowboy Hat and Temmie Armor
+        if (sendingPlayer[`armor`] === `Cowboy Hat`) {
+            console.log(`\x1b[31m%s\x1b[0m`, `${sender} is wearing the Cowboy Hat, +5 ATK`)
+            attackBonus += 5
+        } else if (sendingPlayer[`armor`] === `Temmie Armor`) {
+            console.log(`\x1b[31m%s\x1b[0m`, `${sender} is wearing the Temmie Armor, +10 ATK`)
+            attackBonus += 10
+        }
 
         let smallDamageDealt = (smallDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
         let mediumDamageDealt = (mediumDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
@@ -530,28 +533,6 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`do i have vip`)) {
         let response
         senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-    }
-
-    // Sender has Turbo?
-    if (senderHasTurbo) {
-        const response = `Wow, ${sender} is a Twitch Turbo user! :O`
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-    }
-
-    // Contains MY MESSAGE ID
-    if (msg.toLowerCase().includes(`my message id`)) {
-        const response = `${sender}, your message ID was ${msgID} :)`
-        client.say(channel, response)
-        console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
-    }
-
-    // Contains HEX CODE / HEX COLOR
-    if (msg.toLowerCase().includes(`hex code`)
-        || msg.toLowerCase().includes(`hex color`)) {
-        const response = `${sender}, your name's hex color is ${color} :)`
         client.say(channel, response)
         console.log(`\x1b[33m%s\x1b[0m`, `${channel} UndertaleBot: ${response}`)
     }
@@ -1399,7 +1380,7 @@ function fetchGivenItemText(user, target) {
     const targetPlayer = players[target.toLowerCase()]
     console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${sendingPlayer[`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
     console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${targetPlayer[`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
-    
+
     // Burnt Pan weapon check
     if (targetPlayer[`weapon`] === `Burnt Pan`) { targetHealAmt += 4 }
 

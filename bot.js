@@ -182,7 +182,7 @@ function onMessageHandler(channel, tags, msg, self) {
         for (const player in players) {
             const logColor = players[player][`dead`] ? redBg : greenBg
             response += `${player} `
-            console.log(`${logColor} ${player} ${resetTxt} ${logColor} LV: ${players[player][`lv`]} ${resetTxt} ${logColor} HP: ${players[player][`hp`]} ${resetTxt} ${logColor} AT: ${players[player][`at`]} ${resetTxt} ${logColor} DF: ${players[player][`df`]} ${resetTxt} ${logColor} EXP: ${players[player][`exp`]} ${resetTxt} ${logColor} NEXT: ${players[player][`next`]} ${resetTxt} ${logColor} Weapon: ${players[player][`weapon`]} ${resetTxt} ${logColor} Armor: ${players[player][`armor`]} ${resetTxt} ${logColor} Gold: ${players[player][`gold`]} ${resetTxt}`)
+            console.log(`${logColor} ${player} LV: ${players[player][`lv`]}, HP: ${players[player][`hp`]}/${getUserMaxHP(player)}, AT: ${players[player][`at`]}, DF: ${players[player][`df`]}, EXP: ${players[player][`exp`]}, NEXT: ${players[player][`next`]}, Weapon: ${players[player][`weapon`]}, Armor: ${players[player][`armor`]}, Gold: ${players[player][`gold`]} ${resetTxt}`)
         }
         client.say(channel, response)
         console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
@@ -1887,7 +1887,7 @@ function deathCheck(chatroom, user, target) {
     const sendingPlayer = players[user.toLowerCase()]
     const targetPlayer = players[target.toLowerCase()]
     const targetSaveData = playerSave[target.toLowerCase()]
-    console.log(`${sendingPlayer[`hp`] <= 0 ? redBg : greenBg} user: ${user} ${sendingPlayer[`hp`]} HP ${resetTxt} ${targetPlayer[`hp`] <= 0 ? redBg : greenBg} target: ${target} ${targetPlayer[`hp`]} HP ${resetTxt}`)
+    console.log(`${sendingPlayer[`hp`] <= 0 ? redBg : greenBg} user: ${user} ${sendingPlayer[`hp`]}/${getUserMaxHP(user)} HP ${resetTxt} ${targetPlayer[`hp`] <= 0 ? redBg : greenBg} target: ${target} ${targetPlayer[`hp`]}/${getUserMaxHP(target)} HP ${resetTxt}`)
 
     const deathText = [
         `The future of monsters depends on you!`,
@@ -2030,7 +2030,7 @@ function calculateUserLV(user) {
         player[`df`] = calculateUserDEF(user)
         player[`hp`] += 4
     }
-    console.log(`${blueBg} ${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]} / ${getUserMaxHP(user)} ${resetTxt}`)
+    console.log(`${cyanBg} ${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]} / ${getUserMaxHP(user)} ${resetTxt}`)
 }
 
 // Called every time the bot connects to Twitch chat

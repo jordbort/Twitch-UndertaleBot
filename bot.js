@@ -573,7 +573,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
                 client.say(channel, response)
                 console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
-                console.log(`\x1b[31m%s\x1b[0m`, `sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum}`)
+                console.log(`${cyanBg} sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum} ${resetTxt}`)
                 return
             } else {
                 response += `${sender} tried to spare ${toUser}. ${toUser} `
@@ -595,7 +595,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         client.say(channel, response)
         console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
-        console.log(`\x1b[31m%s\x1b[0m`, `sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum}`)
+        console.log(`${cyanBg} sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum} ${resetTxt}`)
     }
 
     // HP
@@ -881,10 +881,10 @@ function getSpamtonQuote(num) {
     ]
     const idx = Number(num) - 1
     if (idx >= 0 && idx < quotes.length && Number.isInteger(idx)) {
-        // console.log(`\x1b[31m%s\x1b[0m`, `Delivering quote ${idx}`)
+        // console.log(`${c yanBg}Delivering quote ${idx} ${resetTxt}`)
         return quotes[idx]
     } else {
-        // console.log(`\x1b[31m%s\x1b[0m`, `Delivering random quote`)
+        // console.log(`${c yanBg}Delivering random quote ${resetTxt}`)
         return quotes[Math.floor(Math.random() * quotes.length)]
     }
 }
@@ -1323,7 +1323,7 @@ function fetchItemText(user) {
     if (players[user.toLowerCase()][`weapon`] === `Burnt Pan`) { userHealAmt += 4 }
 
     const chosenUser = players[user.toLowerCase()]
-    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${chosenUser[`hp`]}, randItem: ${randItem}, userHealAmt: ${userHealAmt}`)
+    console.log(`${grayBg} randItem: ${randItem} ${resetTxt} ${cyanBg} ${user} HP: ${chosenUser[`hp`]}/${getUserMaxHP(user)}, healing: ${userHealAmt} ${resetTxt}`)
 
     chosenUser[`hp`] += userHealAmt
     if (chosenUser[`hp`] > getUserMaxHP(user)) { chosenUser[`hp`] = getUserMaxHP(user) }
@@ -1545,8 +1545,7 @@ function fetchGivenItemText(user, target) {
 
     const sendingPlayer = players[user.toLowerCase()]
     const targetPlayer = players[target.toLowerCase()]
-    console.log(`\x1b[31m%s\x1b[0m`, `${user} HP: ${sendingPlayer[`hp`]}, randGivenItem: ${randGivenItem}, userHealAmt: ${userHealAmt}`)
-    console.log(`\x1b[31m%s\x1b[0m`, `${target} HP: ${targetPlayer[`hp`]}, randGivenItem: ${randGivenItem}, targetHealAmt: ${targetHealAmt}`)
+    console.log(`${grayBg} randGivenItem: ${randGivenItem} ${resetTxt} ${cyanBg} ${user} HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(user)}, healing: ${userHealAmt} ${resetTxt} ${magentaBg} ${target} HP: ${targetPlayer[`hp`]}/${getUserMaxHP(target)}, healing: ${targetHealAmt} ${resetTxt}`)
 
     // Burnt Pan weapon check
     if (targetPlayer[`weapon`] === `Burnt Pan`) { targetHealAmt += 4 }
@@ -1718,11 +1717,11 @@ function fetchWeaponOrArmor(user) {
     if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
     if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
     if (randEquipment === 113) { chosenUser[`armor`] = `Locket` }
-    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`\x1b[31m%s\x1b[0m`, `(Dog Residue doesn't do anything)`) }
-    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`\x1b[31m%s\x1b[0m`, `(Punch Card doesn't do anything)`) }
-    if (randEquipment === 118) { console.log(`\x1b[31m%s\x1b[0m`, `(Annoying Dog doesn't do anything)`) }
-    if (randEquipment === 119) { console.log(`\x1b[31m%s\x1b[0m`, `(Mystery Key doesn't do anything)`) }
-    if (randEquipment === 120) { console.log(`\x1b[31m%s\x1b[0m`, `(0 doesn't do anything)`) }
+    if (randEquipment >= 114  && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`)}
+    if (randEquipment >= 116  && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`)}
+    if (randEquipment === 118)  { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`)}
+    if (randEquipment === 119)  { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`)}
+    if (randEquipment === 120)  { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`)}
 
     return equipText[randEquipment]
 }
@@ -1877,11 +1876,11 @@ function fetchGivenWeaponOrArmor(target) {
     if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
     if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
     if (randEquipment === 113) { chosenUser[`armor`] = `Locket` }
-    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`\x1b[31m%s\x1b[0m`, `(Dog Residue doesn't do anything)`) }
-    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`\x1b[31m%s\x1b[0m`, `(Punch Card doesn't do anything)`) }
-    if (randEquipment === 118) { console.log(`\x1b[31m%s\x1b[0m`, `(Annoying Dog doesn't do anything)`) }
-    if (randEquipment === 119) { console.log(`\x1b[31m%s\x1b[0m`, `(Mystery Key doesn't do anything)`) }
-    if (randEquipment === 120) { console.log(`\x1b[31m%s\x1b[0m`, `(0 doesn't do anything)`) }
+    if (randEquipment >= 114  && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`)}
+    if (randEquipment >= 116  && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`)}
+    if (randEquipment === 118)  { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`)}
+    if (randEquipment === 119)  { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`)}
+    if (randEquipment === 120)  { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`)}
 
     return givenEquipText[randEquipment]
 }
@@ -1973,7 +1972,7 @@ function getToUser(str) {
 
 function getUserMaxHP(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s max HP is ${baseHP + (4 * userLV)}`)
+    // console.log(`${c yanBg}${user}'s max HP is ${baseHP + (4 * userLV)} ${resetTxt}`)
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
     return maxHP
@@ -1981,7 +1980,7 @@ function getUserMaxHP(user) {
 
 function calculateUserATK(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s ATK is ${Math.floor((userLV - 1) * baseDF)}`)
+    // console.log(`${c yanBg}${user}'s ATK is ${Math.floor((userLV - 1) * baseDF)} ${resetTxt}`)
     let attack = baseAT + (2 * userLV)
     if (userLV >= 20) { attack = 38 }
     return attack
@@ -1989,7 +1988,7 @@ function calculateUserATK(user) {
 
 function calculateUserDEF(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s DEF is ${Math.floor((userLV - 1) * baseDF)}`)
+    // console.log(`${c yanBg}${user}'s DEF is ${Math.floor((userLV - 1) * baseDF)} ${resetTxt}`)
     let defense = Math.floor((userLV - 1) * baseDF)
     if (userLV >= 20) { defense = 4 }
     return defense
@@ -1997,7 +1996,7 @@ function calculateUserDEF(user) {
 
 function calculateUserNextLV(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`\x1b[31m%s\x1b[0m`, `${user}'s LV is ${userLV}`)
+    // console.log(`${c yanBg}${user}'s LV is ${userLV} ${resetTxt}`)
 
     let userNext = 0
     if (userLV === 1) { userNext = 10 }
@@ -2026,7 +2025,7 @@ function calculateUserNextLV(user) {
 function calculateUserLV(user) {
     const player = players[user.toLowerCase()]
     while (player[`next`] <= 0) {
-        // console.log(`\x1b[31m%s\x1b[0m`, `user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]}`)
+        // console.log(`${c yanBg}user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]} ${resetTxt}`)
         player[`lv`] += 1
         player[`next`] += calculateUserNextLV(user)
         player[`at`] = calculateUserATK(user)

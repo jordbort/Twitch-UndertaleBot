@@ -239,10 +239,10 @@ function onMessageHandler(channel, tags, msg, self) {
 
         // Attack bonus for Cowboy Hat and Temmie Armor
         if (sendingPlayer[`armor`] === `Cowboy Hat`) {
-            console.log(`\x1b[31m%s\x1b[0m`, `${sender} is wearing the Cowboy Hat, +5 ATK`)
+            console.log(`${magentaBg} ${sender} is wearing the Cowboy Hat, +5 ATK ${resetTxt}`)
             attackBonus += 5
         } else if (sendingPlayer[`armor`] === `Temmie Armor`) {
-            console.log(`\x1b[31m%s\x1b[0m`, `${sender} is wearing the Temmie Armor, +10 ATK`)
+            console.log(`${magentaBg} ${sender} is wearing the Temmie Armor, +10 ATK ${resetTxt}`)
             attackBonus += 10
         }
 
@@ -1915,19 +1915,19 @@ function calculateUserNextLV(user) {
 function calculateUserLV(user) {
     const player = players[user.toLowerCase()]
     while (player[`next`] <= 0) {
-        console.log(`\x1b[31m%s\x1b[0m`, `user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]}`)
+        // console.log(`\x1b[31m%s\x1b[0m`, `user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]}`)
         player[`lv`] += 1
         player[`next`] += calculateUserNextLV(user)
         player[`at`] = calculateUserATK(user)
         player[`df`] = calculateUserDEF(user)
         player[`hp`] += 4
     }
-    console.log(`\x1b[31m%s\x1b[0m`, `${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]}`)
+    console.log(`${blueBg} ${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]} / ${getUserMaxHP(user)} ${resetTxt}`)
 }
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    // client.say(CHANNEL_4, `I have been rebooted :)`)
+    client.say(CHANNEL_1, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }

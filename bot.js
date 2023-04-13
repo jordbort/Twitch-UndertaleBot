@@ -169,7 +169,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
     }
     const sendingPlayer = players[sender.toLowerCase()]
-    const targetPlayer = toUser && toUser.toLowerCase() !== sender.toLowerCase() && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
+    const targetPlayer = toUser.toLowerCase() !== sender.toLowerCase() && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
 
     // Log message
     console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
@@ -200,7 +200,7 @@ function onMessageHandler(channel, tags, msg, self) {
             console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
             return
         }
-        
+
         // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
         // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
         playerSave[sender.toLowerCase()] = { ...players[sender.toLowerCase()] }
@@ -748,25 +748,17 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // GN BOT
     if (msg.toLowerCase().includes(`gn bot`)
-        || msg.toLowerCase().includes(`night bot`)) {
-        const greetings = [`Hi`, `Hey`, `Hello`]
-        const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-        const response = `${greeting}, ${sender}! :)`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
-    }
-
-    // UNDERTALE BOT GN
-    if (msg.toLowerCase().includes(`undertalebot gn`)
+        || msg.toLowerCase().includes(`night bot`)
+        || msg.toLowerCase().includes(`undertalebot gn`)
         || msg.toLowerCase().includes(`undertalebot good night`)
         || msg.toLowerCase().includes(`undertalebot night`)
         || msg.toLowerCase().includes(`gn undertalebot`)
         || msg.toLowerCase().includes(`night undertalebot`)
         || msg.toLowerCase().includes(`gn @undertalebot`)
         || msg.toLowerCase().includes(`night @undertalebot`)) {
-        const greetings = [`Hi`, `Hey`, `Hello`]
+        const greetings = [`Good night`, `Sleep well`, `See you later`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-        const response = `${greeting}, ${sender}! How are you? :)`
+        const response = `${greeting}, ${sender}! :)`
         client.say(channel, response)
         console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
     }
@@ -1762,11 +1754,11 @@ function fetchWeaponOrArmor(user) {
     if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
     if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
     if (randEquipment === 113) { chosenUser[`armor`] = `The Locket` }
-    if (randEquipment >= 114  && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`)}
-    if (randEquipment >= 116  && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`)}
-    if (randEquipment === 118)  { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`)}
-    if (randEquipment === 119)  { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`)}
-    if (randEquipment === 120)  { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`)}
+    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`) }
+    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`) }
+    if (randEquipment === 118) { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`) }
+    if (randEquipment === 119) { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`) }
+    if (randEquipment === 120) { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`) }
 
     return equipText[randEquipment]
 }
@@ -1921,11 +1913,11 @@ function fetchGivenWeaponOrArmor(target) {
     if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
     if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
     if (randEquipment === 113) { chosenUser[`armor`] = `The Locket` }
-    if (randEquipment >= 114  && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`)}
-    if (randEquipment >= 116  && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`)}
-    if (randEquipment === 118)  { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`)}
-    if (randEquipment === 119)  { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`)}
-    if (randEquipment === 120)  { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`)}
+    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`) }
+    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`) }
+    if (randEquipment === 118) { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`) }
+    if (randEquipment === 119) { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`) }
+    if (randEquipment === 120) { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`) }
 
     return givenEquipText[randEquipment]
 }
@@ -2112,6 +2104,6 @@ function onConnectedHandler(addr, port) {
     console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
     console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
-    client.say(CHANNEL_5, `I have been rebooted :)`)
+    client.say(CHANNEL_1, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }

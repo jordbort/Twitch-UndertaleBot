@@ -711,7 +711,10 @@ function onMessageHandler(channel, tags, msg, self) {
     // HELLO BOT
     if (msg.toLowerCase().includes(`hello bot`)
         || msg.toLowerCase().includes(`hey bot`)
-        || msg.toLowerCase().includes(`hi bot`)) {
+        || msg.toLowerCase().includes(`hi bot`)
+        || msg.toLowerCase().includes(`bot hi`)
+        || msg.toLowerCase().includes(`bot hey`)
+        || msg.toLowerCase().includes(`bot hello`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
@@ -722,7 +725,38 @@ function onMessageHandler(channel, tags, msg, self) {
     // UNDERTALE BOT HI
     if (msg.toLowerCase().includes(`undertalebot hello`)
         || msg.toLowerCase().includes(`undertalebot hey`)
-        || msg.toLowerCase().includes(`undertalebot hi`)) {
+        || msg.toLowerCase().includes(`undertalebot hi`)
+        || msg.toLowerCase().includes(`hi undertalebot`)
+        || msg.toLowerCase().includes(`hey undertalebot`)
+        || msg.toLowerCase().includes(`hello undertalebot`)
+        || msg.toLowerCase().includes(`hi @undertalebot`)
+        || msg.toLowerCase().includes(`hey @undertalebot`)
+        || msg.toLowerCase().includes(`hello @undertalebot`)) {
+        const greetings = [`Hi`, `Hey`, `Hello`]
+        const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+        const response = `${greeting}, ${sender}! How are you? :)`
+        client.say(channel, response)
+        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+    }
+
+    // GN BOT
+    if (msg.toLowerCase().includes(`gn bot`)
+        || msg.toLowerCase().includes(`night bot`)) {
+        const greetings = [`Hi`, `Hey`, `Hello`]
+        const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+        const response = `${greeting}, ${sender}! :)`
+        client.say(channel, response)
+        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+    }
+
+    // UNDERTALE BOT GN
+    if (msg.toLowerCase().includes(`undertalebot gn`)
+        || msg.toLowerCase().includes(`undertalebot good night`)
+        || msg.toLowerCase().includes(`undertalebot night`)
+        || msg.toLowerCase().includes(`gn undertalebot`)
+        || msg.toLowerCase().includes(`night undertalebot`)
+        || msg.toLowerCase().includes(`gn @undertalebot`)
+        || msg.toLowerCase().includes(`night @undertalebot`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`
@@ -1720,7 +1754,7 @@ function fetchWeaponOrArmor(user) {
     if (randEquipment >= 97 && randEquipment <= 104) { chosenUser[`armor`] = `Stained Apron` }
     if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
     if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
-    if (randEquipment === 113) { chosenUser[`armor`] = `Locket` }
+    if (randEquipment === 113) { chosenUser[`armor`] = `The Locket` }
     if (randEquipment >= 114  && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`)}
     if (randEquipment >= 116  && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`)}
     if (randEquipment === 118)  { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`)}
@@ -1879,7 +1913,7 @@ function fetchGivenWeaponOrArmor(target) {
     if (randEquipment >= 97 && randEquipment <= 104) { chosenUser[`armor`] = `Stained Apron` }
     if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
     if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
-    if (randEquipment === 113) { chosenUser[`armor`] = `Locket` }
+    if (randEquipment === 113) { chosenUser[`armor`] = `The Locket` }
     if (randEquipment >= 114  && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`)}
     if (randEquipment >= 116  && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`)}
     if (randEquipment === 118)  { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`)}

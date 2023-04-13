@@ -6,6 +6,7 @@ const CHANNEL_1 = process.env.CHANNEL_1
 const CHANNEL_2 = process.env.CHANNEL_2
 const CHANNEL_3 = process.env.CHANNEL_3
 const CHANNEL_4 = process.env.CHANNEL_4
+const CHANNEL_5 = process.env.CHANNEL_5
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -45,7 +46,8 @@ const opts = {
         CHANNEL_1,
         CHANNEL_2,
         CHANNEL_3,
-        CHANNEL_4
+        CHANNEL_4,
+        CHANNEL_5
     ]
 }
 
@@ -2069,6 +2071,6 @@ function onConnectedHandler(addr, port) {
     console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
     console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
-    // client.say(CHANNEL_1, `I have been rebooted :)`)
+    client.say(CHANNEL_5, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }

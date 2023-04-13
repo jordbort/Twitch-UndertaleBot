@@ -194,6 +194,13 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // SAVE
     if (command === `!save`) {
+        if (sendingPlayer[`dead`]) {
+            const reply = `Sorry ${sender}, you are dead! :(`
+            client.say(channel, reply)
+            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            return
+        }
+        
         // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
         // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
         playerSave[sender.toLowerCase()] = { ...players[sender.toLowerCase()] }

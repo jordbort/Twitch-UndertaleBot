@@ -22,6 +22,7 @@ const magentaTxt = `\x1b[35m`
 const cyanTxt = `\x1b[36m`
 const whiteTxt = `\x1b[37m`
 const grayTxt = `\x1b[90m`
+const orangeTxt = `\x1b[38;5;208m`
 
 const blackBg = `\x1b[40m`
 const redBg = `\x1b[41m`
@@ -32,6 +33,7 @@ const magentaBg = `\x1b[45m`
 const cyanBg = `\x1b[46m`
 const whiteBg = `\x1b[47m`
 const grayBg = `\x1b[100m`
+const orangeBg = `\x1b[48;2;255;164;0m`
 
 // Define configuration options
 const opts = {
@@ -2058,7 +2060,15 @@ function printLogo() {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
+    console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
     printLogo()
-    client.say(CHANNEL_1, `I have been rebooted :)`)
+    console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
+    console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
+    console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Give a consumable item to yourself or another chat member${resetTxt}`)
+    console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
+    console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
+    console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
+    console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
+    // client.say(CHANNEL_1, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }

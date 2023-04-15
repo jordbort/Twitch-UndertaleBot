@@ -1324,7 +1324,8 @@ function fetchItemText(user) {
     if (randItem >= 29 && randItem <= 31) { userHealAmt = getUserMaxHP(user) }
     if (randItem >= 32 && randItem <= 36) { userHealAmt = 45 }
     if (randItem >= 37 && randItem <= 44) { userHealAmt = 15 }
-    if (randItem >= 45 && randItem <= 48) { userHealAmt = 22 }
+    if (randItem >= 45 && randItem <= 47) { userHealAmt = 11 }
+    if (randItem === 48) { userHealAmt = 22 }
     if (randItem >= 49 && randItem <= 52) { userHealAmt = 11 }
     if (randItem >= 53 && randItem <= 60) { userHealAmt = 22 }
     if (randItem >= 61 && randItem <= 68) { userHealAmt = 21 }
@@ -2104,6 +2105,6 @@ function onConnectedHandler(addr, port) {
     console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
     console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
-    client.say(CHANNEL_1, `I have been rebooted :)`)
+    client.say(CHANNEL_3, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }

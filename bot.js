@@ -2,11 +2,7 @@ require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const CHANNEL_1 = process.env.CHANNEL_1
-const CHANNEL_2 = process.env.CHANNEL_2
-const CHANNEL_3 = process.env.CHANNEL_3
-const CHANNEL_4 = process.env.CHANNEL_4
-const CHANNEL_5 = process.env.CHANNEL_5
+const SELECTED_CHANNEL = process.env.CHANNEL_3
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -43,11 +39,7 @@ const opts = {
         password: OAUTH_TOKEN
     },
     channels: [
-        CHANNEL_1,
-        CHANNEL_2,
-        CHANNEL_3,
-        CHANNEL_4,
-        CHANNEL_5
+        SELECTED_CHANNEL
     ]
 }
 

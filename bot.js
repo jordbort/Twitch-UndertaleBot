@@ -2,7 +2,7 @@ require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const SELECTED_CHANNEL = process.env.CHANNEL_3
+const SELECTED_CHANNEL = process.env.CHANNEL_5
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -2097,6 +2097,6 @@ function onConnectedHandler(addr, port) {
     console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
     console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
-    client.say(CHANNEL_3, `I have been rebooted :)`)
+    client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }

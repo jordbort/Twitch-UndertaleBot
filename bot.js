@@ -692,7 +692,7 @@ function onMessageHandler(channel, tags, msg, self) {
     if (msg.toLowerCase().includes(`am i a mod`)
         || msg.toLowerCase().includes(`am i mod`)) {
         let response
-        senderIsAMod ? response = `Yes ${sender}, you are a mod :)` : response = `No ${sender}, you aren't a mod :(`
+        senderIsAMod ? response = `Yes ${sender}, you are a moderator :)` : response = `No ${sender}, you aren't a moderator :(`
         client.say(channel, response)
         console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
     }
@@ -711,9 +711,11 @@ function onMessageHandler(channel, tags, msg, self) {
     if (msg.toLowerCase().includes(`hello bot`)
         || msg.toLowerCase().includes(`hey bot`)
         || msg.toLowerCase().includes(`hi bot`)
+        || msg.toLowerCase().includes(`sup bot`)
         || msg.toLowerCase().includes(`bot hi`)
         || msg.toLowerCase().includes(`bot hey`)
-        || msg.toLowerCase().includes(`bot hello`)) {
+        || msg.toLowerCase().includes(`bot hello`)
+        || msg.toLowerCase().includes(`bot sup`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
@@ -725,12 +727,15 @@ function onMessageHandler(channel, tags, msg, self) {
     if (msg.toLowerCase().includes(`undertalebot hello`)
         || msg.toLowerCase().includes(`undertalebot hey`)
         || msg.toLowerCase().includes(`undertalebot hi`)
+        || msg.toLowerCase().includes(`undertalebot sup`)
         || msg.toLowerCase().includes(`hi undertalebot`)
         || msg.toLowerCase().includes(`hey undertalebot`)
         || msg.toLowerCase().includes(`hello undertalebot`)
+        || msg.toLowerCase().includes(`sup undertalebot`)
         || msg.toLowerCase().includes(`hi @undertalebot`)
         || msg.toLowerCase().includes(`hey @undertalebot`)
-        || msg.toLowerCase().includes(`hello @undertalebot`)) {
+        || msg.toLowerCase().includes(`hello @undertalebot`)
+        || msg.toLowerCase().includes(`sup @undertalebot`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`
@@ -1985,10 +1990,11 @@ function deathCheck(chatroom, user, target) {
         targetPlayer[`at`] = 0
         targetPlayer[`df`] = 0
 
+        const msgDelay = chatroom === `#undertalebot` ? 1000 : 2000
         setTimeout(function () {
             client.say(chatroom, response)
             console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${response}${resetTxt}`)
-        }, 2000)
+        }, msgDelay)
     }
 }
 

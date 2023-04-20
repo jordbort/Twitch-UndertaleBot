@@ -2,7 +2,7 @@ require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const SELECTED_CHANNEL = process.env.CHANNEL_5
+const SELECTED_CHANNEL = process.env.CHANNEL_1
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -70,7 +70,8 @@ let players = {
         weapon: `Stick`,
         armor: `Bandage`,
         gold: 0,
-        stainedApronHealTime: false
+        stainedApronHealTime: false,
+        inventory: []
     }
 }
 
@@ -87,7 +88,8 @@ let playerSave = {
         weapon: `Stick`,
         armor: `Bandage`,
         gold: 0,
-        stainedApronHealTime: false
+        stainedApronHealTime: false,
+        inventory: []
     }
 }
 
@@ -2105,4 +2107,44 @@ function onConnectedHandler(addr, port) {
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
     client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
+}
+// Consumable items
+const consumableItems = {
+    "Bandage": 10,
+    "Monster Candy": 10,
+    "Spider Donut": 12,
+    "Spider Cider": 24,
+    "Butterscotch Pie": "ALL HP",
+    "Snail Pie": "Restores HP up to one less than maximum HP",
+    "Snowman Piece": 45,
+    "Nice Cream": 15,
+    "Bisicle": 11,
+    "Unisicle": 11,
+    "Cinnamon Bunny": 22,
+    "Astronaut Food": 21,
+    "Crab Apple": 18,
+    "Sea Tea": 10,
+    "Abandoned Quiche": 34,
+    "Temmie Flakes": 2, // cheap/normal/expensiv/premiem
+    "Dog Salad": "2/10/30/ALL HP",
+    "Instant Noodles": "4/15/90 HP",
+    "Hot Dog...?": 20,
+    "Hot Cat": 21,
+    "Junk Food": 17,
+    "Hush Puppy": 65,
+    "Starfait": 14,
+    "Glamburger": 27,
+    "Legendary Hero": 40,
+    "Steak in the Shape of Mettaton's Face": 60,
+    "Popato Chisps": 13,
+    "Bad Memory": "-1 HP / ALL HP (if HP is 3 or lower)",
+    "Last Dream": "12 HP (Description) 17 HP (Use)",
+
+    // Unused items
+    "Puppydough Icecream": 28,
+    "Pumpkin Rings": 8,
+    "Croquet Roll": 15,
+    "Ghost Fruit": 16,
+    "Stoic Onion": 5,
+    "Rock Candy": 1
 }

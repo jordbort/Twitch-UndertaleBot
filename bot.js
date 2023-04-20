@@ -464,11 +464,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ITEM
     if (command === `!item` || command === `!items`) {
-        const usedItem = toUser.toLowerCase() || ``
-        console.log(`Used item: ${usedItem}`)
-
         const inventory = sendingPlayer[`inventory`]
         console.log(`inventory: ${inventory}`)
+
+        let usedItem = toUser.toLowerCase() || ``
+
         if (inventory.length === 0) {
             const reply = `${sender} has no items! :(`
             client.say(channel, reply)
@@ -502,14 +502,14 @@ function onMessageHandler(channel, tags, msg, self) {
             "temmie flakes",
             "dog salad",
             "instant noodles",
-            "hot dog...?",
+            "hot dog",
             "hot cat",
             "junk food",
             "hush puppy",
             "starfait",
             "glamburger",
             "legendary hero",
-            "steak in the shape of mettaton's face",
+            "steak in the shape of mettaton",
             "popato chisps",
             "bad memory",
             "last dream",
@@ -523,7 +523,16 @@ function onMessageHandler(channel, tags, msg, self) {
             "rock candy"
         ]
 
-        if (!consumableItems.includes(usedItem)) {
+        let isAnItem = false
+        for (idx in consumableItems) {
+            if (msg.toLowerCase().includes(consumableItems[idx])) {
+                console.log(`matched with:`, consumableItems[idx])
+                isAnItem = true
+                usedItem = consumableItems[idx]
+                break
+            }
+        }
+        if (!isAnItem) {
             const reply = `${sender}, that isn't an item! :(`
             client.say(channel, reply)
             console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
@@ -532,7 +541,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let itemInInventory = false
         for (const idx in inventory) {
-            console.log(`item:`, inventory[idx], `usedItem:`, usedItem, `itemInInventory:`, inventory[idx].toLowerCase() === usedItem)
+            console.log(`Looking for:`, usedItem, idx, inventory[idx], `> found?`, inventory[idx].toLowerCase() === usedItem)
             if (inventory[idx].toLowerCase() === usedItem) { itemInInventory = true; break }
         }
 
@@ -2439,7 +2448,7 @@ function useItem(user, str) {
         maxedOut ? itemText += ` HP was maxed out` : itemText += ` ${user} recovered ${healAmt} HP!`
         return itemText
     }
-    if (str === `hot dog...?`) {
+    if (str === `hot dog`) {
         const hotdogText = [
             `* ${user} ate a Hot Dog...? (Bark!)`,
             `* ${user} ate a Hot Dog...? (Bark!)`,

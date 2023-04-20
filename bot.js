@@ -460,7 +460,79 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // ITEM
-    if (command === `!item`) {
+    if (command === `!item` || command === `!items`) {
+        const usedItem = toUser || ``
+        console.log(`Used item: ${usedItem}`)
+
+        const inventory = players[sender][`inventory`]
+        if (inventory.length === 0) {
+            const reply = `${sender} has no items! :(`
+            client.say(channel, reply)
+            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            return
+        }
+
+        if (!inventory.includes(usedItem)) {
+            const reply = `${sender}, you don't have that item! :(`
+            client.say(channel, reply)
+            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            return
+        }
+
+        const consumableItems = {
+            "Bandage": 10,
+            "Monster Candy": 10,
+            "Spider Donut": 12,
+            "Spider Cider": 24,
+            "Butterscotch Pie": "ALL HP",
+            "Snail Pie": "Restores HP up to one less than maximum HP",
+            "Snowman Piece": 45,
+            "Nice Cream": 15,
+            "Bisicle": 11,
+            "Unisicle": 11,
+            "Cinnamon Bunny": 22,
+            "Astronaut Food": 21,
+            "Crab Apple": 18,
+            "Sea Tea": 10,
+            "Abandoned Quiche": 34,
+            "Temmie Flakes": 2, // cheap/normal/expensiv/premiem
+            "Dog Salad": "2/10/30/ALL HP",
+            "Instant Noodles": "4/15/90 HP",
+            "Hot Dog...?": 20,
+            "Hot Cat": 21,
+            "Junk Food": 17,
+            "Hush Puppy": 65,
+            "Starfait": 14,
+            "Glamburger": 27,
+            "Legendary Hero": 40,
+            "Steak in the Shape of Mettaton's Face": 60,
+            "Popato Chisps": 13,
+            "Bad Memory": "-1 HP / ALL HP (if HP is 3 or lower)",
+            "Last Dream": "12 HP (Description) 17 HP (Use)",
+
+            // Unused items
+            "Puppydough Icecream": 28,
+            "Pumpkin Rings": 8,
+            "Croquet Roll": 15,
+            "Ghost Fruit": 16,
+            "Stoic Onion": 5,
+            "Rock Candy": 1
+        }
+
+        if (!(usedItem in consumableItems)) {
+            const reply = `${sender}, that isn't an item! :(`
+            client.say(channel, reply)
+            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            return
+        }
+
+        const response = `* ${sender} ` + useItem(sender, toUser, consumableItems[toUser])
+        client.say(channel, response)
+        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+    }
+
+    // HEAL (depricated "!ITEM")
+    if (command === `!heal`) {
         if (sendingPlayer[`dead`]) {
             const reply = `Sorry ${sender}, you are dead! :(`
             client.say(channel, reply)
@@ -2108,43 +2180,354 @@ function onConnectedHandler(addr, port) {
     client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }
-// Consumable items
-const consumableItems = {
-    "Bandage": 10,
-    "Monster Candy": 10,
-    "Spider Donut": 12,
-    "Spider Cider": 24,
-    "Butterscotch Pie": "ALL HP",
-    "Snail Pie": "Restores HP up to one less than maximum HP",
-    "Snowman Piece": 45,
-    "Nice Cream": 15,
-    "Bisicle": 11,
-    "Unisicle": 11,
-    "Cinnamon Bunny": 22,
-    "Astronaut Food": 21,
-    "Crab Apple": 18,
-    "Sea Tea": 10,
-    "Abandoned Quiche": 34,
-    "Temmie Flakes": 2, // cheap/normal/expensiv/premiem
-    "Dog Salad": "2/10/30/ALL HP",
-    "Instant Noodles": "4/15/90 HP",
-    "Hot Dog...?": 20,
-    "Hot Cat": 21,
-    "Junk Food": 17,
-    "Hush Puppy": 65,
-    "Starfait": 14,
-    "Glamburger": 27,
-    "Legendary Hero": 40,
-    "Steak in the Shape of Mettaton's Face": 60,
-    "Popato Chisps": 13,
-    "Bad Memory": "-1 HP / ALL HP (if HP is 3 or lower)",
-    "Last Dream": "12 HP (Description) 17 HP (Use)",
 
-    // Unused items
-    "Puppydough Icecream": 28,
-    "Pumpkin Rings": 8,
-    "Croquet Roll": 15,
-    "Ghost Fruit": 16,
-    "Stoic Onion": 5,
-    "Rock Candy": 1
+function useItem(user, str, healAmt) {
+    const hpDifference = getUserMaxHP(user) - players[user][`hp`]
+    const maxedOut = healAmt >= hpDifference
+    console.log(`hpDifference:`, hpDifference)
+    console.log(`maxedOut:`, maxedOut)
+
+    if (str === `Bandage`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Monster Candy`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Spider Donut`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Spider Cider`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Butterscotch Pie`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Snail Pie`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Snowman Piece`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Nice Cream`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Bisicle`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Unisicle`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Cinnamon Bunny`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Astronaut Food`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Crab Apple`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Sea Tea`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Abandoned Quiche`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Temmie Flakes`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Dog Salad`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Instant Noodles`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Hot Dog...?`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Hot Cat`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Junk Food`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Hush Puppy`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Starfait`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Glamburger`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Legendary Hero`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Steak in the Shape of Mettaton's Face`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Popato Chisps`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Bad Memory`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Last Dream`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Puppydough Icecream`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Pumpkin Rings`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Croquet Roll`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Ghost Fruit`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Stoic Onion`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    if (str === `Rock Candy`) {
+        let itemText = `used ${str} :)`
+        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
+        return itemText
+    }
+    return `item not found?`
+
+    const itemText = [
+        `* ${user} re-applied a used Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
+        `* ${user} re-applied a gross Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
+        `* ${user} re-applied their old, used Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
+        `* ${user} re-applied a dirty Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
+        `* ${user} re-applied a well-used Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
+        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
+        `* ${user} ate a Spider Donut. Made with Spider Cider in the batter. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
+        `* ${user} drank a Spider Cider. Made with whole spiders, not just the juice. ${user} recovered 24 HP!`,
+        `* ${user} ate the Butterscotch-Cinnamon Pie. ${user}'s HP was maxed out.`,
+        `* ${user} ate the Snail Pie. ${user}'s HP was maxed out.`,
+        `* ${user} ate the Snail Pie. It's an acquired taste. ${user}'s HP was maxed out.`,
+        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
+        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
+        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
+        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
+        `* ${user} ate a Snowman Piece in front of the Snowman it came from. ${user} recovered 45 HP!`,
+        `* ${user} ate a Nice Cream. You're super spiffy! ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. Are those claws natural? ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. Love yourself! I love you! ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. You look nice today! ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. (An illustration of a hug) ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. Have a wonderful day! ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. Is this as sweet as you? ${user} recovered 15 HP!`,
+        `* ${user} ate a Nice Cream. You're just great! ${user} recovered 15 HP!`,
+        `* ${user} ate a Bisicle. ${user} recovered 11 HP!`,
+        `* ${user} ate a Bisicle. ${user} recovered 11 HP!`,
+        `* ${user} ate a Bisicle. It's a two-pronged popsicle, so you can eat it twice. ${user} recovered 11 HP!`,
+        `* ${user} ate both halves of a Bisicle. ${user} recovered 22 HP!`,
+        `* ${user} ate one half of a Bisicle. ${user} recovered 11 HP!`,
+        `* ${user} ate a Unisicle. ${user} recovered 11 HP!`,
+        `* ${user} ate a Unisicle. ${user} recovered 11 HP!`,
+        `* ${user} ate a Unisicle. It's a SINGLE-pronged popsicle. Wait, that's just normal... ${user} recovered 11 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate a Cinnamon Bunny. A cinnamon roll in a shape of a bunny. ${user} recovered 22 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
+        `* ${user} ate some Astronaut Food. It's for a pet astronaut? ${user} recovered 21 HP!`,
+        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. An aquatic fruit that resembles a crustacean. ${user} recovered 18 HP!`,
+        `* ${user} ate a Crab Apple. An aquatic fruit that resembles a crustacean. ${user} recovered 18 HP!`,
+        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
+        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
+        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
+        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
+        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
+        `* ${user} drank a Sea Tea. Made from glowing marsh water. Increases SPEED for one battle. ${user} recovered 10 HP!`,
+        `* ${user} drank a Sea Tea. Made from glowing marsh water. Increases SPEED for one battle. ${user} recovered 10 HP!`,
+        `* ${user} ate the Abandoned Quiche. ${user} recovered 34 HP!`,
+        `* ${user} ate the Abandoned Quiche. ${user} recovered 34 HP!`,
+        `* ${user} ate the Abandoned Quiche. ${user} recovered 34 HP!`,
+        `* ${user} ate the quiche they found under a bench. ${user} recovered 34 HP!`,
+        `* ${user} ate a psychologically-damaged spinach egg pie. ${user} recovered 34 HP!`,
+        `* ${user} ate some Temmie Flakes (cheap). hOI! ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (cheap). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (normal). hOI!!! i'm tEMMIE!! ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (normal). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (expensiv). WOA!! u gota... tem flakes!!! ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (expensiv). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (premiem). FOOB!!! ${user} recovered 2 HP!`,
+        `* ${user} ate some Temmie Flakes (premiem). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
+        `* ${user} ate Dog Salad. Oh. There are bones... ${user} recovered 2 HP!`,
+        `* ${user} ate Dog Salad. Oh. There are bones... ${user} recovered 2 HP!`,
+        `* ${user} ate Dog Salad. Oh. Fried tennis ball... ${user} recovered 10 HP!`,
+        `* ${user} ate Dog Salad. Oh. Fried tennis ball... ${user} recovered 10 HP!`,
+        `* ${user} ate Dog Salad. Oh. Tastes yappy... ${user} recovered 30 HP!`,
+        `* ${user} ate Dog Salad. Oh. Tastes yappy... ${user} recovered 30 HP!`,
+        `* ${user} ate Dog Salad. It's literally garbage??? ${user}'s HP was maxed out.`,
+        `* ${user} ate Dog Salad. It's literally garbage??? ${user}'s HP was maxed out.`,
+        `* ${user} ate Instant Noodles. They're better dry. ${user} recovered 90 HP!`,
+        `* ${user} ate Instant Noodles. They're better dry. ${user} recovered 90 HP!`,
+        `* ${user} cooked the Instant Noodles. Comes with everything you need for a quick meal! ${user} recovered 15 HP!`,
+        `* ${user} cooked the Instant Noodles. Comes with everything you need for a quick meal! ${user} recovered 15 HP!`,
+        `* ${user} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better. ${user} recovered 4 HP!`,
+        `* ${user} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better. ${user} recovered 4 HP!`,
+        `* ${user} ate a Hot Dog...? (Bark!) ${user} recovered 20 HP!`,
+        `* ${user} ate a Hot Dog...? (Bark!) ${user} recovered 20 HP!`,
+        `* ${user} ate a Hot Dog...? The "meat" is made of something called a "water sausage." ${user} recovered 20 HP!`,
+        `* ${user} ate a Hot Cat. (Meow!) ${user} recovered 21 HP!`,
+        `* ${user} ate a Hot Cat. (Meow!) ${user} recovered 21 HP!`,
+        `* ${user} ate a Hot Cat. Like a hot dog, but with little cat ears on the end. ${user} recovered 21 HP!`,
+        `* ${user} used Junk Food. ${user} recovered 17 HP!`,
+        `* ${user} used Junk Food. ${user} recovered 17 HP!`,
+        `* ${user} used Junk Food. ${user} recovered 17 HP!`,
+        `* ${user} used Junk Food. Food that was probably once thrown away. ${user} recovered 17 HP!`,
+        `* ${user} used Junk Food. (Eating garbage?!) ${user} recovered 17 HP!`,
+        `* ${user} used Junk Food. (Eating garbage?!) ${user} recovered 17 HP!`,
+        `* ${user} used Junk Food. (Eating garbage?!) ${user} recovered 17 HP!`,
+        `* ${user} ate a Hush Puppy. Dog-magic is neutralized. ${user} recovered 65 HP!`,
+        `* ${user} ate a Hush Puppy. Dog-magic is neutralized. ${user} recovered 65 HP!`,
+        `* ${user} ate a Hush Puppy. Dog-magic is neutralized. ${user} recovered 65 HP!`,
+        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
+        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
+        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
+        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
+        `* ${user} ate a Starfait. A sweet treat made of sparkling stars. ${user} recovered 14 HP!`,
+        `* ${user} ate a Starfait. Viewer ratings go up by 200 points! ${user} recovered 14 HP!`,
+        `* ${user} ate a Starfait. Viewer ratings go up by 200 points! ${user} recovered 14 HP!`,
+        `* ${user} ate a Glamburger. ${user} recovered 27 HP!`,
+        `* ${user} ate a Glamburger. ${user} recovered 27 HP!`,
+        `* ${user} ate a Glamburger. ${user} recovered 27 HP!`,
+        `* ${user} ate the Glamburger. Made of edible glitter and sequins. ${user} recovered 27 HP!`,
+        `* ${user} ate the Glamburger. Made of edible glitter and sequins. ${user} recovered 27 HP!`,
+        `* ${user} ate a Glamburger. The audience loves the brand. Viewer ratings go up by 300 points! ${user} recovered 27 HP!`,
+        `* ${user} ate a Glamburger. The audience loves the brand. Viewer ratings go up by 300 points! ${user} recovered 27 HP!`,
+        `* ${user} ate a Legendary Hero. ${user} recovered 40 HP!`,
+        `* ${user} ate a Legendary Hero. ${user} recovered 40 HP!`,
+        `* ${user} ate a Legendary Hero. ${user} recovered 40 HP!`,
+        `* ${user} ate the Legendary Hero. Sandwich shaped like a sword. Increases ATTACK when eaten. ${user} recovered 40 HP!`,
+        `* ${user} ate the Legendary Hero. Sandwich shaped like a sword. Increases ATTACK when eaten. ${user} recovered 40 HP!`,
+        `* ${user} ate a Legendary Hero. Viewer ratings go up by 500 points! ${user} recovered 40 HP!`,
+        `* ${user} ate a Legendary Hero. Viewer ratings go up by 500 points! ${user} recovered 40 HP!`,
+        `* ${user} ate the Steak in the Shape of Mettaton's Face. They feel like it's not made of real meat... ${user} recovered 60 HP!`,
+        `* ${user} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts. ${user} recovered 60 HP!`,
+        `* ${user} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts. Viewer ratings go up by 700 points! ${user} recovered 60 HP!`,
+        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
+        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
+        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
+        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
+        `* ${user} ate some Popato Chisps. Regular old popato chisps. ${user} recovered 13 HP!`,
+        `* ${user} used Last Dream. Through DETERMINATION, the dream became true. ${user}'s HP was maxed out.`,
+        `* ${user} hit a Croquet Roll into their mouth. Fried dough traditionally served with a mallet. ${user} recovered 15 HP!`,
+        `* ${user} ate Rock Candy. It's a rock. ${user} recovered 1 HP!`,
+        `* ${user} ate Pumpkin Rings. A small pumpkin cooked like onion rings. ${user} recovered 8 HP!`,
+        `* ${user} ate a Stoic Onion. They didn't cry... ${user} recovered 5 HP!`,
+        `* ${user} ate a Ghost Fruit. It will never pass to the other side. ${user} recovered 16 HP!`,
+        `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies. ${user} recovered 28 HP!`,
+        `* Papyrus gives ${user} some of his oak-aged spaghetti. ${user} takes a small bite. Their face reflexively scrunches up. The taste is indescribable... Papyrus is flattered!`
+    ]
 }

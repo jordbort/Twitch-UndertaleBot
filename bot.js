@@ -146,7 +146,8 @@ function onMessageHandler(channel, tags, msg, self) {
             weapon: `Stick`,
             armor: `Bandage`,
             gold: 0,
-            stainedApronHealTime: false
+            stainedApronHealTime: false,
+            inventory: [`Bandage`, `Monster Candy`] // should be empty, but debugging
         }
         playerSave[`${sender.toLowerCase()}`] = {
             lv: 1,
@@ -159,7 +160,8 @@ function onMessageHandler(channel, tags, msg, self) {
             weapon: `Stick`,
             armor: `Bandage`,
             gold: 0,
-            stainedApronHealTime: false
+            stainedApronHealTime: false,
+            inventory: [`Bandage`, `Monster Candy`] // should be empty, but debugging
         }
     }
     const sendingPlayer = players[sender.toLowerCase()]
@@ -254,6 +256,7 @@ function onMessageHandler(channel, tags, msg, self) {
         response += `LV: ${players[sender.toLowerCase()][`lv`]}, HP: ${players[sender.toLowerCase()][`hp`]}/${getUserMaxHP(sender)}, AT: ${players[sender.toLowerCase()][`at`]}(${weaponsATK[players[sender.toLowerCase()][`weapon`]] + attackBoost}), DF: ${players[sender.toLowerCase()][`df`]}(${armorDEF[players[sender.toLowerCase()][`armor`]]}), EXP: ${players[sender.toLowerCase()][`exp`]}, NEXT: ${players[sender.toLowerCase()][`next`]}, WEAPON: ${players[sender.toLowerCase()][`weapon`]}, ARMOR: ${players[sender.toLowerCase()][`armor`]}, GOLD: ${players[sender.toLowerCase()][`gold`]}`
         client.say(channel, response)
         console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        console.log(sendingPlayer[`inventory`])
 
         // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
         // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
@@ -461,10 +464,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ITEM
     if (command === `!item` || command === `!items`) {
-        const usedItem = toUser || ``
+        const usedItem = toUser.toLowerCase() || ``
         console.log(`Used item: ${usedItem}`)
 
-        const inventory = players[sender][`inventory`]
+        const inventory = sendingPlayer[`inventory`]
+        console.log(`inventory: ${inventory}`)
         if (inventory.length === 0) {
             const reply = `${sender} has no items! :(`
             client.say(channel, reply)
@@ -472,61 +476,74 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        if (!inventory.includes(usedItem)) {
-            const reply = `${sender}, you don't have that item! :(`
+        if (!usedItem) {
+            const reply = `${sender}'s items: ${inventory}`
             client.say(channel, reply)
             console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
             return
         }
 
-        const consumableItems = {
-            "Bandage": 10,
-            "Monster Candy": 10,
-            "Spider Donut": 12,
-            "Spider Cider": 24,
-            "Butterscotch Pie": "ALL HP",
-            "Snail Pie": "Restores HP up to one less than maximum HP",
-            "Snowman Piece": 45,
-            "Nice Cream": 15,
-            "Bisicle": 11,
-            "Unisicle": 11,
-            "Cinnamon Bunny": 22,
-            "Astronaut Food": 21,
-            "Crab Apple": 18,
-            "Sea Tea": 10,
-            "Abandoned Quiche": 34,
-            "Temmie Flakes": 2, // cheap/normal/expensiv/premiem
-            "Dog Salad": "2/10/30/ALL HP",
-            "Instant Noodles": "4/15/90 HP",
-            "Hot Dog...?": 20,
-            "Hot Cat": 21,
-            "Junk Food": 17,
-            "Hush Puppy": 65,
-            "Starfait": 14,
-            "Glamburger": 27,
-            "Legendary Hero": 40,
-            "Steak in the Shape of Mettaton's Face": 60,
-            "Popato Chisps": 13,
-            "Bad Memory": "-1 HP / ALL HP (if HP is 3 or lower)",
-            "Last Dream": "12 HP (Description) 17 HP (Use)",
+        const consumableItems = [
+            "bandage",
+            "monster candy",
+            "spider donut",
+            "spider cider",
+            "butterscotch pie",
+            "snail pie",
+            "snowman piece",
+            "nice cream",
+            "bisicle",
+            "unisicle",
+            "cinnamon bunny",
+            "astronaut food",
+            "crab apple",
+            "sea tea",
+            "abandoned quiche",
+            "temmie flakes",
+            "dog salad",
+            "instant noodles",
+            "hot dog...?",
+            "hot cat",
+            "junk food",
+            "hush puppy",
+            "starfait",
+            "glamburger",
+            "legendary hero",
+            "steak in the shape of mettaton's face",
+            "popato chisps",
+            "bad memory",
+            "last dream",
 
             // Unused items
-            "Puppydough Icecream": 28,
-            "Pumpkin Rings": 8,
-            "Croquet Roll": 15,
-            "Ghost Fruit": 16,
-            "Stoic Onion": 5,
-            "Rock Candy": 1
-        }
+            "puppydough icecream",
+            "pumpkin rings",
+            "croquet roll",
+            "ghost fruit",
+            "stoic onion",
+            "rock candy"
+        ]
 
-        if (!(usedItem in consumableItems)) {
+        if (!consumableItems.includes(usedItem)) {
             const reply = `${sender}, that isn't an item! :(`
             client.say(channel, reply)
             console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
             return
         }
 
-        const response = `* ${sender} ` + useItem(sender, toUser, consumableItems[toUser])
+        let itemInInventory = false
+        for (const idx in inventory) {
+            console.log(`item:`, inventory[idx], `usedItem:`, usedItem, `itemInInventory:`, inventory[idx].toLowerCase() === usedItem)
+            if (inventory[idx].toLowerCase() === usedItem) { itemInInventory = true; break }
+        }
+
+        if (!itemInInventory) {
+            const reply = `${sender}, you don't have that item! :(`
+            client.say(channel, reply)
+            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            return
+        }
+
+        const response = `* ${sender} ` + useItem(sender, toUser)
         client.say(channel, response)
         console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
     }
@@ -2181,187 +2198,123 @@ function onConnectedHandler(addr, port) {
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }
 
-function useItem(user, str, healAmt) {
-    const hpDifference = getUserMaxHP(user) - players[user][`hp`]
+function useItem(user, str) {
+    const consumableItems = {
+        "bandage": 10,
+        "monster candy": 10,
+        "spider donut": 12,
+        "spider cider": 24,
+        "butterscotch pie": "ALL HP",
+        "snail pie": "Restores HP up to one less than maximum HP",
+        "snowman piece": 45,
+        "nice cream": 15,
+        "bisicle": 11,
+        "unisicle": 11,
+        "cinnamon bunny": 22,
+        "astronaut food": 21,
+        "crab apple": 18,
+        "sea tea": 10,
+        "abandoned quiche": 34,
+        "temmie flakes": 2, // cheap/normal/expensiv/premiem
+        "dog salad": "2/10/30/ALL HP",
+        "instant noodles": "4/15/90 HP",
+        "hot dog...?": 20,
+        "hot cat": 21,
+        "junk food": 17,
+        "hush puppy": 65,
+        "starfait": 14,
+        "glamburger": 27,
+        "legendary hero": 40,
+        "steak in the shape of mettaton's face": 60,
+        "popato chisps": 13,
+        "bad memory": "-1 HP / ALL HP (if HP is 3 or lower)",
+        "last dream": "12 HP (Description) 17 HP (Use)",
+
+        // Unused items
+        "puppydough icecream": 28,
+        "pumpkin rings": 8,
+        "croquet roll": 15,
+        "ghost fruit": 16,
+        "stoic onion": 5,
+        "rock candy": 1
+    }
+    const healAmt = consumableItems[str]
+    const hpDifference = getUserMaxHP(user) - players[user.toLowerCase()][`hp`]
     const maxedOut = healAmt >= hpDifference
     console.log(`hpDifference:`, hpDifference)
     console.log(`maxedOut:`, maxedOut)
+    
+    if (str === `bandage`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `monster candy`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `spider donut`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `spider cider`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `butterscotch pie`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `snail pie`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `snowman piece`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `nice cream`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `bisicle`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `unisicle`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `cinnamon bunny`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `astronaut food`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `crab apple`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `sea tea`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `abandoned quiche`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `temmie flakes`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `dog salad`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `instant noodles`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `hot dog...?`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `hot cat`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `junk food`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `hush puppy`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `starfait`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `glamburger`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `legendary hero`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `steak in the shape of mettaton's face`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `popato chisps`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `bad memory`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `last dream`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `puppydough icecream`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `pumpkin rings`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `croquet roll`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `ghost fruit`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `stoic onion`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    if (str === `rock candy`) { let itemText = `used ${str} :) `; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
 
-    if (str === `Bandage`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Monster Candy`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Spider Donut`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Spider Cider`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Butterscotch Pie`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Snail Pie`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Snowman Piece`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Nice Cream`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Bisicle`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Unisicle`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Cinnamon Bunny`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Astronaut Food`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Crab Apple`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Sea Tea`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Abandoned Quiche`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Temmie Flakes`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Dog Salad`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Instant Noodles`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Hot Dog...?`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Hot Cat`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Junk Food`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Hush Puppy`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Starfait`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Glamburger`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Legendary Hero`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Steak in the Shape of Mettaton's Face`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Popato Chisps`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Bad Memory`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Last Dream`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Puppydough Icecream`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Pumpkin Rings`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Croquet Roll`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Ghost Fruit`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Stoic Onion`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
-    if (str === `Rock Candy`) {
-        let itemText = `used ${str} :)`
-        maxedOut ? itemText += `HP was maxed out` : item += `${user} recovered ${healAmt} HP!`
-        return itemText
-    }
+    // if (str === `Bandage`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Monster Candy`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Spider Donut`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Spider Cider`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Butterscotch Pie`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Snail Pie`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Snowman Piece`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Nice Cream`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Bisicle`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Unisicle`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Cinnamon Bunny`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Astronaut Food`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Crab Apple`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Sea Tea`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Abandoned Quiche`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Temmie Flakes`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Dog Salad`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Instant Noodles`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Hot Dog...?`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Hot Cat`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Junk Food`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Hush Puppy`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Starfait`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Glamburger`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Legendary Hero`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Steak in the Shape of Mettaton's Face`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Popato Chisps`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Bad Memory`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Last Dream`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Puppydough Icecream`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Pumpkin Rings`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Croquet Roll`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Ghost Fruit`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Stoic Onion`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
+    // if (str === `Rock Candy`) { let itemText = `used ${str} :)`; maxedOut ? itemText += `HP was maxed out` : itemText += `${user} recovered ${healAmt} HP!`; return itemText }
     return `item not found?`
 
     const itemText = [

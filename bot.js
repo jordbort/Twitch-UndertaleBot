@@ -539,20 +539,23 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        let itemInInventory = false
+        let index = -1
         for (const idx in inventory) {
             console.log(`Looking for:`, usedItem, idx, inventory[idx], `> found?`, inventory[idx].toLowerCase() === usedItem)
-            if (inventory[idx].toLowerCase() === usedItem) { itemInInventory = true; break }
+            if (inventory[idx].toLowerCase() === usedItem) {
+                index = idx
+                break
+            }
         }
 
-        if (!itemInInventory) {
+        if (index < 0) {
             const reply = `${sender}, you don't have that item! :(`
             client.say(channel, reply)
             console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
             return
         }
 
-        const response = useItem(sender, usedItem)
+        const response = useItem(sender, usedItem, index)
         talk(channel, response)
         // client.say(channel, response)
         // console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
@@ -741,14 +744,14 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
+        const spendingAmt = Number(args[0])
+
         if (!Number.isNaN(spendingAmt) && spendingAmt > sendingPlayer[`gold`]) {
             talk(channel, `You don't have that much gold, ${sender}! :(`)
             return
         }
 
         let response = `Spend 15 G to buy a Bisicle! :)`
-
-        const spendingAmt = Number(args[0])
 
         if (spendingAmt === 15) {
             sendingPlayer[`gold`] -= 15
@@ -2225,7 +2228,7 @@ function onConnectedHandler(addr, port) {
     // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }
 
-function useItem(user, str) {
+function useItem(user, str, idx) {
     const consumableItems = {
         "bandage": 10,
         "monster candy": 10,
@@ -2274,6 +2277,7 @@ function useItem(user, str) {
     // console.log(`maxedOut:`, maxedOut)
 
     if (str === `bandage`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const bandageText = [
@@ -2289,6 +2293,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `monster candy`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const monstercandyText = [
@@ -2301,6 +2306,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `spider donut`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const spiderdonutText = [
@@ -2313,6 +2319,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `spider cider`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const spiderciderText = [
@@ -2325,10 +2332,12 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `butterscotch pie`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] = getUserMaxHP(user)
         return `* ${user} ate the Butterscotch-Cinnamon Pie. ${user}'s HP was maxed out.`
     }
     if (str === `snail pie`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] = getUserMaxHP(user) - 1
         const snailpieText = [
             `* ${user} ate the Snail Pie. ${user}'s HP was maxed out.`,
@@ -2338,6 +2347,7 @@ function useItem(user, str) {
         return snailpieText[randIdx]
     }
     if (str === `snowman piece`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const snowmanpieceText = [
@@ -2353,6 +2363,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `nice cream`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const nicecreamText = [
@@ -2371,6 +2382,8 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `bisicle`) {
+        player[`inventory`][idx] = `Unisicle`
+        console.log(player[`inventory`])
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const bisicleText = [
@@ -2383,6 +2396,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `unisicle`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const unisicleText = [
@@ -2395,6 +2409,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `cinnamon bunny`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const cinnamonbunnyText = [
@@ -2407,6 +2422,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `astronaut food`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const astronautfoodText = [
@@ -2419,6 +2435,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `crab apple`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const crabappleText = [
@@ -2431,6 +2448,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `sea tea`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const seateaText = [
@@ -2443,6 +2461,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `abandoned quiche`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const abandonedquicheText = [
@@ -2456,6 +2475,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `temmie flakes`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const temmieflakesText = [
@@ -2474,6 +2494,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `dog salad`) {
+        player[`inventory`].splice(idx, 1)
         const dogsaladText = [
             `* ${user} ate Dog Salad. Oh. There are bones...`,
             `* ${user} ate Dog Salad. Oh. Fried tennis ball...`,
@@ -2491,6 +2512,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `instant noodles`) {
+        player[`inventory`].splice(idx, 1)
         const instantnoodlesText = [
             `* ${user} ate the Instant Noodles. They're better dry.`,
             `* ${user} cooked the Instant Noodles. Comes with everything you need for a quick meal!`,
@@ -2505,6 +2527,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `hot dog`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const hotdogText = [
@@ -2518,6 +2541,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `hot cat`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const hotcatText = [
@@ -2531,6 +2555,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `junk food`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const junkfoodText = [
@@ -2545,6 +2570,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `hush puppy`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate a Hush Puppy. Dog-magic is neutralized.`
@@ -2552,6 +2578,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `starfait`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const starfaitText = [
@@ -2568,6 +2595,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `glamburger`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const glamburgerText = [
@@ -2580,6 +2608,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `legendary hero`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const legendaryheroText = [
@@ -2593,6 +2622,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `steak in the shape of mettaton's face`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const steakText = [
@@ -2606,6 +2636,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `popato chisps`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const popatochispsText = [
@@ -2618,6 +2649,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `bad memory`) {
+        player[`inventory`].splice(idx, 1)
         let itemText = `* ${user} consumes the Bad Memory. `
         if (player[`hp`] <= 3) {
             player[`hp`] = getUserMaxHP(user)
@@ -2629,12 +2661,14 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `last dream`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         let itemText = `* ${user} used Last Dream. Through DETERMINATION, the dream became true. `
         maxedOut ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered 12 HP!`
         return itemText
     }
     if (str === `puppydough icecream`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies.`
@@ -2642,6 +2676,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `pumpkin rings`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate Pumpkin Rings. A small pumpkin cooked like onion rings.`
@@ -2649,6 +2684,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `croquet roll`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} hit a Croquet Roll into their mouth. Fried dough traditionally served with a mallet.`
@@ -2656,6 +2692,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `ghost fruit`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate a Ghost Fruit. It will never pass to the other side.`
@@ -2663,6 +2700,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `stoic onion`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate a Stoic Onion. They didn't cry...`
@@ -2670,6 +2708,7 @@ function useItem(user, str) {
         return itemText
     }
     if (str === `rock candy`) {
+        player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate Rock Candy. It's a rock.`

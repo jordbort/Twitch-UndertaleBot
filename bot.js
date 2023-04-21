@@ -176,29 +176,22 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // MEMORY
     if (command === `!memory`) {
-        // console.log(`currently:`, JSON.stringify(sendingPlayer))
-        // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
         let response = `Here's everyone I know: `
         for (const player in players) {
             const logColor = players[player][`dead`] ? redBg : greenBg
             response += `${player} `
             console.log(`${logColor} ${player} LV: ${players[player][`lv`]}, HP: ${players[player][`hp`]}/${getUserMaxHP(player)}, AT: ${players[player][`at`]}, DF: ${players[player][`df`]}, EXP: ${players[player][`exp`]}, NEXT: ${players[player][`next`]}, Weapon: ${players[player][`weapon`]}, Armor: ${players[player][`armor`]}, Gold: ${players[player][`gold`]} ${resetTxt}`)
         }
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // SAVE
     if (command === `!save`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
-        // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
-        // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
         playerSave[sender.toLowerCase()] = { ...players[sender.toLowerCase()] }
 
         let response = `* `
@@ -236,17 +229,11 @@ function onMessageHandler(channel, tags, msg, self) {
         ]
         const randSaveText = Math.floor(Math.random() * saveText.length)
         response += saveText[randSaveText]
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
-
-        // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
-        // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
+        talk(channel, response)
     }
 
     // LOAD
     if (command === `!load`) {
-        // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
-        // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
         players[sender.toLowerCase()] = { ...playerSave[sender.toLowerCase()] }
 
         let response = `"${sender}" `
@@ -254,12 +241,8 @@ function onMessageHandler(channel, tags, msg, self) {
         if (players[sender.toLowerCase()][`armor`] === `Cowboy Hat`) { attackBoost = 5 }
         if (players[sender.toLowerCase()][`armor`] === `Temmie Armor`) { attackBoost = 10 }
         response += `LV: ${players[sender.toLowerCase()][`lv`]}, HP: ${players[sender.toLowerCase()][`hp`]}/${getUserMaxHP(sender)}, AT: ${players[sender.toLowerCase()][`at`]}(${weaponsATK[players[sender.toLowerCase()][`weapon`]] + attackBoost}), DF: ${players[sender.toLowerCase()][`df`]}(${armorDEF[players[sender.toLowerCase()][`armor`]]}), EXP: ${players[sender.toLowerCase()][`exp`]}, NEXT: ${players[sender.toLowerCase()][`next`]}, WEAPON: ${players[sender.toLowerCase()][`weapon`]}, ARMOR: ${players[sender.toLowerCase()][`armor`]}, GOLD: ${players[sender.toLowerCase()][`gold`]}`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
-        console.log(sendingPlayer[`inventory`])
-
-        // console.log(`currently:`, JSON.stringify(players[sender.toLowerCase()]))
-        // console.log(`save file:`, JSON.stringify(playerSave[sender.toLowerCase()]))
+        talk(channel, response)
+        console.log(`Inventory:`, sendingPlayer[`inventory`])
     }
 
     // STATS
@@ -277,8 +260,7 @@ function onMessageHandler(channel, tags, msg, self) {
             if (sendingPlayer[`armor`] === `Temmie Armor`) { attackBoost = 10 }
             response = `"${sender}" LV: ${sendingPlayer[`lv`]}, HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(sender)}, AT: ${sendingPlayer[`at`]}(${weaponsATK[sendingPlayer[`weapon`]] + attackBoost}), DF: ${sendingPlayer[`df`]}(${armorDEF[sendingPlayer[`armor`]]}), EXP: ${sendingPlayer[`exp`]}, NEXT: ${sendingPlayer[`next`]}, WEAPON: ${sendingPlayer[`weapon`]}, ARMOR: ${sendingPlayer[`armor`]}, GOLD: ${sendingPlayer[`gold`]}`
         }
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // REVIVE (for testing, mods can also use)
@@ -290,44 +272,34 @@ function onMessageHandler(channel, tags, msg, self) {
                 players[player][`dead`] = false
             }
             response = `Everyone is alive :)`
-            client.say(channel, response)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+            talk(channel, response)
         } else {
             response = `You can't use this command, ${sender} ;)`
-            client.say(channel, response)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+            talk(channel, response)
         }
     }
 
     // SPAMTON QUOTE
     if (command === `!spamton`) {
         const response = getSpamtonQuote(args[0])
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // FIGHT
     if (command === `!fight`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
         if (toUser) {
-            let reply
             if (toUser.toLowerCase() in players) {
                 if (players[toUser.toLowerCase()][`dead`]) {
-                    reply = `${toUser} is already dead! :(`
-                    client.say(channel, reply)
-                    console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                    talk(channel, `${toUser} is already dead! :(`)
                     return
                 }
             } else {
-                reply = `${toUser} is not a registered player :(`
-                client.say(channel, reply)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                talk(channel, `${toUser} is not a registered player :(`)
                 return
             }
         }
@@ -381,8 +353,7 @@ function onMessageHandler(channel, tags, msg, self) {
             if (stainedApronHealCheck) { response += ` ${sender} recovered 1 HP!` }
         }
 
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
 
         if (targetPlayer) {
             if (randNum === 0) {
@@ -422,25 +393,18 @@ function onMessageHandler(channel, tags, msg, self) {
     // ACT
     if (command === `!act`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
         if (toUser) {
-            let reply
             if (toUser.toLowerCase() in players) {
                 if (players[toUser.toLowerCase()][`dead`]) {
-                    reply = `Sorry ${sender}, ${toUser} is dead! :(`
-                    client.say(channel, reply)
-                    console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                    talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
                     return
                 }
             } else {
-                reply = `${toUser} is not a registered player :(`
-                client.say(channel, reply)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                talk(channel, `${toUser} is not a registered player :(`)
                 return
             }
         }
@@ -458,28 +422,28 @@ function onMessageHandler(channel, tags, msg, self) {
             }
         }
 
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // ITEM
     if (command === `!item` || command === `!items`) {
         const inventory = sendingPlayer[`inventory`]
-        console.log(`inventory: ${inventory}`)
+        console.log(`Inventory:`, inventory)
 
         let usedItem = toUser.toLowerCase() || ``
 
         if (inventory.length === 0) {
-            const reply = `${sender} has no items! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `${sender} has no items! :(`)
             return
         }
 
         if (!usedItem) {
-            const reply = `${sender}'s items: ${inventory}`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `${sender}'s items: ${inventory}`)
+            return
+        }
+
+        if (sendingPlayer[`dead`]) {
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
@@ -526,22 +490,18 @@ function onMessageHandler(channel, tags, msg, self) {
         let isAnItem = false
         for (idx in consumableItems) {
             if (msg.toLowerCase().includes(consumableItems[idx])) {
-                console.log(`matched with:`, consumableItems[idx])
                 isAnItem = true
                 usedItem = consumableItems[idx]
                 break
             }
         }
         if (!isAnItem) {
-            const reply = `${sender}, that isn't an item! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `${sender}, that isn't an item! :(`)
             return
         }
 
         let index = -1
         for (const idx in inventory) {
-            console.log(`Looking for:`, usedItem, idx, inventory[idx], `> found?`, inventory[idx].toLowerCase() === usedItem)
             if (inventory[idx].toLowerCase() === usedItem) {
                 index = idx
                 break
@@ -549,72 +509,53 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         if (index < 0) {
-            const reply = `${sender}, you don't have that item! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `${sender}, you don't have that item! :(`)
             return
         }
 
         const response = useItem(sender, usedItem, index)
         talk(channel, response)
-        // client.say(channel, response)
-        // console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
     }
 
     // HEAL (depricated "!ITEM")
     if (command === `!heal`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
         if (toUser) {
-            let reply
             if (toUser.toLowerCase() in players) {
                 if (players[toUser.toLowerCase()][`dead`]) {
-                    reply = `Sorry ${sender}, ${toUser} is dead! :(`
-                    client.say(channel, reply)
-                    console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                    talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
                     return
                 }
             } else {
-                reply = `${toUser} is not a registered player :(`
-                client.say(channel, reply)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                talk(channel, `${toUser} is not a registered player :(`)
                 return
             }
         }
 
         let response
         targetPlayer ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // EQUIP
     if (command === `!equip`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
         if (toUser) {
-            let reply
             if (toUser.toLowerCase() in players) {
                 if (players[toUser.toLowerCase()][`dead`]) {
-                    reply = `Sorry ${sender}, ${toUser} is dead! :(`
-                    client.say(channel, reply)
-                    console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                    talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
                     return
                 }
             } else {
-                reply = `${toUser} is not a registered player :(`
-                client.say(channel, reply)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+                talk(channel, `${toUser} is not a registered player :(`)
                 return
             }
         }
@@ -637,16 +578,13 @@ function onMessageHandler(channel, tags, msg, self) {
         //     }
         // }
 
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // MERCY
     if (command === `!mercy`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
@@ -663,14 +601,12 @@ function onMessageHandler(channel, tags, msg, self) {
             // If toUser not registered
             if (!(toUser.toLowerCase() in players)) {
                 response = `${toUser} is not a registered player :(`
-                client.say(channel, response)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+                talk(channel, response)
                 return
                 // If toUser is dead
             } else if (targetPlayer[`dead`]) {
                 response = `Sorry ${sender}, ${toUser} is dead! :(`
-                client.say(channel, response)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+                talk(channel, response)
                 return
             } else if (randNum === 1) {
                 response += `YOU WON! ${toUser} was spared. ${sender} earned 0 EXP and ${randGoldAmt} gold.`
@@ -678,8 +614,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 sendingPlayer[`hp`] = getUserMaxHP(sender)
                 targetPlayer[`hp`] = getUserMaxHP(toUser)
 
-                client.say(channel, response)
-                console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+                talk(channel, response)
                 console.log(`${cyanBg} sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum} ${resetTxt}`)
                 return
             } else {
@@ -700,8 +635,7 @@ function onMessageHandler(channel, tags, msg, self) {
             }
         }
 
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
         console.log(`${cyanBg} sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum} ${resetTxt}`)
     }
 
@@ -717,8 +651,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender} has ${sendingPlayer[`hp`]} HP :)`
             if (sendingPlayer[`dead`]) { response += ` You are dead :(` }
         }
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // GOLD
@@ -731,16 +664,13 @@ function onMessageHandler(channel, tags, msg, self) {
         } else {
             response = `${sender} has ${sendingPlayer[`gold`]} G :)`
         }
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // SPEND
     if (command === `!spend`) {
         if (sendingPlayer[`dead`]) {
-            const reply = `Sorry ${sender}, you are dead! :(`
-            client.say(channel, reply)
-            console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
@@ -759,36 +689,8 @@ function onMessageHandler(channel, tags, msg, self) {
             talk(channel, `* ${sender} bought a Bicicle! It's a two-pronged popsicle, so you can eat it twice.`)
             return
         }
-
-        // User has no gold
-        // if (sendingPlayer[`gold`] <= 0) {
-        //     const reply = `You don't have any gold, ${sender}! :(`
-        //     client.say(channel, reply)
-        //     console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
-        //     return
-        // }
-
-        // No amount specified
-        // if (!args.length) {
-        //     const reply = `You must provide an amount, ${sender}! >(`
-        //     client.say(channel, reply)
-        //     console.log(`${yellowBg}${channel} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${reply}${resetTxt}`)
-        //     return
-        // }
-
-        // if (!Number.isNaN(spendingAmt)) {
-        //     if (spendingAmt <= 0) {
-        //         response = `You must specify a positive amount of gold, ${sender} ;)`
-        //     } else if (spendingAmt > sendingPlayer[`gold`]) {
-        //         response = `You don't have that much gold, ${sender}! :(`
-        //     } else {
-        //         sendingPlayer[`gold`] -= spendingAmt
-        //         response = `${sender} spent ${spendingAmt} gold :)`
-        //     }
-        // }
+        
         talk(channel, response)
-        // client.say(channel, response)
-        // console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
     }
 
     // UNDERTALE/LOGO
@@ -800,8 +702,7 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`do i have a sub`)) {
         let response
         senderIsSubbed ? response = `Yes ${sender}, you are subbed :)` : response = `No ${sender}, you aren't subbed :(`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // AM I A MOD
@@ -809,8 +710,7 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`am i mod`)) {
         let response
         senderIsAMod ? response = `Yes ${sender}, you are a moderator :)` : response = `No ${sender}, you aren't a moderator :(`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // AM I VIP
@@ -819,8 +719,7 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`do i have vip`)) {
         let response
         senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // HELLO BOT
@@ -835,8 +734,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // UNDERTALE BOT HI
@@ -855,8 +753,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     // GN BOT
@@ -872,13 +769,12 @@ function onMessageHandler(channel, tags, msg, self) {
         const greetings = [`Good night`, `Sleep well`, `See you later`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
-        client.say(channel, response)
-        console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${response}${resetTxt}`)
+        talk(channel, response)
     }
 
     function talk(chatroom, resp) {
         client.say(chatroom, resp)
-        console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${resp}${resetTxt}`)
+        console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
     }
 }
 
@@ -1036,10 +932,8 @@ function getSpamtonQuote(num) {
     ]
     const idx = Number(num) - 1
     if (idx >= 0 && idx < quotes.length && Number.isInteger(idx)) {
-        // console.log(`${c yanBg}Delivering quote ${idx} ${resetTxt}`)
         return quotes[idx]
     } else {
-        // console.log(`${c yanBg}Delivering random quote ${resetTxt}`)
         return quotes[Math.floor(Math.random() * quotes.length)]
     }
 }
@@ -2129,7 +2023,6 @@ function getToUser(str) {
 
 function getUserMaxHP(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`${c yanBg}${user}'s max HP is ${baseHP + (4 * userLV)} ${resetTxt}`)
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
     return maxHP
@@ -2137,7 +2030,6 @@ function getUserMaxHP(user) {
 
 function calculateUserATK(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`${c yanBg}${user}'s ATK is ${Math.floor((userLV - 1) * baseDF)} ${resetTxt}`)
     let attack = baseAT + (2 * userLV)
     if (userLV >= 20) { attack = 38 }
     return attack
@@ -2145,7 +2037,6 @@ function calculateUserATK(user) {
 
 function calculateUserDEF(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`${c yanBg}${user}'s DEF is ${Math.floor((userLV - 1) * baseDF)} ${resetTxt}`)
     let defense = Math.floor((userLV - 1) * baseDF)
     if (userLV >= 20) { defense = 4 }
     return defense
@@ -2153,7 +2044,6 @@ function calculateUserDEF(user) {
 
 function calculateUserNextLV(user) {
     const userLV = players[user.toLowerCase()][`lv`]
-    // console.log(`${c yanBg}${user}'s LV is ${userLV} ${resetTxt}`)
 
     let userNext = 0
     if (userLV === 1) { userNext = 10 }
@@ -2182,7 +2072,6 @@ function calculateUserNextLV(user) {
 function calculateUserLV(user) {
     const player = players[user.toLowerCase()]
     while (player[`next`] <= 0) {
-        // console.log(`${c yanBg}user: ${user}, LV: ${player[`lv`]}, next: ${player[`next`]}, hp: ${player[`hp`]} ${resetTxt}`)
         player[`lv`] += 1
         player[`next`] += calculateUserNextLV(user)
         player[`at`] = calculateUserATK(user)
@@ -2210,22 +2099,6 @@ function printLogo() {
     console.log(whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 8 ]
     console.log(whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 9 ]
     //          [  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][ 8 ]
-}
-
-// Called every time the bot connects to Twitch chat
-function onConnectedHandler(addr, port) {
-    console.log(`* Connected to ${addr}:${port}`)
-    console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
-    printLogo()
-    console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
-    console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
-    console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Give a consumable item to yourself or another chat member${resetTxt}`)
-    console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
-    console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
-    console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
-    console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
-    client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
-    // console.log(`${boldTxt}* boldTxt *${resetTxt} ${underlined}* underlined *${resetTxt} ${inverted}* inverted *${resetTxt} ${blackTxt}* blackTxt *${resetTxt} ${redTxt}* redTxt *${resetTxt} ${greenTxt}* greenTxt *${resetTxt} ${yellowTxt}* yellowTxt *${resetTxt} ${blueTxt}* blueTxt *${resetTxt} ${magentaTxt}* magentaTxt *${resetTxt} ${cyanTxt}* cyanTxt *${resetTxt} ${whiteTxt}* whiteTxt *${resetTxt} ${grayTxt}* grayTxt *${resetTxt} ${blackBg}* blackBg *${resetTxt} ${redBg}* redBg *${resetTxt} ${greenBg}* greenBg *${resetTxt} ${yellowBg}* yellowBg *${resetTxt} ${blueBg}* blueBg *${resetTxt} ${magentaBg}* magentaBg *${resetTxt} ${cyanBg}* cyanBg *${resetTxt} ${whiteBg}* whiteBg *${resetTxt} ${grayBg}* grayBg *${resetTxt}`)
 }
 
 function useItem(user, str, idx) {
@@ -2272,9 +2145,6 @@ function useItem(user, str, idx) {
     const healAmt = consumableItems[str]
     const hpDifference = getUserMaxHP(user) - player[`hp`]
     const maxedOut = healAmt >= hpDifference
-    console.log(`${str}: ${consumableItems[str]}`)
-    // console.log(`hpDifference:`, hpDifference)
-    // console.log(`maxedOut:`, maxedOut)
 
     if (str === `bandage`) {
         player[`inventory`].splice(idx, 1)
@@ -2383,7 +2253,6 @@ function useItem(user, str, idx) {
     }
     if (str === `bisicle`) {
         player[`inventory`][idx] = `Unisicle`
-        console.log(player[`inventory`])
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const bisicleText = [
@@ -2716,4 +2585,19 @@ function useItem(user, str, idx) {
         return itemText
     }
     return `* ${user} used 0. If you are reading this, I messed up somehow.`
+}
+
+// Called every time the bot connects to Twitch chat
+function onConnectedHandler(addr, port) {
+    console.log(`* Connected to ${addr}:${port}`)
+    console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
+    printLogo()
+    console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
+    console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
+    console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Give a consumable item to yourself or another chat member${resetTxt}`)
+    console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
+    console.log(`${greenBg} !equip ${resetTxt}`, `${greenTxt}- Give a weapon or armor to yourself or another chat member${resetTxt}`)
+    console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
+    console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
+    client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
 }

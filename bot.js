@@ -473,7 +473,7 @@ function onMessageHandler(channel, tags, msg, self) {
             "starfait",
             "glamburger",
             "legendary hero",
-            "steak in the shape of mettaton",
+            "steak in the shape of mettaton's face",
             "popato chisps",
             "bad memory",
             "last dream",
@@ -689,7 +689,7 @@ function onMessageHandler(channel, tags, msg, self) {
             talk(channel, `* ${sender} bought a Bicicle! It's a two-pronged popsicle, so you can eat it twice.`)
             return
         }
-        
+
         talk(channel, response)
     }
 
@@ -2107,8 +2107,8 @@ function useItem(user, str, idx) {
         "monster candy": 10,
         "spider donut": 12,
         "spider cider": 24,
-        "butterscotch pie": "ALL HP",
-        "snail pie": "Restores HP up to one less than maximum HP",
+        "butterscotch pie": 99,
+        "snail pie": 98,
         "snowman piece": 45,
         "nice cream": 15,
         "bisicle": 11,
@@ -2118,10 +2118,10 @@ function useItem(user, str, idx) {
         "crab apple": 18,
         "sea tea": 10,
         "abandoned quiche": 34,
-        "temmie flakes": 2, // cheap/normal/expensiv/premiem
-        "dog salad": "2/10/30/ALL HP",
-        "instant noodles": "4/15/90 HP",
-        "hot dog...?": 20,
+        "temmie flakes": 2,
+        "dog salad": 2,
+        "instant noodles": 4,
+        "hot dog": 20,
         "hot cat": 21,
         "junk food": 17,
         "hush puppy": 65,
@@ -2364,20 +2364,30 @@ function useItem(user, str, idx) {
     }
     if (str === `dog salad`) {
         player[`inventory`].splice(idx, 1)
-        const dogsaladText = [
+        const dogSaladText = [
             `* ${user} ate Dog Salad. Oh. There are bones...`,
             `* ${user} ate Dog Salad. Oh. Fried tennis ball...`,
             `* ${user} ate Dog Salad. Oh. Tastes yappy...`,
             `* ${user} ate Dog Salad. It's literally garbage??? ${user}'s HP was maxed out.`,
         ]
-        const randIdx = Math.floor(Math.random() * dogsaladText.length)
-        if (randIdx === 0) { player[`hp`] += 2 }
-        if (randIdx === 1) { player[`hp`] += 10 }
-        if (randIdx === 2) { player[`hp`] += 30 }
+        const randIdx = Math.floor(Math.random() * dogSaladText.length)
+        let dogSaladHealAmt = 99
+        if (randIdx === 0) {
+            player[`hp`] += 2
+            dogSaladHealAmt = 2
+        }
+        if (randIdx === 1) {
+            player[`hp`] += 10
+            dogSaladHealAmt = 10
+        }
+        if (randIdx === 2) {
+            player[`hp`] += 30
+            dogSaladHealAmt = 30
+        }
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         if (randIdx === 3) { player[`hp`] = getUserMaxHP(user) }
-        let itemText = dogsaladText[randIdx]
-        maxedOut ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered ${healAmt} HP!`
+        let itemText = dogSaladText[randIdx]
+        player[`hp`] === getUserMaxHP(user) ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered ${dogSaladHealAmt} HP!`
         return itemText
     }
     if (str === `instant noodles`) {
@@ -2388,11 +2398,22 @@ function useItem(user, str, idx) {
             `* ${user} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better.`
         ]
         const randIdx = Math.floor(Math.random() * instantnoodlesText.length)
-        if (randIdx === 0) { player[`hp`] += 90 }
-        if (randIdx === 1) { player[`hp`] += 15 }
-        if (randIdx === 2) { player[`hp`] += 4 }
+        let instantNoodlesHealAmt = 4
+        if (randIdx === 0) {
+            player[`hp`] += 90
+            instantNoodlesHealAmt = 90
+        }
+        if (randIdx === 1) {
+            player[`hp`] += 15
+            instantNoodlesHealAmt = 15
+        }
+        if (randIdx === 2) {
+            player[`hp`] += 4
+            instantNoodlesHealAmt = 4
+        }
+        if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = instantnoodlesText[randIdx]
-        maxedOut ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered ${healAmt} HP!`
+        player[`hp`] === getUserMaxHP(user) ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered ${instantNoodlesHealAmt} HP!`
         return itemText
     }
     if (str === `hot dog`) {

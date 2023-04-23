@@ -53,6 +53,9 @@ client.on('connected', onConnectedHandler)
 // Connect to Twitch:
 client.connect()
 
+// All active users (to avoid duplicate clients):
+const globalUsers = [`undertalebot`]
+
 const baseHP = 16
 const baseAT = -2
 const baseDF = 0.25
@@ -120,7 +123,7 @@ const armorDEF = {
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, msg, self) {
-    if (self) { return } // Ignore messages from the bot
+    if (self || tags["display-name"] === `UndertaleBot`) { return } // Ignore messages from the bot
 
     // Message context
     const sender = tags["display-name"]
@@ -209,6 +212,36 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
     // ** REPLY CASES **
     // *****************
+
+    // JOIN
+    if (command === `!join` && channel === `#undertalebot`) {
+        const user = sender.toLowerCase()
+
+        let index = -1
+        for (const idx in globalUsers) {
+            if (globalUsers[idx] === user) {
+                index = idx
+                break
+            }
+        }
+        if (index >= 0) {
+            talk(channel, `${sender}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
+            return
+        }
+
+        const client = new tmi.client({
+            identity: {
+                username: BOT_USERNAME,
+                password: OAUTH_TOKEN
+            },
+            channels: [user]
+        })
+        client.on('message', onMessageHandler)
+        client.connect()
+
+        globalUsers.push(user)
+        talk(`#undertalebot`, `${sender}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+    }
 
     // MEMORY
     if (command === `!memory`) {
@@ -2627,7 +2660,7 @@ function useItem(user, str, idx) {
         player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
-        let itemText = `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies.`        
+        let itemText = `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies.`
         player[`hp`] === getUserMaxHP(user) ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${user} HP: ${player[`hp`]}/${getUserMaxHP(user)}, healAmt: ${healAmt} ${resetTxt}`)
         return itemText

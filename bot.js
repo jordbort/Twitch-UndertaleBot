@@ -2651,6 +2651,7 @@ function useItem(user, str, idx) {
     if (str === `last dream`) {
         player[`inventory`].splice(idx, 1)
         player[`hp`] += healAmt
+        if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} used Last Dream. Through DETERMINATION, the dream became true.`
         player[`hp`] === getUserMaxHP(user) ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered 12 HP!`
         console.log(`${cyanBg} ${user} HP: ${player[`hp`]}/${getUserMaxHP(user)}, healAmt: ${healAmt} ${resetTxt}`)

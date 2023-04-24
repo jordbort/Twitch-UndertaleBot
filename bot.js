@@ -2728,3 +2728,48 @@ function onConnectedHandler(addr, port) {
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
     client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
 }
+
+// Item prices
+const itemPrices = {
+    "Monster Candy": 0, // Four of a kind
+    "Spider Donut": 7,
+    "Spider Cider": 18,
+    "Snowman Piece": 0, // Two of a kind
+    "Nice Cream": 15, // 25G later
+    "Bisicle": 15, // 30, 45, 70G later
+    "Cinnamon Bunny": 25,
+    "Crab Apple": 25,
+    "Sea Tea": 18,
+    "Temmie Flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
+    "Hot Dog...?": 30,
+    "Hot Cat": 30,
+    "Junk Food": 25,
+    "Starfait": 60,
+    "Glamburger": 120,
+    "Legendary Hero": 300,
+    "Steak in the Shape of Mettaton's Face": 500,
+    "Popato Chisps": 25
+}
+
+const weaponPrices = {
+    "Toy Knife": 0,
+    "Tough Glove": 50,
+    "Ballet Shoes": 0,
+    "Torn Notebook": 55,
+    "Burnt Pan": 0,
+    "Empty Gun": 350,
+    "Worn Dagger": 0,
+    "Real Knife": 0
+}
+
+const armorPrices = {
+    "Faded Ribbon": 0,
+    "Manly Bandanna": 50,
+    "Old Tutu": 0,
+    "Cloudy Glasses": 35,
+    "Temmie Armor": 750,
+    "Stained Apron": 0,
+    "Cowboy Hat": 350,
+    "Heart Locket": 0,
+    "The Locket": 0
+}

@@ -165,41 +165,23 @@ function onMessageHandler(channel, tags, msg, self) {
             gold: 0,
             stainedApronHealTime: false,
             inventory: [
-                "bandage",
-                "monster candy",
-                "spider donut",
-                "spider cider",
-                "butterscotch pie",
-                "snail pie",
-                "snowman piece",
-                "nice cream",
-                "bisicle",
-                "unisicle",
-                "cinnamon bunny",
-                "astronaut food",
-                "crab apple",
-                "sea tea",
-                "abandoned quiche",
-                "temmie flakes",
-                "dog salad",
-                "instant noodles",
-                "hot dog",
-                "hot cat",
-                "junk food",
-                "hush puppy",
-                "starfait",
-                "glamburger",
-                "legendary hero",
-                "steak in the shape of mettaton's face",
-                "popato chisps",
-                "bad memory",
-                "last dream",
-                "puppydough icecream",
-                "pumpkin rings",
-                "croquet roll",
-                "ghost fruit",
-                "stoic onion",
-                "rock candy"
+                `Toy Knife`,
+                `Tough Glove`,
+                `Ballet Shoes`,
+                `Torn Notebook`,
+                `Burnt Pan`,
+                `Empty Gun`,
+                `Worn Dagger`,
+                `Real Knife`,
+                `Faded Ribbon`,
+                `Manly Bandanna`,
+                `Old Tutu`,
+                `Cloudy Glasses`,
+                `Temmie Armor`,
+                `Stained Apron`,
+                `Cowboy Hat`,
+                `Heart Locket`,
+                `The Locket`
             ] // should be empty, but debugging
         }
     }
@@ -516,7 +498,7 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        const consumableItems = [
+        const allItems = [
             "bandage",
             "monster candy",
             "spider donut",
@@ -553,14 +535,36 @@ function onMessageHandler(channel, tags, msg, self) {
             "croquet roll",
             "ghost fruit",
             "stoic onion",
-            "rock candy"
+            "rock candy",
+
+            // Weapons
+            `stick`,
+            `toy knife`,
+            `tough glove`,
+            `ballet shoes`,
+            `torn notebook`,
+            `burnt pan`,
+            `empty gun`,
+            `worn dagger`,
+            `real knife`,
+
+            // Armor
+            `faded ribbon`,
+            `manly bandanna`,
+            `old tutu`,
+            `cloudy glasses`,
+            `temmie armor`,
+            `stained apron`,
+            `cowboy hat`,
+            `heart locket`,
+            `the locket`
         ]
 
         let isAnItem = false
-        for (idx in consumableItems) {
-            if (msg.toLowerCase().includes(consumableItems[idx])) {
+        for (idx in allItems) {
+            if (msg.toLowerCase().includes(allItems[idx])) {
                 isAnItem = true
-                usedItem = consumableItems[idx]
+                usedItem = allItems[idx]
                 break
             }
         }
@@ -637,7 +641,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response += fetchWeaponOrArmor(sender.toLowerCase())
         }
 
-        // Stained Apron heal check (Not done for items or equip?)
+        // Stained Apron heal check (Not done for items or equip?) // after (now "heal") and equip are depricated, !item will check this
         // if (sendingPlayer[`armor`] === `Stained Apron`) {
         //     const stainedApronHealCheck = stainedApronHealToggle(sender)
         //     if (stainedApronHealCheck) {
@@ -2710,6 +2714,225 @@ function useItem(user, str, idx) {
         player[`hp`] === getUserMaxHP(user) ? itemText += ` ${user}'s HP was maxed out.` : itemText += ` ${user} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${user} HP: ${player[`hp`]}/${getUserMaxHP(user)}, healAmt: ${healAmt} ${resetTxt}`)
         return itemText
+    }
+
+    // Weapons
+    if (str === `stick`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Stick`
+        const stickText = [
+            `threw the Stick away. Then picked it back up.`,
+            `equipped the Stick. Its bark is worse than its bite.`
+        ]
+        const randIdx = Math.floor(Math.random() * stickText.length)
+        console.log(`${cyanBg} ${user} equipped the Stick, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return stickText[randIdx]
+    }
+    if (str === `toy knife`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Toy Knife`
+        const toyKnifeText = [
+            `equipped the Toy Knife. +3 ATTACK`,
+            `equipped the Toy Knife. Made of plastic. A rarity nowadays.`
+        ]
+        const randIdx = Math.floor(Math.random() * toyKnifeText.length)
+        console.log(`${cyanBg} ${user} equipped the Toy Knife, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return toyKnifeText[randIdx]
+    }
+    if (str === `tough glove`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Tough Glove`
+        const toughGloveText = [
+            `equipped the Tough Glove. +5 ATTACK`,
+            `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`
+        ]
+        const randIdx = Math.floor(Math.random() * toughGloveText.length)
+        console.log(`${cyanBg} ${user} equipped the Tough Glove, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return toughGloveText[randIdx]
+    }
+    if (str === `ballet shoes`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Ballet Shoes`
+        const balletShoesText = [
+            `equipped the Ballet Shoes. +7 ATTACK`,
+            `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`
+        ]
+        const randIdx = Math.floor(Math.random() * balletShoesText.length)
+        console.log(`${cyanBg} ${user} equipped the Ballet Shoes, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return balletShoesText[randIdx]
+    }
+    if (str === `torn notebook`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Torn Notebook`
+        const tornNotebookText = [
+            `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
+            `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`
+        ]
+        const randIdx = Math.floor(Math.random() * tornNotebookText.length)
+        console.log(`${cyanBg} ${user} equipped the Torn Notebook, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return tornNotebookText[randIdx]
+    }
+    if (str === `burnt pan`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Burnt Pan`
+        const burntPanText = [
+            `equipped the Burnt Pan. +10 ATTACK`,
+            `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`
+        ]
+        const randIdx = Math.floor(Math.random() * burntPanText.length)
+        console.log(`${cyanBg} ${user} equipped the Burnt Pan, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return burntPanText[randIdx]
+    }
+    if (str === `empty gun`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Empty Gun`
+        const emptyGunText = [
+            `equipped the Empty Gun. +12 ATTACK`,
+            `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`
+        ]
+        const randIdx = Math.floor(Math.random() * emptyGunText.length)
+        console.log(`${cyanBg} ${user} equipped the Empty Gun, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return emptyGunText[randIdx]
+    }
+    if (str === `worn dagger`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Worn Dagger`
+        const wornDaggerText = [
+            `equipped the Worn Dagger. +15 ATTACK`,
+            `equipped the Worn Dagger. Perfect for cutting plants and vines.`
+        ]
+        const randIdx = Math.floor(Math.random() * wornDaggerText.length)
+        console.log(`${cyanBg} ${user} equipped the Worn Dagger, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return wornDaggerText[randIdx]
+    }
+    if (str === `real knife`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`weapon`])
+        player[`weapon`] = `Real Knife`
+        const realKnifeText = [
+            `equipped the Real Knife. About time. +99 ATTACK`
+        ]
+        const randIdx = Math.floor(Math.random() * realKnifeText.length)
+        console.log(`${cyanBg} ${user} equipped the Real Knife, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return realKnifeText[randIdx]
+    }
+
+    // Armor
+    if (str === `faded ribbon`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Faded Ribbon`
+        const fadedRibbonText = [
+            `equipped the Faded Ribbon. +5 DEFENSE`,
+            `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`
+        ]
+        const randIdx = Math.floor(Math.random() * fadedRibbonText.length)
+        console.log(`${cyanBg} ${user} equipped the Faded Ribbon, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return fadedRibbonText[randIdx]
+    }
+    if (str === `manly bandanna`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Manly Bandanna`
+        const manlyBandannaText = [
+            `equipped the Manly Bandanna. +7 DEFENSE`,
+            `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`
+        ]
+        const randIdx = Math.floor(Math.random() * manlyBandannaText.length)
+        console.log(`${cyanBg} ${user} equipped the Manly Bandanna, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return manlyBandannaText[randIdx]
+    }
+    if (str === `old tutu`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Old Tutu`
+        const oldTutuText = [
+            `equipped the Old Tutu. +10 DEFENSE`,
+            `equipped the Old Tutu. Finally, a protective piece of armor.`
+        ]
+        const randIdx = Math.floor(Math.random() * oldTutuText.length)
+        console.log(`${cyanBg} ${user} equipped the Old Tutu, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return oldTutuText[randIdx]
+    }
+    if (str === `cloudy glasses`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Cloudy Glasses`
+        const cloudyGlassesText = [
+            `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
+            `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`
+        ]
+        const randIdx = Math.floor(Math.random() * cloudyGlassesText.length)
+        console.log(`${cyanBg} ${user} equipped the Cloudy Glasses, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return cloudyGlassesText[randIdx]
+    }
+    if (str === `temmie armor`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Temmie Armor`
+        const temmieArmorText = [
+            `donned the Temmie Armor. The things you can do with a college education!`,
+            `donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`
+        ]
+        const randIdx = Math.floor(Math.random() * temmieArmorText.length)
+        console.log(`${cyanBg} ${user} equipped the Temmie Armor, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return temmieArmorText[randIdx]
+    }
+    if (str === `stained apron`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Stained Apron`
+        const stainedApronText = [
+            `equipped the Stained Apron. +11 DEFENSE`,
+            `equipped the Stained Apron. Heals 1 HP every other turn.`
+        ]
+        const randIdx = Math.floor(Math.random() * stainedApronText.length)
+        console.log(`${cyanBg} ${user} equipped the Stained Apron, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return stainedApronText[randIdx]
+    }
+    if (str === `cowboy hat`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Cowboy Hat`
+        const cowboyHatText = [
+            `equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+            `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
+            `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`
+        ]
+        const randIdx = Math.floor(Math.random() * cowboyHatText.length)
+        console.log(`${cyanBg} ${user} equipped the Cowboy Hat, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return cowboyHatText[randIdx]
+    }
+    if (str === `heart locket`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `Heart Locket`
+        const heartLocketText = [
+            `equipped the Heart Locket. +15 DEFENSE`,
+            `equipped the Heart Locket. It says "Best Friends Forever."`
+        ]
+        const randIdx = Math.floor(Math.random() * heartLocketText.length)
+        console.log(`${cyanBg} ${user} equipped the Heart Locket, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return heartLocketText[randIdx]
+    }
+    if (str === `the locket`) {
+        player[`inventory`].splice(idx, 1)
+        player[`inventory`].push(player[`armor`])
+        player[`armor`] = `The Locket`
+        const theLocketText = [
+            `equipped the Locket. Right where it belongs.`
+        ]
+        const randIdx = Math.floor(Math.random() * theLocketText.length)
+        console.log(`${cyanBg} ${user} equipped the Locket, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
+        return theLocketText[randIdx]
     }
     return `* ${user} used 0. If you are reading this, I messed up somehow.`
 }

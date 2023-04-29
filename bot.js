@@ -2,7 +2,7 @@ require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const SELECTED_CHANNEL = process.env.CHANNEL_1
+const SELECTED_CHANNEL = process.env.CHANNEL_4
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -39,7 +39,8 @@ const opts = {
         password: OAUTH_TOKEN
     },
     channels: [
-        SELECTED_CHANNEL
+        SELECTED_CHANNEL,
+        process.env.CHANNEL_2
     ]
 }
 
@@ -150,7 +151,7 @@ function onMessageHandler(channel, tags, msg, self) {
             armor: `Bandage`,
             gold: 0,
             stainedApronHealTime: false,
-            inventory: [`Bandage`, `Monster Candy`] // should be empty, but debugging
+            inventory: []
         }
         playerSave[`${sender.toLowerCase()}`] = {
             lv: 1,
@@ -164,25 +165,7 @@ function onMessageHandler(channel, tags, msg, self) {
             armor: `Bandage`,
             gold: 0,
             stainedApronHealTime: false,
-            inventory: [
-                `Toy Knife`,
-                `Tough Glove`,
-                `Ballet Shoes`,
-                `Torn Notebook`,
-                `Burnt Pan`,
-                `Empty Gun`,
-                `Worn Dagger`,
-                `Real Knife`,
-                `Faded Ribbon`,
-                `Manly Bandanna`,
-                `Old Tutu`,
-                `Cloudy Glasses`,
-                `Temmie Armor`,
-                `Stained Apron`,
-                `Cowboy Hat`,
-                `Heart Locket`,
-                `The Locket`
-            ] // should be empty, but debugging
+            inventory: []
         }
     }
     const sendingPlayer = players[sender.toLowerCase()]
@@ -591,68 +574,68 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // HEAL (depricated "!ITEM")
-    if (command === `!heal`) {
-        if (sendingPlayer[`dead`]) {
-            talk(channel, `Sorry ${sender}, you are dead! :(`)
-            return
-        }
+    // if (command === `!heal`) {
+    //     if (sendingPlayer[`dead`]) {
+    //         talk(channel, `Sorry ${sender}, you are dead! :(`)
+    //         return
+    //     }
 
-        if (toUser) {
-            if (toUser.toLowerCase() in players) {
-                if (players[toUser.toLowerCase()][`dead`]) {
-                    talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
-                    return
-                }
-            } else {
-                talk(channel, `${toUser} is not a registered player :(`)
-                return
-            }
-        }
+    //     if (toUser) {
+    //         if (toUser.toLowerCase() in players) {
+    //             if (players[toUser.toLowerCase()][`dead`]) {
+    //                 talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
+    //                 return
+    //             }
+    //         } else {
+    //             talk(channel, `${toUser} is not a registered player :(`)
+    //             return
+    //         }
+    //     }
 
-        let response
-        targetPlayer ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
-        talk(channel, response)
-    }
+    //     let response
+    //     targetPlayer ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
+    //     talk(channel, response)
+    // }
 
-    // EQUIP
-    if (command === `!equip`) {
-        if (sendingPlayer[`dead`]) {
-            talk(channel, `Sorry ${sender}, you are dead! :(`)
-            return
-        }
+    // EQUIP (depricated)
+    // if (command === `!equip`) {
+    //     if (sendingPlayer[`dead`]) {
+    //         talk(channel, `Sorry ${sender}, you are dead! :(`)
+    //         return
+    //     }
 
-        if (toUser) {
-            if (toUser.toLowerCase() in players) {
-                if (players[toUser.toLowerCase()][`dead`]) {
-                    talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
-                    return
-                }
-            } else {
-                talk(channel, `${toUser} is not a registered player :(`)
-                return
-            }
-        }
+    //     if (toUser) {
+    //         if (toUser.toLowerCase() in players) {
+    //             if (players[toUser.toLowerCase()][`dead`]) {
+    //                 talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
+    //                 return
+    //             }
+    //         } else {
+    //             talk(channel, `${toUser} is not a registered player :(`)
+    //             return
+    //         }
+    //     }
 
-        let response = `* ${sender} `
-        if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
-            response += `gave ${toUser} `
-            response += fetchGivenWeaponOrArmor(toUser.toLowerCase())
-        } else {
-            response += fetchWeaponOrArmor(sender.toLowerCase())
-        }
+    //     let response = `* ${sender} `
+    //     if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
+    //         response += `gave ${toUser} `
+    //         response += fetchGivenWeaponOrArmor(toUser.toLowerCase())
+    //     } else {
+    //         response += fetchWeaponOrArmor(sender.toLowerCase())
+    //     }
 
-        // Stained Apron heal check (Not done for items or equip?) // after (now "heal") and equip are depricated, !item will check this
-        // if (sendingPlayer[`armor`] === `Stained Apron`) {
-        //     const stainedApronHealCheck = stainedApronHealToggle(sender)
-        //     if (stainedApronHealCheck) {
-        //         response += ` ${sender} recovered 1 HP!`
-        //         sendingPlayer[`hp`] += 1
-        //         if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
-        //     }
-        // }
+    //     // Stained Apron heal check (Not done for items or equip?) // after (now "heal") and equip are depricated, !item will check this
+    //     // if (sendingPlayer[`armor`] === `Stained Apron`) {
+    //     //     const stainedApronHealCheck = stainedApronHealToggle(sender)
+    //     //     if (stainedApronHealCheck) {
+    //     //         response += ` ${sender} recovered 1 HP!`
+    //     //         sendingPlayer[`hp`] += 1
+    //     //         if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
+    //     //     }
+    //     // }
 
-        talk(channel, response)
-    }
+    //     talk(channel, response)
+    // }
 
     // MERCY
     if (command === `!mercy`) {
@@ -740,28 +723,144 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
-    // SPEND
-    if (command === `!spend`) {
+    // Buy item (!buy !shop !get ???)
+    if (command === `!get`) {
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
         }
 
-        const spendingAmt = Number(args[0])
+        // Item prices
+        const itemPrices = {
+            // Consumable items
+            "monster candy": 0, // Four of a kind
+            "spider donut": 7,
+            "spider cider": 18,
+            "snowman piece": 0, // Two of a kind
+            "nice cream": 15, // 25G later
+            "bisicle": 15, // 30, 45, 70G later
+            "cinnamon bunny": 25,
+            "crab apple": 25,
+            "sea tea": 18,
+            "temmie flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
+            "hot dog": 30,
+            "hot cat": 30,
+            "junk food": 25,
+            "starfait": 60,
+            "glamburger": 120,
+            "legendary hero": 300,
+            "steak in the shape of mettaton's face": 500,
+            "popato chisps": 25,
 
-        if (!Number.isNaN(spendingAmt) && spendingAmt > sendingPlayer[`gold`]) {
-            talk(channel, `You don't have that much gold, ${sender}! :(`)
+            // Weapons
+            "toy knife": 0,
+            "tough glove": 50,
+            "ballet shoes": 0,
+            "torn notebook": 55,
+            "burnt pan": 0,
+            "empty gun": 350,
+            "worn dagger": 0,
+            "real knife": 0,
+            
+            // Armor
+            "faded ribbon": 0,
+            "manly bandanna": 50,
+            "old tutu": 0,
+            "cloudy glasses": 35,
+            "temmie armor": 750,
+            "stained apron": 0,
+            "cowboy hat": 350,
+            "heart locket": 0,
+            "the locket": 0
+        }
+
+        let queryItem = ``
+
+        const allItems = [
+            "bandage",
+            "monster candy",
+            "spider donut",
+            "spider cider",
+            "butterscotch pie",
+            "snail pie",
+            "snowman piece",
+            "nice cream",
+            "bisicle",
+            "unisicle",
+            "cinnamon bunny",
+            "astronaut food",
+            "crab apple",
+            "sea tea",
+            "abandoned quiche",
+            "temmie flakes",
+            "dog salad",
+            "instant noodles",
+            "hot dog",
+            "hot cat",
+            "junk food",
+            "hush puppy",
+            "starfait",
+            "glamburger",
+            "legendary hero",
+            "steak in the shape of mettaton's face",
+            "popato chisps",
+            "bad memory",
+            "last dream",
+
+            // Unused items
+            "puppydough icecream",
+            "pumpkin rings",
+            "croquet roll",
+            "ghost fruit",
+            "stoic onion",
+            "rock candy",
+
+            // Weapons
+            `stick`,
+            `toy knife`,
+            `tough glove`,
+            `ballet shoes`,
+            `torn notebook`,
+            `burnt pan`,
+            `empty gun`,
+            `worn dagger`,
+            `real knife`,
+
+            // Armor
+            `faded ribbon`,
+            `manly bandanna`,
+            `old tutu`,
+            `cloudy glasses`,
+            `temmie armor`,
+            `stained apron`,
+            `cowboy hat`,
+            `heart locket`,
+            `the locket`
+        ]
+
+        let isAnItem = false
+        for (idx in allItems) {
+            if (msg.toLowerCase().includes(allItems[idx])) {
+                isAnItem = true
+                queryItem = allItems[idx]
+                break
+            }
+        }
+        if (queryItem && !isAnItem) {
+            talk(channel, `${sender}, that item doesn't exist! :(`)
             return
         }
 
-        let response = `Spend 15 G to buy a Bisicle! :)`
+        let response = `${sender} can buy: `
+        if (sendingPlayer[`lv`] >= 1) { response += `Monster Candy (${itemPrices[`monster candy`]}G), Spider Donut (${itemPrices[`spider donut`]}G), Spider Cider (${itemPrices[`spider cider`]}G), Toy Knife (${itemPrices[`toy knife`]}G), Faded Ribbon (${itemPrices[`faded ribbon`]}G)` }
+        if (sendingPlayer[`lv`] >= 2) { response += `, Snowman Piece (${itemPrices[`snowman piece`]}G), Nice Cream (${itemPrices[`nice cream`]}G), Bisicle (${itemPrices[`bisicle`]}G), Cinnamon Bunny (${itemPrices[`cinnamon bunny`]}G), Tough Glove (${itemPrices[`tough glove`]}G), Ballet Shoes (${itemPrices[`ballet shoes`]}G), Manly Bandanna (${itemPrices[`manly bandanna`]}G), Old Tutu (${itemPrices[`old tutu`]}G)` }
+        if (sendingPlayer[`lv`] >= 3) { response += `, Crab Apple (${itemPrices[`crab apple`]}G), Sea Tea (${itemPrices[`sea tea`]}G), Temmie Flakes (${itemPrices[`temmie flakes`]}G), Torn Notebook (${itemPrices[`torn notebook`]}G), Cloudy Glasses (${itemPrices[`cloudy glasses`]}G), Temmie Armor (${itemPrices[`temmie armor`]}G)` }
+        if (sendingPlayer[`lv`] >= 4) { response += `, Hot Dog...? (${itemPrices[`hot dog`]}G), Hot Cat (${itemPrices[`hot cat`]}G), Burnt Pan (${itemPrices[`burnt pan`]}G), Stained Apron (${itemPrices[`stained apron`]}G)` }
+        if (sendingPlayer[`lv`] >= 5) { response += `, Junk Food (${itemPrices[`junk food`]}G), Starfait (${itemPrices[`starfait`]}G), Glamburger (${itemPrices[`glamburger`]}G), Legendary Hero (${itemPrices[`legendary hero`]}G), Steak in the Shape of Mettaton's Face (${itemPrices[`steak in the shape of mettaton's face`]}G), Empty Gun (${itemPrices[`empty gun`]}G), Cowboy Hat (${itemPrices[`cowboy hat`]}G)` }
+        if (sendingPlayer[`lv`] >= 6) { response += `, Popato Chisps (${itemPrices[`popato chisps`]}G), Worn Dagger (${itemPrices[`worn dagger`]}G), Heart Locket (${itemPrices[`heart locket`]}G)` }
+        if (sendingPlayer[`lv`] >= 7) { response += `, Real Knife (${itemPrices[`real knife`]}G), The Locket (${itemPrices[`the locket`]}G)` }
 
-        if (spendingAmt === 15) {
-            sendingPlayer[`gold`] -= 15
-            sendingPlayer[`inventory`].push(`Bisicle`)
-            talk(channel, `* ${sender} bought a Bicicle! It's a two-pronged popsicle, so you can eat it twice.`)
-            return
-        }
+        if (queryItem) { response = buyItem(sender, queryItem, itemPrices[queryItem]) }
 
         talk(channel, response)
     }
@@ -2174,6 +2273,238 @@ function printLogo() {
     //          [  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][ 8 ]
 }
 
+function buyItem(user, str, price) {
+    const player = players[user.toLowerCase()]
+
+    const itemLvThreshold = {
+        // Consumable items
+        "monster candy": 1,
+        "spider donut": 1,
+        "spider cider": 1,
+        "snowman piece": 2,
+        "nice cream": 2,
+        "bisicle": 2,
+        "cinnamon bunny": 2,
+        "crab apple": 3,
+        "sea tea": 3,
+        "temmie flakes": 3,
+        "hot dog": 4,
+        "hot cat": 4,
+        "junk food": 5,
+        "starfait": 5,
+        "glamburger": 5,
+        "legendary hero": 5,
+        "steak in the shape of mettaton's face": 5,
+        "popato chisps": 6,
+
+        // Weapons
+        "toy knife": 1,
+        "tough glove": 2,
+        "ballet shoes": 2,
+        "torn notebook": 3,
+        "burnt pan": 4,
+        "empty gun": 5,
+        "worn dagger": 6,
+        "real knife": 7,
+
+        // Armor
+        "faded ribbon": 1,
+        "manly bandanna": 2,
+        "old tutu": 2,
+        "cloudy glasses": 3,
+        "temmie armor": 3,
+        "stained apron": 4,
+        "cowboy hat": 5,
+        "heart locket": 6,
+        "the locket": 7
+    }
+
+    if (player[`lv`] < itemLvThreshold[str]) {
+        return `${user}, that item isn't available to you! :(`
+    }
+
+    if (player[`gold`] < price) {
+        return `${user}, you can't afford this item! :(`
+    }
+
+    if (str === `monster candy`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Monster Candy`)
+        return `* ${user} bought the Monster Candy!`
+    }
+    if (str === `spider donut`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Spider Donut`)
+        return `* ${user} bought the Spider Donut!`
+    }
+    if (str === `spider cider`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Spider Cider`)
+        return `* ${user} bought the Spider Cider!`
+    }
+    if (str === `toy knife`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Toy Knife`)
+        return `* ${user} bought the Toy Knife!`
+    }
+    if (str === `faded ribbon`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Faded Ribbon`)
+        return `* ${user} bought the Faded Ribbon!`
+    }
+    if (str === `snowman piece`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Snowman Piece`)
+        return `* ${user} bought the Snowman Piece!`
+    }
+    if (str === `nice cream`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Nice Cream`)
+        return `* ${user} bought the Nice Cream!`
+    }
+    if (str === `bisicle`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Bisicle`)
+        return `* ${user} bought the Bisicle!`
+    }
+    if (str === `cinnamon bunny`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Cinnamon Bunny`)
+        return `* ${user} bought the Cinnamon Bunny!`
+    }
+    if (str === `tough glove`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Tough Glove`)
+        return `* ${user} bought the Tough Glove!`
+    }
+    if (str === `ballet shoes`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Ballet Shoes`)
+        return `* ${user} bought the Ballet Shoes!`
+    }
+    if (str === `manly bandanna`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Manly Bandanna`)
+        return `* ${user} bought the Manly Bandanna!`
+    }
+    if (str === `old tutu`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Old Tutu`)
+        return `* ${user} bought the Old Tutu!`
+    }
+    if (str === `crab apple`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Crab Apple`)
+        return `* ${user} bought the Crab Apple!`
+    }
+    if (str === `sea tea`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Sea Tea`)
+        return `* ${user} bought the Sea Tea!`
+    }
+    if (str === `temmie flakes`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Temmie Flakes`)
+        return `* ${user} bought the Temmie Flakes!`
+    }
+    if (str === `torn notebook`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Torn Notebook`)
+        return `* ${user} bought the Torn Notebook!`
+    }
+    if (str === `cloudy glasses`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Cloudy Glasses`)
+        return `* ${user} bought the Cloudy Glasses!`
+    }
+    if (str === `temmie armor`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Temmie Armor`)
+        return `* ${user} bought the Temmie Armor!`
+    }
+    if (str === `hot dog`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Hot Dog...?`)
+        return `* ${user} bought the Hot Dog...?!`
+    }
+    if (str === `hot cat`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Hot Cat`)
+        return `* ${user} bought the Hot Cat!`
+    }
+    if (str === `burnt pan`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Burnt Pan`)
+        return `* ${user} bought the Burnt Pan!`
+    }
+    if (str === `stained apron`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Stained Apron`)
+        return `* ${user} bought the Stained Apron!`
+    }
+    if (str === `junk food`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Junk Food`)
+        return `* ${user} bought the Junk Food!`
+    }
+    if (str === `starfait`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Starfait`)
+        return `* ${user} bought the Starfait!`
+    }
+    if (str === `glamburger`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Glamburger`)
+        return `* ${user} bought the Glamburger!`
+    }
+    if (str === `legendary hero`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Legendary Hero`)
+        return `* ${user} bought the Legendary Hero!`
+    }
+    if (str === `steak in the shape of mettaton's face`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Steak in the Shape of Mettaton's Face`)
+        return `* ${user} bought the Steak in the Shape of Mettaton's Face!`
+    }
+    if (str === `empty gun`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Empty Gun`)
+        return `* ${user} bought the Empty Gun!`
+    }
+    if (str === `cowboy hat`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Cowboy Hat`)
+        return `* ${user} bought the Cowboy Hat!`
+    }
+    if (str === `popato chisps`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Popato Chisps`)
+        return `* ${user} bought the Popato Chisps!`
+    }
+    if (str === `worn dagger`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Worn Dagger`)
+        return `* ${user} bought the Worn Dagger!`
+    }
+    if (str === `heart locket`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Heart Locket`)
+        return `* ${user} bought the Heart Locket!`
+    }
+    if (str === `real knife`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`Real Knife`)
+        return `* ${user} bought the Real Knife!`
+    }
+    if (str === `the locket`) {
+        player[`gold`] -= price
+        player[`inventory`].push(`The Locket`)
+        return `* ${user} bought the The Locket!`
+    }
+    return `If you are reading this, I messed up somehow.`
+}
+
 function useItem(user, str, idx) {
     const consumableItems = {
         "bandage": 10,
@@ -2950,49 +3281,4 @@ function onConnectedHandler(addr, port) {
     console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state ${resetTxt}`)
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file ${resetTxt}`)
     client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
-}
-
-// Item prices
-const itemPrices = {
-    "Monster Candy": 0, // Four of a kind
-    "Spider Donut": 7,
-    "Spider Cider": 18,
-    "Snowman Piece": 0, // Two of a kind
-    "Nice Cream": 15, // 25G later
-    "Bisicle": 15, // 30, 45, 70G later
-    "Cinnamon Bunny": 25,
-    "Crab Apple": 25,
-    "Sea Tea": 18,
-    "Temmie Flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
-    "Hot Dog...?": 30,
-    "Hot Cat": 30,
-    "Junk Food": 25,
-    "Starfait": 60,
-    "Glamburger": 120,
-    "Legendary Hero": 300,
-    "Steak in the Shape of Mettaton's Face": 500,
-    "Popato Chisps": 25
-}
-
-const weaponPrices = {
-    "Toy Knife": 0,
-    "Tough Glove": 50,
-    "Ballet Shoes": 0,
-    "Torn Notebook": 55,
-    "Burnt Pan": 0,
-    "Empty Gun": 350,
-    "Worn Dagger": 0,
-    "Real Knife": 0
-}
-
-const armorPrices = {
-    "Faded Ribbon": 0,
-    "Manly Bandanna": 50,
-    "Old Tutu": 0,
-    "Cloudy Glasses": 35,
-    "Temmie Armor": 750,
-    "Stained Apron": 0,
-    "Cowboy Hat": 350,
-    "Heart Locket": 0,
-    "The Locket": 0
 }

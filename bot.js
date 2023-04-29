@@ -3053,8 +3053,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Stick`
         const stickText = [
-            `threw the Stick away. Then picked it back up.`,
-            `equipped the Stick. Its bark is worse than its bite.`
+            `* ${user} threw the Stick away. Then picked it back up.`,
+            `* ${user} equipped the Stick. Its bark is worse than its bite.`
         ]
         const randIdx = Math.floor(Math.random() * stickText.length)
         console.log(`${cyanBg} ${user} equipped the Stick, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3065,8 +3065,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Toy Knife`
         const toyKnifeText = [
-            `equipped the Toy Knife. +3 ATTACK`,
-            `equipped the Toy Knife. Made of plastic. A rarity nowadays.`
+            `* ${user} equipped the Toy Knife. +3 ATTACK`,
+            `* ${user} equipped the Toy Knife. Made of plastic. A rarity nowadays. +3 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * toyKnifeText.length)
         console.log(`${cyanBg} ${user} equipped the Toy Knife, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3077,8 +3077,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Tough Glove`
         const toughGloveText = [
-            `equipped the Tough Glove. +5 ATTACK`,
-            `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`
+            `* ${user} equipped the Tough Glove. +5 ATTACK`,
+            `* ${user} equipped the Tough Glove. A worn pink leather glove. For five-fingered folk. +5 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * toughGloveText.length)
         console.log(`${cyanBg} ${user} equipped the Tough Glove, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3089,8 +3089,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Ballet Shoes`
         const balletShoesText = [
-            `equipped the Ballet Shoes. +7 ATTACK`,
-            `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`
+            `* ${user} equipped the Ballet Shoes. +7 ATTACK`,
+            `* ${user} equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous. +7 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * balletShoesText.length)
         console.log(`${cyanBg} ${user} equipped the Ballet Shoes, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3100,21 +3100,16 @@ function useItem(user, str, idx) {
         player[`inventory`].splice(idx, 1)
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Torn Notebook`
-        const tornNotebookText = [
-            `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-            `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`
-        ]
-        const randIdx = Math.floor(Math.random() * tornNotebookText.length)
         console.log(`${cyanBg} ${user} equipped the Torn Notebook, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
-        return tornNotebookText[randIdx]
+        return `* ${user} equipped the Torn Notebook. +2 ATTACK`
     }
     if (str === `burnt pan`) {
         player[`inventory`].splice(idx, 1)
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Burnt Pan`
         const burntPanText = [
-            `equipped the Burnt Pan. +10 ATTACK`,
-            `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`
+            `* ${user} equipped the Burnt Pan. +10 ATTACK`,
+            `* ${user} equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP. +10 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * burntPanText.length)
         console.log(`${cyanBg} ${user} equipped the Burnt Pan, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3125,8 +3120,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Empty Gun`
         const emptyGunText = [
-            `equipped the Empty Gun. +12 ATTACK`,
-            `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`
+            `* ${user} equipped the Empty Gun. +12 ATTACK`,
+            `* ${user} equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low. +12 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * emptyGunText.length)
         console.log(`${cyanBg} ${user} equipped the Empty Gun, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3137,8 +3132,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Worn Dagger`
         const wornDaggerText = [
-            `equipped the Worn Dagger. +15 ATTACK`,
-            `equipped the Worn Dagger. Perfect for cutting plants and vines.`
+            `* ${user} equipped the Worn Dagger. +15 ATTACK`,
+            `* ${user} equipped the Worn Dagger. Perfect for cutting plants and vines. +15 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * wornDaggerText.length)
         console.log(`${cyanBg} ${user} equipped the Worn Dagger, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3148,12 +3143,8 @@ function useItem(user, str, idx) {
         player[`inventory`].splice(idx, 1)
         player[`inventory`].push(player[`weapon`])
         player[`weapon`] = `Real Knife`
-        const realKnifeText = [
-            `equipped the Real Knife. About time. +99 ATTACK`
-        ]
-        const randIdx = Math.floor(Math.random() * realKnifeText.length)
         console.log(`${cyanBg} ${user} equipped the Real Knife, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
-        return realKnifeText[randIdx]
+        return `* ${user} equipped the Real Knife. About time. +99 ATTACK`
     }
 
     // Armor
@@ -3162,8 +3153,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Faded Ribbon`
         const fadedRibbonText = [
-            `equipped the Faded Ribbon. +5 DEFENSE`,
-            `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`
+            `* ${user} equipped the Faded Ribbon. +5 DEFENSE`,
+            `* ${user} equipped the Faded Ribbon. If you're cuter, they won't hit you as hard. +5 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * fadedRibbonText.length)
         console.log(`${cyanBg} ${user} equipped the Faded Ribbon, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3174,8 +3165,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Manly Bandanna`
         const manlyBandannaText = [
-            `equipped the Manly Bandanna. +7 DEFENSE`,
-            `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`
+            `* ${user} equipped the Manly Bandanna. +7 DEFENSE`,
+            `* ${user} equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it. +7 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * manlyBandannaText.length)
         console.log(`${cyanBg} ${user} equipped the Manly Bandanna, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3186,8 +3177,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Old Tutu`
         const oldTutuText = [
-            `equipped the Old Tutu. +10 DEFENSE`,
-            `equipped the Old Tutu. Finally, a protective piece of armor.`
+            `* ${user} equipped the Old Tutu. +10 DEFENSE`,
+            `* ${user} equipped the Old Tutu. Finally, a protective piece of armor. +10 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * oldTutuText.length)
         console.log(`${cyanBg} ${user} equipped the Old Tutu, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3198,8 +3189,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Cloudy Glasses`
         const cloudyGlassesText = [
-            `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-            `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`
+            `* ${user} equipped the Cloudy Glasses. +5 DEFENSE`,
+            `* ${user} equipped the Cloudy Glasses. Glasses marred with wear. +5 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * cloudyGlassesText.length)
         console.log(`${cyanBg} ${user} equipped the Cloudy Glasses, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3210,8 +3201,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Temmie Armor`
         const temmieArmorText = [
-            `donned the Temmie Armor. The things you can do with a college education!`,
-            `donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`
+            `* ${user} donned the Temmie Armor. The things you can do with a college education!`,
+            `* ${user} donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`
         ]
         const randIdx = Math.floor(Math.random() * temmieArmorText.length)
         console.log(`${cyanBg} ${user} equipped the Temmie Armor, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3222,8 +3213,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Stained Apron`
         const stainedApronText = [
-            `equipped the Stained Apron. +11 DEFENSE`,
-            `equipped the Stained Apron. Heals 1 HP every other turn.`
+            `* ${user} equipped the Stained Apron. +11 DEFENSE`,
+            `* ${user} equipped the Stained Apron. Heals 1 HP every other turn.`
         ]
         const randIdx = Math.floor(Math.random() * stainedApronText.length)
         console.log(`${cyanBg} ${user} equipped the Stained Apron, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3234,9 +3225,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Cowboy Hat`
         const cowboyHatText = [
-            `equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
-            `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
-            `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`
+            `* ${user} equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+            `* ${user} equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. +5 ATTACK +12 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * cowboyHatText.length)
         console.log(`${cyanBg} ${user} equipped the Cowboy Hat, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3247,8 +3237,8 @@ function useItem(user, str, idx) {
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `Heart Locket`
         const heartLocketText = [
-            `equipped the Heart Locket. +15 DEFENSE`,
-            `equipped the Heart Locket. It says "Best Friends Forever."`
+            `* ${user} equipped the Heart Locket. +15 DEFENSE`,
+            `* ${user} equipped the Heart Locket. It says "Best Friends Forever." +15 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * heartLocketText.length)
         console.log(`${cyanBg} ${user} equipped the Heart Locket, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
@@ -3258,12 +3248,8 @@ function useItem(user, str, idx) {
         player[`inventory`].splice(idx, 1)
         player[`inventory`].push(player[`armor`])
         player[`armor`] = `The Locket`
-        const theLocketText = [
-            `equipped the Locket. Right where it belongs.`
-        ]
-        const randIdx = Math.floor(Math.random() * theLocketText.length)
         console.log(`${cyanBg} ${user} equipped the Locket, HP: ${player[`hp`]}/${getUserMaxHP(user)} ${resetTxt}`)
-        return theLocketText[randIdx]
+        return `* ${user} equipped the Locket. Right where it belongs. +99 DEFENSE`
     }
     return `* ${user} used 0. If you are reading this, I messed up somehow.`
 }

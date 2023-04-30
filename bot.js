@@ -150,7 +150,7 @@ function onMessageHandler(channel, tags, msg, self) {
             armor: `Bandage`,
             gold: 0,
             stainedApronHealTime: false,
-            inventory: []
+            inventory: [`Monster Candy`]
         }
         playerSave[`${sender.toLowerCase()}`] = {
             lv: 1,
@@ -164,7 +164,7 @@ function onMessageHandler(channel, tags, msg, self) {
             armor: `Bandage`,
             gold: 0,
             stainedApronHealTime: false,
-            inventory: []
+            inventory: [`Monster Candy`]
         }
     }
     const sendingPlayer = players[sender.toLowerCase()]
@@ -319,7 +319,8 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // FIGHT
-    if (command === `!fight`) {
+    if (command === `!fight`
+        || command === `!attack`) {
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -459,7 +460,9 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // ITEM
-    if (command === `!item` || command === `!items`) {
+    if (command === `!item`
+        || command === `!items`
+        || command === `!use`) {
         const inventory = sendingPlayer[`inventory`]
         console.log(`Inventory:`, inventory)
 
@@ -637,7 +640,8 @@ function onMessageHandler(channel, tags, msg, self) {
     // }
 
     // MERCY
-    if (command === `!mercy`) {
+    if (command === `!mercy`
+        || command === `!spare`) {
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -723,7 +727,9 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // Buy item (!buy !shop !get ???)
-    if (command === `!get`) {
+    if (command === `!get`
+        || command === `!buy`
+        || command === `!shop`) {
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -760,7 +766,7 @@ function onMessageHandler(channel, tags, msg, self) {
             "empty gun": 350,
             "worn dagger": 0,
             "real knife": 0,
-            
+
             // Armor
             "faded ribbon": 0,
             "manly bandanna": 50,
@@ -851,13 +857,13 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response = `${sender} can buy: `
-        if (sendingPlayer[`lv`] >= 1) { response += `Monster Candy (${itemPrices[`monster candy`]}G), Spider Donut (${itemPrices[`spider donut`]}G), Spider Cider (${itemPrices[`spider cider`]}G), Toy Knife (${itemPrices[`toy knife`]}G), Faded Ribbon (${itemPrices[`faded ribbon`]}G)` }
-        if (sendingPlayer[`lv`] >= 2) { response += `, Snowman Piece (${itemPrices[`snowman piece`]}G), Nice Cream (${itemPrices[`nice cream`]}G), Bisicle (${itemPrices[`bisicle`]}G), Cinnamon Bunny (${itemPrices[`cinnamon bunny`]}G), Tough Glove (${itemPrices[`tough glove`]}G), Ballet Shoes (${itemPrices[`ballet shoes`]}G), Manly Bandanna (${itemPrices[`manly bandanna`]}G), Old Tutu (${itemPrices[`old tutu`]}G)` }
-        if (sendingPlayer[`lv`] >= 3) { response += `, Crab Apple (${itemPrices[`crab apple`]}G), Sea Tea (${itemPrices[`sea tea`]}G), Temmie Flakes (${itemPrices[`temmie flakes`]}G), Torn Notebook (${itemPrices[`torn notebook`]}G), Cloudy Glasses (${itemPrices[`cloudy glasses`]}G), Temmie Armor (${itemPrices[`temmie armor`]}G)` }
-        if (sendingPlayer[`lv`] >= 4) { response += `, Hot Dog...? (${itemPrices[`hot dog`]}G), Hot Cat (${itemPrices[`hot cat`]}G), Burnt Pan (${itemPrices[`burnt pan`]}G), Stained Apron (${itemPrices[`stained apron`]}G)` }
-        if (sendingPlayer[`lv`] >= 5) { response += `, Junk Food (${itemPrices[`junk food`]}G), Starfait (${itemPrices[`starfait`]}G), Glamburger (${itemPrices[`glamburger`]}G), Legendary Hero (${itemPrices[`legendary hero`]}G), Steak in the Shape of Mettaton's Face (${itemPrices[`steak in the shape of mettaton's face`]}G), Empty Gun (${itemPrices[`empty gun`]}G), Cowboy Hat (${itemPrices[`cowboy hat`]}G)` }
-        if (sendingPlayer[`lv`] >= 6) { response += `, Popato Chisps (${itemPrices[`popato chisps`]}G), Worn Dagger (${itemPrices[`worn dagger`]}G), Heart Locket (${itemPrices[`heart locket`]}G)` }
-        if (sendingPlayer[`lv`] >= 7) { response += `, Real Knife (${itemPrices[`real knife`]}G), The Locket (${itemPrices[`the locket`]}G)` }
+        if (sendingPlayer[`lv`] >= 1) { response += `Monster Candy, Spider Donut, Spider Cider, Toy Knife, Faded Ribbon` }
+        if (sendingPlayer[`lv`] >= 2) { response += `, Snowman Piece, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Ballet Shoes, Manly Bandanna, Old Tutu` }
+        if (sendingPlayer[`lv`] >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses, Temmie Armor` }
+        if (sendingPlayer[`lv`] >= 4) { response += `, Hot Dog...?, Hot Cat, Burnt Pan, Stained Apron` }
+        if (sendingPlayer[`lv`] >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
+        if (sendingPlayer[`lv`] >= 6) { response += `, Popato Chisps, Worn Dagger, Heart Locket` }
+        if (sendingPlayer[`lv`] >= 7) { response += `, Real Knife, The Locket` }
 
         if (queryItem) { response = buyItem(sender, queryItem, itemPrices[queryItem]) }
 
@@ -865,7 +871,8 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // UNDERTALE/LOGO
-    if (command === `!undertale` || command === `!logo`) { printLogo() }
+    if (command === `!undertale`
+        || command === `!logo`) { printLogo() }
 
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
@@ -1330,780 +1337,12 @@ function getAction(user, target) {
     return actions[randAction]
 }
 
-function fetchItemText(user) {
-    const itemText = [
-        `* ${user} re-applied a used Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
-        `* ${user} re-applied a gross Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
-        `* ${user} re-applied their old, used Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
-        `* ${user} re-applied a dirty Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
-        `* ${user} re-applied a well-used Bandage. Still kind of gooey. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. Very un-licorice-like. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
-        `* ${user} ate a Monster Candy. ...tastes like licorice. ${user} recovered 10 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. ${user} recovered 12 HP!`,
-        `* ${user} ate a Spider Donut. Made with Spider Cider in the batter. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. ${user} recovered 24 HP!`,
-        `* ${user} drank a Spider Cider. Made with whole spiders, not just the juice. ${user} recovered 24 HP!`,
-        `* ${user} ate the Butterscotch-Cinnamon Pie. ${user}'s HP was maxed out.`,
-        `* ${user} ate the Snail Pie. ${user}'s HP was maxed out.`,
-        `* ${user} ate the Snail Pie. It's an acquired taste. ${user}'s HP was maxed out.`,
-        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
-        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
-        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
-        `* ${user} ate a Snowman Piece. ${user} recovered 45 HP!`,
-        `* ${user} ate a Snowman Piece in front of the Snowman it came from. ${user} recovered 45 HP!`,
-        `* ${user} ate a Nice Cream. You're super spiffy! ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. Are those claws natural? ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. Love yourself! I love you! ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. You look nice today! ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. (An illustration of a hug) ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. Have a wonderful day! ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. Is this as sweet as you? ${user} recovered 15 HP!`,
-        `* ${user} ate a Nice Cream. You're just great! ${user} recovered 15 HP!`,
-        `* ${user} ate a Bisicle. ${user} recovered 11 HP!`,
-        `* ${user} ate a Bisicle. ${user} recovered 11 HP!`,
-        `* ${user} ate a Bisicle. It's a two-pronged popsicle, so you can eat it twice. ${user} recovered 11 HP!`,
-        `* ${user} ate both halves of a Bisicle. ${user} recovered 22 HP!`,
-        `* ${user} ate one half of a Bisicle. ${user} recovered 11 HP!`,
-        `* ${user} ate a Unisicle. ${user} recovered 11 HP!`,
-        `* ${user} ate a Unisicle. ${user} recovered 11 HP!`,
-        `* ${user} ate a Unisicle. It's a SINGLE-pronged popsicle. Wait, that's just normal... ${user} recovered 11 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate a Cinnamon Bunny. A cinnamon roll in a shape of a bunny. ${user} recovered 22 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. ${user} recovered 21 HP!`,
-        `* ${user} ate some Astronaut Food. It's for a pet astronaut? ${user} recovered 21 HP!`,
-        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. An aquatic fruit that resembles a crustacean. ${user} recovered 18 HP!`,
-        `* ${user} ate a Crab Apple. An aquatic fruit that resembles a crustacean. ${user} recovered 18 HP!`,
-        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
-        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
-        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
-        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
-        `* ${user} drank a Sea Tea. Their SPEED boosts! ${user} recovered 10 HP!`,
-        `* ${user} drank a Sea Tea. Made from glowing marsh water. Increases SPEED for one battle. ${user} recovered 10 HP!`,
-        `* ${user} drank a Sea Tea. Made from glowing marsh water. Increases SPEED for one battle. ${user} recovered 10 HP!`,
-        `* ${user} ate the Abandoned Quiche. ${user} recovered 34 HP!`,
-        `* ${user} ate the Abandoned Quiche. ${user} recovered 34 HP!`,
-        `* ${user} ate the Abandoned Quiche. ${user} recovered 34 HP!`,
-        `* ${user} ate the quiche they found under a bench. ${user} recovered 34 HP!`,
-        `* ${user} ate a psychologically-damaged spinach egg pie. ${user} recovered 34 HP!`,
-        `* ${user} ate some Temmie Flakes (cheap). hOI! ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (cheap). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (normal). hOI!!! i'm tEMMIE!! ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (normal). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (expensiv). WOA!! u gota... tem flakes!!! ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (expensiv). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (premiem). FOOB!!! ${user} recovered 2 HP!`,
-        `* ${user} ate some Temmie Flakes (premiem). It's just torn up pieces of colored construction paper. ${user} recovered 2 HP!`,
-        `* ${user} ate Dog Salad. Oh. There are bones... ${user} recovered 2 HP!`,
-        `* ${user} ate Dog Salad. Oh. There are bones... ${user} recovered 2 HP!`,
-        `* ${user} ate Dog Salad. Oh. Fried tennis ball... ${user} recovered 10 HP!`,
-        `* ${user} ate Dog Salad. Oh. Fried tennis ball... ${user} recovered 10 HP!`,
-        `* ${user} ate Dog Salad. Oh. Tastes yappy... ${user} recovered 30 HP!`,
-        `* ${user} ate Dog Salad. Oh. Tastes yappy... ${user} recovered 30 HP!`,
-        `* ${user} ate Dog Salad. It's literally garbage??? ${user}'s HP was maxed out.`,
-        `* ${user} ate Dog Salad. It's literally garbage??? ${user}'s HP was maxed out.`,
-        `* ${user} ate Instant Noodles. They're better dry. ${user} recovered 90 HP!`,
-        `* ${user} ate Instant Noodles. They're better dry. ${user} recovered 90 HP!`,
-        `* ${user} cooked the Instant Noodles. Comes with everything you need for a quick meal! ${user} recovered 15 HP!`,
-        `* ${user} cooked the Instant Noodles. Comes with everything you need for a quick meal! ${user} recovered 15 HP!`,
-        `* ${user} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better. ${user} recovered 4 HP!`,
-        `* ${user} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better. ${user} recovered 4 HP!`,
-        `* ${user} ate a Hot Dog...? (Bark!) ${user} recovered 20 HP!`,
-        `* ${user} ate a Hot Dog...? (Bark!) ${user} recovered 20 HP!`,
-        `* ${user} ate a Hot Dog...? The "meat" is made of something called a "water sausage." ${user} recovered 20 HP!`,
-        `* ${user} ate a Hot Cat. (Meow!) ${user} recovered 21 HP!`,
-        `* ${user} ate a Hot Cat. (Meow!) ${user} recovered 21 HP!`,
-        `* ${user} ate a Hot Cat. Like a hot dog, but with little cat ears on the end. ${user} recovered 21 HP!`,
-        `* ${user} used Junk Food. ${user} recovered 17 HP!`,
-        `* ${user} used Junk Food. ${user} recovered 17 HP!`,
-        `* ${user} used Junk Food. ${user} recovered 17 HP!`,
-        `* ${user} used Junk Food. Food that was probably once thrown away. ${user} recovered 17 HP!`,
-        `* ${user} used Junk Food. (Eating garbage?!) ${user} recovered 17 HP!`,
-        `* ${user} used Junk Food. (Eating garbage?!) ${user} recovered 17 HP!`,
-        `* ${user} used Junk Food. (Eating garbage?!) ${user} recovered 17 HP!`,
-        `* ${user} ate a Hush Puppy. Dog-magic is neutralized. ${user} recovered 65 HP!`,
-        `* ${user} ate a Hush Puppy. Dog-magic is neutralized. ${user} recovered 65 HP!`,
-        `* ${user} ate a Hush Puppy. Dog-magic is neutralized. ${user} recovered 65 HP!`,
-        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
-        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
-        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
-        `* ${user} ate a Starfait. ${user} recovered 14 HP!`,
-        `* ${user} ate a Starfait. A sweet treat made of sparkling stars. ${user} recovered 14 HP!`,
-        `* ${user} ate a Starfait. Viewer ratings go up by 200 points! ${user} recovered 14 HP!`,
-        `* ${user} ate a Starfait. Viewer ratings go up by 200 points! ${user} recovered 14 HP!`,
-        `* ${user} ate a Glamburger. ${user} recovered 27 HP!`,
-        `* ${user} ate a Glamburger. ${user} recovered 27 HP!`,
-        `* ${user} ate a Glamburger. ${user} recovered 27 HP!`,
-        `* ${user} ate the Glamburger. Made of edible glitter and sequins. ${user} recovered 27 HP!`,
-        `* ${user} ate the Glamburger. Made of edible glitter and sequins. ${user} recovered 27 HP!`,
-        `* ${user} ate a Glamburger. The audience loves the brand. Viewer ratings go up by 300 points! ${user} recovered 27 HP!`,
-        `* ${user} ate a Glamburger. The audience loves the brand. Viewer ratings go up by 300 points! ${user} recovered 27 HP!`,
-        `* ${user} ate a Legendary Hero. ${user} recovered 40 HP!`,
-        `* ${user} ate a Legendary Hero. ${user} recovered 40 HP!`,
-        `* ${user} ate a Legendary Hero. ${user} recovered 40 HP!`,
-        `* ${user} ate the Legendary Hero. Sandwich shaped like a sword. Increases ATTACK when eaten. ${user} recovered 40 HP!`,
-        `* ${user} ate the Legendary Hero. Sandwich shaped like a sword. Increases ATTACK when eaten. ${user} recovered 40 HP!`,
-        `* ${user} ate a Legendary Hero. Viewer ratings go up by 500 points! ${user} recovered 40 HP!`,
-        `* ${user} ate a Legendary Hero. Viewer ratings go up by 500 points! ${user} recovered 40 HP!`,
-        `* ${user} ate the Steak in the Shape of Mettaton's Face. They feel like it's not made of real meat... ${user} recovered 60 HP!`,
-        `* ${user} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts. ${user} recovered 60 HP!`,
-        `* ${user} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts. Viewer ratings go up by 700 points! ${user} recovered 60 HP!`,
-        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
-        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
-        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
-        `* ${user} ate some Popato Chisps. ${user} recovered 13 HP!`,
-        `* ${user} ate some Popato Chisps. Regular old popato chisps. ${user} recovered 13 HP!`,
-        `* ${user} used Last Dream. Through DETERMINATION, the dream became true. ${user}'s HP was maxed out.`,
-        `* ${user} hit a Croquet Roll into their mouth. Fried dough traditionally served with a mallet. ${user} recovered 15 HP!`,
-        `* ${user} ate Rock Candy. It's a rock. ${user} recovered 1 HP!`,
-        `* ${user} ate Pumpkin Rings. A small pumpkin cooked like onion rings. ${user} recovered 8 HP!`,
-        `* ${user} ate a Stoic Onion. They didn't cry... ${user} recovered 5 HP!`,
-        `* ${user} ate a Ghost Fruit. It will never pass to the other side. ${user} recovered 16 HP!`,
-        `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies. ${user} recovered 28 HP!`,
-        `* Papyrus gives ${user} some of his oak-aged spaghetti. ${user} takes a small bite. Their face reflexively scrunches up. The taste is indescribable... Papyrus is flattered!`
-    ]
-
-    const randItem = Math.floor(Math.random() * itemText.length)
-    let userHealAmt = 0
-
-    if (randItem >= 0 && randItem <= 12) { userHealAmt = 10 }
-    if (randItem >= 13 && randItem <= 20) { userHealAmt = 12 }
-    if (randItem >= 21 && randItem <= 28) { userHealAmt = 24 }
-    if (randItem >= 29 && randItem <= 31) { userHealAmt = getUserMaxHP(user) }
-    if (randItem >= 32 && randItem <= 36) { userHealAmt = 45 }
-    if (randItem >= 37 && randItem <= 44) { userHealAmt = 15 }
-    if (randItem >= 45 && randItem <= 47) { userHealAmt = 11 }
-    if (randItem === 48) { userHealAmt = 22 }
-    if (randItem >= 49 && randItem <= 52) { userHealAmt = 11 }
-    if (randItem >= 53 && randItem <= 60) { userHealAmt = 22 }
-    if (randItem >= 61 && randItem <= 68) { userHealAmt = 21 }
-    if (randItem >= 69 && randItem <= 76) { userHealAmt = 18 }
-    if (randItem >= 77 && randItem <= 83) { userHealAmt = 10 }
-    if (randItem >= 84 && randItem <= 88) { userHealAmt = 34 }
-    if (randItem >= 89 && randItem <= 98) { userHealAmt = 2 }
-    if (randItem >= 99 && randItem <= 100) { userHealAmt = 10 }
-    if (randItem >= 101 && randItem <= 102) { userHealAmt = 30 }
-    if (randItem >= 103 && randItem <= 104) { userHealAmt = getUserMaxHP(user) }
-    if (randItem >= 105 && randItem <= 106) { userHealAmt = 90 }
-    if (randItem >= 107 && randItem <= 108) { userHealAmt = 15 }
-    if (randItem >= 109 && randItem <= 110) { userHealAmt = 4 }
-    if (randItem >= 111 && randItem <= 113) { userHealAmt = 20 }
-    if (randItem >= 114 && randItem <= 116) { userHealAmt = 21 }
-    if (randItem >= 117 && randItem <= 123) { userHealAmt = 17 }
-    if (randItem >= 124 && randItem <= 126) { userHealAmt = 65 }
-    if (randItem >= 127 && randItem <= 133) { userHealAmt = 14 }
-    if (randItem >= 134 && randItem <= 140) { userHealAmt = 27 }
-    if (randItem >= 141 && randItem <= 147) { userHealAmt = 40 }
-    if (randItem >= 148 && randItem <= 150) { userHealAmt = 60 }
-    if (randItem >= 151 && randItem <= 155) { userHealAmt = 13 }
-    if (randItem === 156) { userHealAmt = getUserMaxHP(user) }
-    if (randItem === 157) { userHealAmt = 15 }
-    if (randItem === 158) { userHealAmt = 1 }
-    if (randItem === 159) { userHealAmt = 8 }
-    if (randItem === 160) { userHealAmt = 5 }
-    if (randItem === 161) { userHealAmt = 16 }
-    if (randItem === 162) { userHealAmt = 28 }
-    // if (randItem === 163) { userHealAmt = 0 }
-
-    // Burnt Pan weapon check
-    if (players[user.toLowerCase()][`weapon`] === `Burnt Pan`) { userHealAmt += 4 }
-
-    const chosenUser = players[user.toLowerCase()]
-    console.log(`${grayBg} randItem: ${randItem} ${resetTxt} ${cyanBg} ${user} HP: ${chosenUser[`hp`]}/${getUserMaxHP(user)}, healing: ${userHealAmt} ${resetTxt}`)
-
-    chosenUser[`hp`] += userHealAmt
-    if (chosenUser[`hp`] > getUserMaxHP(user)) { chosenUser[`hp`] = getUserMaxHP(user) }
-
-    return itemText[randItem]
-}
-
-function fetchGivenItemText(user, target) {
-    const givenItemText = [
-        `* ${user} re-applies an old Bandage onto ${target}. Still kind of gooey. ${target} recovered 10 HP!`,
-        `* ${user} re-applies a used Bandage onto ${target}. Still kind of gooey. ${target} recovered 10 HP!`,
-        `* ${user} re-applies an old, used Bandage onto ${target}. Still kind of gooey. ${target} recovered 10 HP!`,
-        `* ${user} re-applies a gross Bandage onto ${target}. Still kind of gooey. ${target} recovered 10 HP!`,
-        `* ${user} rips off their old Bandage and sticks it onto ${target}. Still kind of gooey. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Monster Candy, and they eat it. Very un-licorice-like. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Monster Candy, and they eat it. Very un-licorice-like. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} some Monster Candy, and they eat it. Very un-licorice-like. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} some Monster Candy, and they eat it. Very un-licorice-like. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Monster Candy, and they eat it. ...tastes like licorice. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Monster Candy, and they eat it. ...tastes like licorice. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} some Monster Candy, and they eat it. ...tastes like licorice. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} some Monster Candy, and they eat it. ...tastes like licorice. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Spider Donut, and they eat it. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut, and they eat it. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut, and they eat it. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut, and they eat it in one bite. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut. They eat it. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut. They eat it. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut. They eat it with trepidation. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Donut. They eat it apprehensively. ${target} recovered 12 HP!`,
-        `* ${user} gives ${target} a Spider Cider, and they drink it. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider, and they drink it. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider, and they drink it. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider, and they drink it. Tastes like spiders. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider. They drink it. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider. They drink it. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider. They smell it before drinking it. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} a Spider Cider. They drink it hesitantly. ${target} recovered 24 HP!`,
-        `* ${user} gives ${target} the Butterscotch-Cinnamon Pie. They eat it. ${target}'s HP was maxed out.`,
-        `* ${user} gives ${target} the Snail Pie. They eat it. ${target}'s HP was maxed out.`,
-        `* ${user} gives ${target} the Snail Pie, and they eat it. It's an acquired taste. ${target}'s HP was maxed out.`,
-        `* ${user} gives ${target} a Snowman Piece, and they eat it. ${target} recovered 45 HP!`,
-        `* ${user} gives ${target} a Snowman Piece, and they eat it. ${target} recovered 45 HP!`,
-        `* ${user} gives ${target} a Snowman Piece, and they eat it. ${target} recovered 45 HP!`,
-        `* ${user} gives ${target} a Snowman Piece, and they eat it. ${target} recovered 45 HP!`,
-        `* ${user} gives ${target} a Snowman Piece, and they eat it in front of the Snowman it came from. ${target} recovered 45 HP!`,
-        `* ${user} gives ${target} a Nice Cream. You're super spiffy! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. Are those claws natural? ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. Love yourself! I love you! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. You look nice today! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. (An illustration of a hug) ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. Have a wonderful day! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. Is this as sweet as you? ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Nice Cream. You're just great! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} a Bisicle, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Bisicle, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Bisicle. They eat half of it. ${target} recovered 11 HP!`,
-        `* ${user} gives ${target} a Bisicle, and they eat half of it. ${target} recovered 11 HP!`,
-        `* ${user} splits their Bisicle in half with ${target}. They both recovered 11 HP!`,
-        `* ${user} and ${target} each eat one half of a Bisicle. They both recovered 11 HP!`,
-        `* ${user} gives ${target} a Unisicle, and they eat it. ${target} recovered 11 HP!`,
-        `* ${user} gives ${target} a Unisicle, and they eat it. ${target} recovered 11 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a Cinnamon Bunny, and they eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} a cinnamon roll in a shape of a bunny. They eat it. ${target} recovered 22 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} some Astronaut Food, and they eat it. ${target} recovered 21 HP!`,
-        `* ${user} feeds ${target} the Astronaut Food. It's for a pet astronaut? ${target} recovered 21 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. It resembled a crustacean. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Crab Apple, and they eat it. It resembled a crustacean. ${target} recovered 18 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. Their SPEED boosts! ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. Their SPEED boosts! ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. Their SPEED boosts! ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. Their SPEED boosts! ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. ${target}'s SPEED increases. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. It's made from glowing marsh water. ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} a Sea Tea, and they drink it. It's made from glowing marsh water. ${target}'s SPEED increases, and they recovered 10 HP!`,
-        `* ${user} gives ${target} a Previously-Abandoned Quiche, and they eat it. ${target} recovered 34 HP!`,
-        `* ${user} gives ${target} a quiche they found abandoned underneath a bench. ${target} ate it and recovered 34 HP!`,
-        `* ${user} gives ${target} a quiche they found. ${target} doesn't ask where it came from, but eats it anyway. ${target} recovered 34 HP!`,
-        `* ${user} finds an Abandoned Quiche under a bench, and gives it to ${target}. They eat the psychologically-damaged spinach egg pie. ${target} recovered 34 HP!`,
-        `* ${user} gives ${target} the Abandoned Quiche, and they eat it. ${target} recovered 34 HP!`,
-        `* ${user} gives ${target} some cheap Temmie Flakes. hOI! ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some cheap Temmie Flakes. It's just torn up pieces of colored construction paper. ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some Temmie Flakes (normal). hOI!!! i'm tEMMIE!! ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some Temmie Flakes (normal). It's just torn up pieces of colored construction paper. ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some Temmie Flakes (expensiv). WOA!! u gota... tem flakes!!! ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some Temmie Flakes (expensiv). It's just torn up pieces of colored construction paper. ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some Temmie Flakes (premiem). FOOB!!! ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} some Temmie Flakes (premiem). It's just torn up pieces of colored construction paper. ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} Dog Salad. Oh. There are bones... ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} Dog Salad. Oh. There are bones... ${target} recovered 2 HP!`,
-        `* ${user} gives ${target} Dog Salad. Oh. Fried tennis ball... ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} Dog Salad. Oh. Fried tennis ball... ${target} recovered 10 HP!`,
-        `* ${user} gives ${target} Dog Salad. Oh. Tastes yappy... ${target} recovered 30 HP!`,
-        `* ${user} gives ${target} Dog Salad. Oh. Tastes yappy... ${target} recovered 30 HP!`,
-        `* ${user} gives ${target} Dog Salad. It's literally garbage??? ${target}'s HP was maxed out.`,
-        `* ${user} gives ${target} Dog Salad. It's literally garbage??? ${target}'s HP was maxed out.`,
-        `* ${user} gives ${target} some Instant Noodles. They're better dry. ${target} recovered 90 HP!`,
-        `* ${user} gives ${target} some Instant Noodles. They're better dry. ${target} recovered 90 HP!`,
-        `* ${user} gives ${target} the Instant Noodles. Comes with everything you need for a quick meal! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} the Instant Noodles. Comes with everything you need for a quick meal! ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} some Instant Noodles, which they spend four minutes cooking. ... they don't taste very good. ${target} adds the flavor packet. That's better. Not great, but better. ${target} recovered 4 HP!`,
-        `* ${user} gives ${target} some Instant Noodles, which they spend four minutes cooking. ... they don't taste very good. ${target} adds the flavor packet. That's better. Not great, but better. ${target} recovered 4 HP!`,
-        `* ${user} gives ${target} a Hot Dog...? (Bark!) ${target} recovered 20 HP!`,
-        `* ${user} gives ${target} a Hot Dog...? (Bark!) ${target} recovered 20 HP!`,
-        `* ${user} gives ${target} a Hot Dog...? The "meat" is made of something called a "water sausage." ${target} recovered 20 HP!`,
-        `* ${user} gives ${target} a Hot Cat. (Meow!) ${target} recovered 20 HP!`,
-        `* ${user} gives ${target} a Hot Cat. (Meow!) ${target} recovered 20 HP!`,
-        `* ${user} gives ${target} a Hot Cat. Like a hot dog, but with little cat ears on the end. ${target} recovered 20 HP!`,
-        `* ${user} gives ${target} some Junk Food. ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} Junk Food. Food that was probably once thrown away. ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} Junk Food. They eat it. ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} some Junk Food, and they eat it. ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} some Junk Food. (Eating garbage?!) ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} some Junk Food. (Eating garbage?!) ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} some Junk Food. (Eating garbage?!) ${target} recovered 17 HP!`,
-        `* ${user} gives ${target} a Hush Puppy. Dog-magic is neutralized. ${target} recovered 65 HP!`,
-        `* ${user} gives ${target} a Hush Puppy. They eat it. Dog-magic is neutralized. ${target} recovered 65 HP!`,
-        `* ${user} gives ${target} a Hush Puppy, and they eat it. Dog-magic is neutralized. ${target} recovered 65 HP!`,
-        `* ${user} gives ${target} a Starfait, and they eat it. ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Starfait, and they eat it. ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Starfait, and they eat it. ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Starfait, and they eat it. ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Starfait. A sweet treat made of sparkling stars. ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Starfait. Viewer ratings go up by 200 points! ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Starfait, and they eat it. Viewer ratings go up by 200 points! ${target} recovered 14 HP!`,
-        `* ${user} gives ${target} a Glamburger, and they eat it. ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Glamburger, and they eat it. ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Glamburger, and they eat it. ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Glamburger. It's made of edible glitter and sequins. ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Glamburger. It's made of edible glitter and sequins. ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Glamburger. It's made of edible glitter and sequins. ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Glamburger. The audience loves the brand. Viewer ratings go up by 300 points! ${target} recovered 27 HP!`,
-        `* ${user} gives ${target} a Legendary Hero, and they eat it. ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} a Legendary Hero, and they eat it. ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} a Legendary Hero, and they eat it. ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} the Legendary Hero, and they eat it. Sandwich shaped like a sword. ${target}'s ATTACK increased. ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} the Legendary Hero, and they eat it. Sandwich shaped like a sword. ${target}'s ATTACK increased. ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} a Legendary Hero, and they eat it. Viewer ratings go up by 500 points! ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} a Legendary Hero, and they eat it. Viewer ratings go up by 500 points! ${target} recovered 40 HP!`,
-        `* ${user} gives ${target} the Steak in the Shape of Mettaton's Face. ${target} doesn't feel like it's made of real meat... ${target} recovered 60 HP!`,
-        `* ${user} gives ${target} the Steak in the Shape of Mettaton's Face. The audience goes nuts. ${target} recovered 60 HP!`,
-        `* ${user} gives ${target} the Steak in the Shape of Mettaton's Face. Viewer ratings go up by 700 points! ${target} recovered 60 HP!`,
-        `* ${user} gives ${target} some Popato Chisps. ${target} recovered 13 HP!`,
-        `* ${user} gives ${target} some Popato Chisps. ${target} recovered 13 HP!`,
-        `* ${user} gives ${target} some Popato Chisps. ${target} recovered 13 HP!`,
-        `* ${user} gives ${target} some Popato Chisps. ${target} recovered 13 HP!`,
-        `* ${user} gives ${target} some Popato Chisps. Regular old popato chisps. ${target} recovered 13 HP!`,
-        `* ${user} gives ${target} Last Dream. Through DETERMINATION, the dream became true. ${target}'s HP was maxed out.`,
-        `* ${user} hits a Croquet Roll into ${target}'s mouth. It's traditionally served with a mallet. ${target} recovered 15 HP!`,
-        `* ${user} gives ${target} Rock Candy. It's a rock. ${target} recovered 1 HP!`,
-        `* ${user} gives ${target} some Pumpkin Rings. A small pumpkin cooked like onion rings. ${target} recovered 8 HP!`,
-        `* ${user} watches ${target} eat the Stoic Onion. They didn't cry... ${target} recovered 5 HP!`,
-        `* ${user} gives ${target} a Ghost Fruit. ${target} eats it, and ${user} wonders if it will ever pass to the other side. ${target} recovered 16 HP!`,
-        `* ${user} gives ${target} Puppydough Icecream. Mmm! Tastes like puppies. ${target} recovered 28 HP!`,
-        `* ${user} gives ${target} some of Papyrus's oak-aged spaghetti. ${target} takes a small bite. Their face reflexively scrunches up. The taste is indescribable... Papyrus is flattered!`
-    ]
-
-    const randGivenItem = Math.floor(Math.random() * givenItemText.length)
-    let userHealAmt = 0
-    let targetHealAmt = 0
-
-    if (randGivenItem >= 0 && randGivenItem <= 12) { targetHealAmt = 10 }
-    if (randGivenItem >= 13 && randGivenItem <= 20) { targetHealAmt = 12 }
-    if (randGivenItem >= 21 && randGivenItem <= 28) { targetHealAmt = 24 }
-    if (randGivenItem >= 29 && randGivenItem <= 31) { targetHealAmt = getUserMaxHP(target) }
-    if (randGivenItem >= 32 && randGivenItem <= 36) { targetHealAmt = 45 }
-    if (randGivenItem >= 37 && randGivenItem <= 44) { targetHealAmt = 15 }
-    if (randGivenItem >= 45 && randGivenItem <= 46) { targetHealAmt = 22 }
-    if (randGivenItem >= 47 && randGivenItem <= 48) { targetHealAmt = 11 }
-    if (randGivenItem >= 49 && randGivenItem <= 50) { userHealAmt = 11; targetHealAmt = 11 }
-    if (randGivenItem >= 51 && randGivenItem <= 52) { targetHealAmt = 11 }
-    if (randGivenItem >= 53 && randGivenItem <= 60) { targetHealAmt = 22 }
-    if (randGivenItem >= 61 && randGivenItem <= 68) { targetHealAmt = 21 }
-    if (randGivenItem >= 69 && randGivenItem <= 76) { targetHealAmt = 18 }
-    if (randGivenItem >= 77 && randGivenItem <= 83) { targetHealAmt = 10 }
-    if (randGivenItem >= 84 && randGivenItem <= 88) { targetHealAmt = 34 }
-    if (randGivenItem >= 89 && randGivenItem <= 98) { targetHealAmt = 2 }
-    if (randGivenItem >= 99 && randGivenItem <= 100) { targetHealAmt = 10 }
-    if (randGivenItem >= 101 && randGivenItem <= 102) { targetHealAmt = 30 }
-    if (randGivenItem >= 103 && randGivenItem <= 104) { targetHealAmt = getUserMaxHP(target) }
-    if (randGivenItem >= 105 && randGivenItem <= 106) { targetHealAmt = 90 }
-    if (randGivenItem >= 107 && randGivenItem <= 108) { targetHealAmt = 15 }
-    if (randGivenItem >= 109 && randGivenItem <= 110) { targetHealAmt = 4 }
-    if (randGivenItem >= 111 && randGivenItem <= 113) { targetHealAmt = 20 }
-    if (randGivenItem >= 114 && randGivenItem <= 116) { targetHealAmt = 21 }
-    if (randGivenItem >= 117 && randGivenItem <= 123) { targetHealAmt = 17 }
-    if (randGivenItem >= 124 && randGivenItem <= 126) { targetHealAmt = 65 }
-    if (randGivenItem >= 127 && randGivenItem <= 133) { targetHealAmt = 14 }
-    if (randGivenItem >= 134 && randGivenItem <= 140) { targetHealAmt = 27 }
-    if (randGivenItem >= 141 && randGivenItem <= 147) { targetHealAmt = 40 }
-    if (randGivenItem >= 148 && randGivenItem <= 150) { targetHealAmt = 60 }
-    if (randGivenItem >= 151 && randGivenItem <= 155) { targetHealAmt = 13 }
-    if (randGivenItem === 156) { targetHealAmt = getUserMaxHP(target) }
-    if (randGivenItem === 157) { targetHealAmt = 15 }
-    if (randGivenItem === 158) { targetHealAmt = 1 }
-    if (randGivenItem === 159) { targetHealAmt = 8 }
-    if (randGivenItem === 160) { targetHealAmt = 5 }
-    if (randGivenItem === 161) { targetHealAmt = 16 }
-    if (randGivenItem === 162) { targetHealAmt = 28 }
-    // if (randGivenItem === 163) { targetHealAmt = 0 }
-
-    const sendingPlayer = players[user.toLowerCase()]
-    const targetPlayer = players[target.toLowerCase()]
-    console.log(`${grayBg} randGivenItem: ${randGivenItem} ${resetTxt} ${cyanBg} ${user} HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(user)}, healing: ${userHealAmt} ${resetTxt} ${magentaBg} ${target} HP: ${targetPlayer[`hp`]}/${getUserMaxHP(target)}, healing: ${targetHealAmt} ${resetTxt}`)
-
-    // Burnt Pan weapon check
-    if (targetPlayer[`weapon`] === `Burnt Pan`) { targetHealAmt += 4 }
-
-    sendingPlayer[`hp`] += userHealAmt
-    if (sendingPlayer[`hp`] > getUserMaxHP(user)) { sendingPlayer[`hp`] = getUserMaxHP(user) }
-
-    targetPlayer[`hp`] += targetHealAmt
-    if (targetPlayer[`hp`] > getUserMaxHP(target)) { targetPlayer[`hp`] = getUserMaxHP(target) }
-
-    return givenItemText[randGivenItem]
-}
-
 function stainedApronHealToggle(user) {
     const player = players[user.toLowerCase()]
 
     // If it's time to heal, toggle and return original state
     player[`stainedApronHealTime`] = !player[`stainedApronHealTime`]
     return !player[`stainedApronHealTime`]
-}
-
-function fetchWeaponOrArmor(user) {
-    const equipText = [
-        `threw the Stick away. Then picked it back up.`,
-        `threw the Stick away. Then picked it back up.`,
-        `threw the Stick away. Then picked it back up.`,
-        `threw the Stick away. Then picked it back up.`,
-        `equipped the Stick. Its bark is worse than its bite.`,
-        `equipped the Stick. Its bark is worse than its bite.`,
-        `equipped the Stick. Its bark is worse than its bite.`,
-        `equipped the Stick. Its bark is worse than its bite.`,
-        `equipped the Toy Knife. +3 ATTACK`,
-        `equipped the Toy Knife. +3 ATTACK`,
-        `equipped the Toy Knife. +3 ATTACK`,
-        `equipped the Toy Knife. +3 ATTACK`,
-        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `equipped the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `equipped the Tough Glove. +5 ATTACK`,
-        `equipped the Tough Glove. +5 ATTACK`,
-        `equipped the Tough Glove. +5 ATTACK`,
-        `equipped the Tough Glove. +5 ATTACK`,
-        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `equipped the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `equipped the Ballet Shoes. +7 ATTACK`,
-        `equipped the Ballet Shoes. +7 ATTACK`,
-        `equipped the Ballet Shoes. +7 ATTACK`,
-        `equipped the Ballet Shoes. +7 ATTACK`,
-        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
-        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
-        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
-        `equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous.`,
-        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `equipped the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
-        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
-        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
-        `equipped the Torn Notebook. Increases INVULNERABILITY by 6.`,
-        `equipped the Burnt Pan. +10 ATTACK`,
-        `equipped the Burnt Pan. +10 ATTACK`,
-        `equipped the Burnt Pan. +10 ATTACK`,
-        `equipped the Burnt Pan. +10 ATTACK`,
-        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `equipped the Empty Gun. +12 ATTACK`,
-        `equipped the Empty Gun. +12 ATTACK`,
-        `equipped the Empty Gun. +12 ATTACK`,
-        `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
-        `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
-        `equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
-        `equipped the Worn Dagger. +15 ATTACK`,
-        `equipped the Worn Dagger. +15 ATTACK`,
-        `equipped the Worn Dagger. Perfect for cutting plants and vines.`,
-        `equipped the Worn Dagger. Perfect for cutting plants and vines.`,
-        `equipped the Real Knife. About time. +99 ATTACK`,
-        `re-applied the used Bandage. They recovered 10 HP!`,
-        `re-applied the used Bandage. They recovered 10 HP!`,
-        `re-applied the used Bandage. They recovered 10 HP!`,
-        `re-applied the used Bandage. They recovered 10 HP!`,
-        `equipped the Faded Ribbon. +5 DEFENSE`,
-        `equipped the Faded Ribbon. +5 DEFENSE`,
-        `equipped the Faded Ribbon. +5 DEFENSE`,
-        `equipped the Faded Ribbon. +5 DEFENSE`,
-        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
-        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
-        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
-        `equipped the Faded Ribbon. If you're cuter, they won't hit you as hard.`,
-        `equipped the Manly Bandanna. +7 DEFENSE`,
-        `equipped the Manly Bandanna. +7 DEFENSE`,
-        `equipped the Manly Bandanna. +7 DEFENSE`,
-        `equipped the Manly Bandanna. +7 DEFENSE`,
-        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `equipped the Old Tutu. +10 DEFENSE`,
-        `equipped the Old Tutu. +10 DEFENSE`,
-        `equipped the Old Tutu. +10 DEFENSE`,
-        `equipped the Old Tutu. +10 DEFENSE`,
-        `equipped the Old Tutu. Finally, a protective piece of armor.`,
-        `equipped the Old Tutu. Finally, a protective piece of armor.`,
-        `equipped the Old Tutu. Finally, a protective piece of armor.`,
-        `equipped the Old Tutu. Finally, a protective piece of armor.`,
-        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `equipped the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `equipped the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `donned the Temmie Armor. The things you can do with a college education!`,
-        `donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`,
-        `equipped the Stained Apron. +11 DEFENSE`,
-        `equipped the Stained Apron. +11 DEFENSE`,
-        `equipped the Stained Apron. +11 DEFENSE`,
-        `equipped the Stained Apron. +11 DEFENSE`,
-        `equipped the Stained Apron. Heals 1 HP every other turn.`,
-        `equipped the Stained Apron. Heals 1 HP every other turn.`,
-        `equipped the Stained Apron. Heals 1 HP every other turn.`,
-        `equipped the Stained Apron. Heals 1 HP every other turn.`,
-        `equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
-        `equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
-        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
-        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
-        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
-        `equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
-        `equipped the Heart Locket. +15 DEFENSE`,
-        `equipped the Heart Locket. It says "Best Friends Forever."`,
-        `equipped the Locket. Right where it belongs.`,
-        `used Dog Residue. The rest of their inventory filled up with Dog Residue.`,
-        `used Dog Residue. ... They finished using it. An uneasy atmosphere fills the room.`,
-        `used a Punch Card. Punching attacks became stronger.`,
-        `got a Punch Card.`,
-        `deployed the Annoying Dog. The dog absorbs an artifact and leaves.`,
-        `got the Mystery Key. It is too bent to fit on their keychain.`,
-        `used 0. If you are reading this, I messed up somehow.`
-    ]
-
-    const randEquipment = Math.floor(Math.random() * equipText.length)
-    const chosenUser = players[user]
-
-    if (randEquipment >= 0 && randEquipment <= 7) { chosenUser[`weapon`] = `Stick` }
-    if (randEquipment >= 8 && randEquipment <= 15) { chosenUser[`weapon`] = `Toy Knife` }
-    if (randEquipment >= 16 && randEquipment <= 23) { chosenUser[`weapon`] = `Tough Glove` }
-    if (randEquipment >= 24 && randEquipment <= 31) { chosenUser[`weapon`] = `Ballet Shoes` }
-    if (randEquipment >= 32 && randEquipment <= 39) { chosenUser[`weapon`] = `Torn Notebook` }
-    if (randEquipment >= 40 && randEquipment <= 47) { chosenUser[`weapon`] = `Burnt Pan` }
-    if (randEquipment >= 48 && randEquipment <= 53) { chosenUser[`weapon`] = `Empty Gun` }
-    if (randEquipment >= 54 && randEquipment <= 57) { chosenUser[`weapon`] = `Worn Dagger` }
-    if (randEquipment === 58) { chosenUser[`weapon`] = `Real Knife` }
-    if (randEquipment >= 59 && randEquipment <= 62) {
-        chosenUser[`hp`] += 10 // Bandage
-        if (chosenUser[`hp`] > getUserMaxHP(user)) { chosenUser[`hp`] = getUserMaxHP(user) }
-    }
-    if (randEquipment >= 63 && randEquipment <= 70) { chosenUser[`armor`] = `Faded Ribbon` }
-    if (randEquipment >= 71 && randEquipment <= 78) { chosenUser[`armor`] = `Manly Bandanna` }
-    if (randEquipment >= 79 && randEquipment <= 86) { chosenUser[`armor`] = `Old Tutu` }
-    if (randEquipment >= 87 && randEquipment <= 94) { chosenUser[`armor`] = `Cloudy Glasses` }
-    if (randEquipment >= 95 && randEquipment <= 96) { chosenUser[`armor`] = `Temmie Armor` }
-    if (randEquipment >= 97 && randEquipment <= 104) { chosenUser[`armor`] = `Stained Apron` }
-    if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
-    if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
-    if (randEquipment === 113) { chosenUser[`armor`] = `The Locket` }
-    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`) }
-    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`) }
-    if (randEquipment === 118) { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`) }
-    if (randEquipment === 119) { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`) }
-    if (randEquipment === 120) { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`) }
-
-    return equipText[randEquipment]
-}
-
-function fetchGivenWeaponOrArmor(target) {
-    const givenEquipText = [
-        `the Stick. They ran and picked it up.`,
-        `the Stick. They ran and picked it up.`,
-        `the Stick. They ran and picked it up.`,
-        `the Stick. They ran and picked it up.`,
-        `the Stick. Its bark is worse than its bite.`,
-        `the Stick. Its bark is worse than its bite.`,
-        `the Stick. Its bark is worse than its bite.`,
-        `the Stick. Its bark is worse than its bite.`,
-        `the Toy Knife. +3 ATTACK`,
-        `the Toy Knife. +3 ATTACK`,
-        `the Toy Knife. +3 ATTACK`,
-        `the Toy Knife. +3 ATTACK`,
-        `the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `the Toy Knife. Made of plastic. A rarity nowadays.`,
-        `the Tough Glove. +5 ATTACK`,
-        `the Tough Glove. +5 ATTACK`,
-        `the Tough Glove. +5 ATTACK`,
-        `the Tough Glove. +5 ATTACK`,
-        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `the Tough Glove. A worn pink leather glove. For five-fingered folk.`,
-        `the Ballet Shoes. +7 ATTACK`,
-        `the Ballet Shoes. +7 ATTACK`,
-        `the Ballet Shoes. +7 ATTACK`,
-        `the Ballet Shoes. +7 ATTACK`,
-        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
-        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
-        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
-        `the Ballet Shoes. These used shoes make them feel incredibly dangerous.`,
-        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `the Torn Notebook. +2 ATTACK +6 INVULNERABILITY`,
-        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
-        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
-        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
-        `the Torn Notebook. Contains illegible scrawls. Increases INVULNERABILITY by 6.`,
-        `the Burnt Pan. +10 ATTACK`,
-        `the Burnt Pan. +10 ATTACK`,
-        `the Burnt Pan. +10 ATTACK`,
-        `the Burnt Pan. +10 ATTACK`,
-        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP.`,
-        `the Empty Gun. +12 ATTACK`,
-        `the Empty Gun. +12 ATTACK`,
-        `the Empty Gun. +12 ATTACK`,
-        `the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
-        `the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
-        `the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low.`,
-        `the Worn Dagger. +15 ATTACK`,
-        `the Worn Dagger. +15 ATTACK`,
-        `the Worn Dagger. Perfect for cutting plants and vines.`,
-        `the Worn Dagger. Perfect for cutting plants and vines.`,
-        `the Real Knife. About time.`,
-        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
-        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
-        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
-        `a used Bandage. They re-applied the bandage. Still kind of gooey. They recovered 10 HP!`,
-        `the Faded Ribbon. +5 DEFENSE`,
-        `the Faded Ribbon. +5 DEFENSE`,
-        `the Faded Ribbon. +5 DEFENSE`,
-        `the Faded Ribbon. +5 DEFENSE`,
-        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
-        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
-        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
-        `the Faded Ribbon. If they're cuter, they won't get hit as hard.`,
-        `the Manly Bandanna. +7 DEFENSE`,
-        `the Manly Bandanna. +7 DEFENSE`,
-        `the Manly Bandanna. +7 DEFENSE`,
-        `the Manly Bandanna. +7 DEFENSE`,
-        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `the Manly Bandanna. It has seen some wear. It has abs drawn on it.`,
-        `the Old Tutu. +10 DEFENSE`,
-        `the Old Tutu. +10 DEFENSE`,
-        `the Old Tutu. +10 DEFENSE`,
-        `the Old Tutu. +10 DEFENSE`,
-        `the Old Tutu. Finally, a protective piece of armor.`,
-        `the Old Tutu. Finally, a protective piece of armor.`,
-        `the Old Tutu. Finally, a protective piece of armor.`,
-        `the Old Tutu. Finally, a protective piece of armor.`,
-        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `the Cloudy Glasses. +5 DEFENSE +9 INVULNERABILITY`,
-        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `the Cloudy Glasses. Glasses marred with wear. Increases INVULNERABILITY by 9.`,
-        `the Temmie Armor. The things you can do with a college education!`,
-        `the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`,
-        `the Stained Apron. +11 DEFENSE`,
-        `the Stained Apron. +11 DEFENSE`,
-        `the Stained Apron. +11 DEFENSE`,
-        `the Stained Apron. +11 DEFENSE`,
-        `the Stained Apron. Heals 1 HP every other turn.`,
-        `the Stained Apron. Heals 1 HP every other turn.`,
-        `the Stained Apron. Heals 1 HP every other turn.`,
-        `the Stained Apron. Heals 1 HP every other turn.`,
-        `the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
-        `the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
-        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
-        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard.`,
-        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
-        `the Cowboy Hat. This battle-worn hat makes them want to grow a beard. It also raises ATTACK by 5.`,
-        `the Heart Locket. +15 DEFENSE`,
-        `the Heart Locket. It says "Best Friends Forever."`,
-        `the Locket. They can feel it beating.`,
-        `Dog Residue. The rest of their inventory filled up with Dog Residue.`,
-        `Dog Residue. ... They finished using it. An uneasy atmosphere fills the room.`,
-        `a Punch Card. Punching attacks became stronger.`,
-        `a Punch Card. One step closer to a free Nice Cream...`,
-        `the Annoying Dog. A little white dog. It's fast asleep...`,
-        `the Mystery Key. ????? Probably to someone's house LOL.`,
-        `0. If you are reading this, I messed up somehow.`
-    ]
-
-    const randEquipment = Math.floor(Math.random() * givenEquipText.length)
-    const chosenUser = players[target]
-
-    if (randEquipment >= 0 && randEquipment <= 7) { chosenUser[`weapon`] = `Stick` }
-    if (randEquipment >= 8 && randEquipment <= 15) { chosenUser[`weapon`] = `Toy Knife` }
-    if (randEquipment >= 16 && randEquipment <= 23) { chosenUser[`weapon`] = `Tough Glove` }
-    if (randEquipment >= 24 && randEquipment <= 31) { chosenUser[`weapon`] = `Ballet Shoes` }
-    if (randEquipment >= 32 && randEquipment <= 39) { chosenUser[`weapon`] = `Torn Notebook` }
-    if (randEquipment >= 40 && randEquipment <= 47) { chosenUser[`weapon`] = `Burnt Pan` }
-    if (randEquipment >= 48 && randEquipment <= 53) { chosenUser[`weapon`] = `Empty Gun` }
-    if (randEquipment >= 54 && randEquipment <= 57) { chosenUser[`weapon`] = `Worn Dagger` }
-    if (randEquipment === 58) { chosenUser[`weapon`] = `Real Knife` }
-    if (randEquipment >= 59 && randEquipment <= 62) {
-        chosenUser[`hp`] += 10 // Bandage
-        if (chosenUser[`hp`] > getUserMaxHP(target)) { chosenUser[`hp`] = getUserMaxHP(target) }
-    }
-    if (randEquipment >= 63 && randEquipment <= 70) { chosenUser[`armor`] = `Faded Ribbon` }
-    if (randEquipment >= 71 && randEquipment <= 78) { chosenUser[`armor`] = `Manly Bandanna` }
-    if (randEquipment >= 79 && randEquipment <= 86) { chosenUser[`armor`] = `Old Tutu` }
-    if (randEquipment >= 87 && randEquipment <= 94) { chosenUser[`armor`] = `Cloudy Glasses` }
-    if (randEquipment >= 95 && randEquipment <= 96) { chosenUser[`armor`] = `Temmie Armor` }
-    if (randEquipment >= 97 && randEquipment <= 104) { chosenUser[`armor`] = `Stained Apron` }
-    if (randEquipment >= 105 && randEquipment <= 110) { chosenUser[`armor`] = `Cowboy Hat` }
-    if (randEquipment >= 111 && randEquipment <= 112) { chosenUser[`armor`] = `Heart Locket` }
-    if (randEquipment === 113) { chosenUser[`armor`] = `The Locket` }
-    if (randEquipment >= 114 && randEquipment <= 115) { console.log(`${cyanBg} (Dog Residue doesn't do anything) ${resetTxt}`) }
-    if (randEquipment >= 116 && randEquipment <= 117) { console.log(`${cyanBg} (Punch Card doesn't do anything) ${resetTxt}`) }
-    if (randEquipment === 118) { console.log(`${cyanBg} (Annoying Dog doesn't do anything) ${resetTxt}`) }
-    if (randEquipment === 119) { console.log(`${cyanBg} (Mystery Key doesn't do anything) ${resetTxt}`) }
-    if (randEquipment === 120) { console.log(`${cyanBg} (0 doesn't do anything) ${resetTxt}`) }
-
-    return givenEquipText[randEquipment]
 }
 
 function deathCheck(chatroom, user, target) {

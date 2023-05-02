@@ -318,7 +318,7 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
-    // FIGHT
+    // FIGHT or ATTACK
     if (command === `!fight`
         || command === `!attack`) {
         if (sendingPlayer[`dead`]) {
@@ -459,7 +459,7 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
-    // ITEM
+    // ITEM or ITEMS or USE
     if (command === `!item`
         || command === `!items`
         || command === `!use`) {
@@ -1786,6 +1786,7 @@ function useItem(user, str, idx) {
     const player = players[user.toLowerCase()]
     let healAmt = consumableItems[str]
     const burntPanBonus = player[`weapon`] === `Burnt Pan` ? 4 : 0
+    if (burntPanBonus > 0) { console.log(`${magentaBg} ${sender} is using the Burnt Pan, heal amount +${burntPanBonus} ${resetTxt}`) }
 
     if (str === `bandage`) {
         player[`inventory`].splice(idx, 1)

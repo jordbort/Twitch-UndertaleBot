@@ -1784,12 +1784,12 @@ function useItem(user, str, idx) {
         "rock candy": 1
     }
     const player = players[user.toLowerCase()]
-    const healAmt = consumableItems[str]
-
-    // need to account for burnt pan
+    let healAmt = consumableItems[str]
+    const burntPanBonus = player[`weapon`] === `Burnt Pan` ? 4 : 0
 
     if (str === `bandage`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const bandageText = [
@@ -1807,6 +1807,7 @@ function useItem(user, str, idx) {
     }
     if (str === `monster candy`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const monstercandyText = [
@@ -1821,6 +1822,7 @@ function useItem(user, str, idx) {
     }
     if (str === `spider donut`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const spiderdonutText = [
@@ -1835,6 +1837,7 @@ function useItem(user, str, idx) {
     }
     if (str === `spider cider`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const spiderciderText = [
@@ -1866,6 +1869,7 @@ function useItem(user, str, idx) {
     }
     if (str === `snowman piece`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const snowmanpieceText = [
@@ -1883,6 +1887,7 @@ function useItem(user, str, idx) {
     }
     if (str === `nice cream`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const nicecreamText = [
@@ -1903,6 +1908,7 @@ function useItem(user, str, idx) {
     }
     if (str === `bisicle`) {
         player[`inventory`][idx] = `Unisicle`
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const bisicleText = [
@@ -1917,6 +1923,7 @@ function useItem(user, str, idx) {
     }
     if (str === `unisicle`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const unisicleText = [
@@ -1931,6 +1938,7 @@ function useItem(user, str, idx) {
     }
     if (str === `cinnamon bunny`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const cinnamonbunnyText = [
@@ -1945,6 +1953,7 @@ function useItem(user, str, idx) {
     }
     if (str === `astronaut food`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const astronautfoodText = [
@@ -1959,6 +1968,7 @@ function useItem(user, str, idx) {
     }
     if (str === `crab apple`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const crabappleText = [
@@ -1973,6 +1983,7 @@ function useItem(user, str, idx) {
     }
     if (str === `sea tea`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const seateaText = [
@@ -1987,6 +1998,7 @@ function useItem(user, str, idx) {
     }
     if (str === `abandoned quiche`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const abandonedquicheText = [
@@ -2002,6 +2014,7 @@ function useItem(user, str, idx) {
     }
     if (str === `temmie flakes`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const temmieflakesText = [
@@ -2031,16 +2044,19 @@ function useItem(user, str, idx) {
         const randIdx = Math.floor(Math.random() * dogSaladText.length)
         let dogSaladHealAmt = 99
         if (randIdx === 0) {
-            player[`hp`] += 2
             dogSaladHealAmt = 2
+            dogSaladHealAmt += burntPanBonus
+            player[`hp`] += dogSaladHealAmt
         }
         if (randIdx === 1) {
-            player[`hp`] += 10
             dogSaladHealAmt = 10
+            dogSaladHealAmt += burntPanBonus
+            player[`hp`] += dogSaladHealAmt
         }
         if (randIdx === 2) {
-            player[`hp`] += 30
             dogSaladHealAmt = 30
+            dogSaladHealAmt += burntPanBonus
+            player[`hp`] += dogSaladHealAmt
         }
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         if (randIdx === 3) { player[`hp`] = getUserMaxHP(user) }
@@ -2059,16 +2075,19 @@ function useItem(user, str, idx) {
         const randIdx = Math.floor(Math.random() * instantnoodlesText.length)
         let instantNoodlesHealAmt = 4
         if (randIdx === 0) {
-            player[`hp`] += 90
             instantNoodlesHealAmt = 90
+            instantNoodlesHealAmt += burntPanBonus
+            player[`hp`] += instantNoodlesHealAmt
         }
         if (randIdx === 1) {
-            player[`hp`] += 15
             instantNoodlesHealAmt = 15
+            instantNoodlesHealAmt += burntPanBonus
+            player[`hp`] += instantNoodlesHealAmt
         }
         if (randIdx === 2) {
-            player[`hp`] += 4
             instantNoodlesHealAmt = 4
+            instantNoodlesHealAmt += burntPanBonus
+            player[`hp`] += instantNoodlesHealAmt
         }
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = instantnoodlesText[randIdx]
@@ -2078,6 +2097,7 @@ function useItem(user, str, idx) {
     }
     if (str === `hot dog`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const hotdogText = [
@@ -2093,6 +2113,7 @@ function useItem(user, str, idx) {
     }
     if (str === `hot cat`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const hotcatText = [
@@ -2108,6 +2129,7 @@ function useItem(user, str, idx) {
     }
     if (str === `junk food`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const junkfoodText = [
@@ -2124,6 +2146,7 @@ function useItem(user, str, idx) {
     }
     if (str === `hush puppy`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate a Hush Puppy. Dog-magic is neutralized.`
@@ -2133,6 +2156,7 @@ function useItem(user, str, idx) {
     }
     if (str === `starfait`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const starfaitText = [
@@ -2151,6 +2175,7 @@ function useItem(user, str, idx) {
     }
     if (str === `glamburger`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const glamburgerText = [
@@ -2165,6 +2190,7 @@ function useItem(user, str, idx) {
     }
     if (str === `legendary hero`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const legendaryheroText = [
@@ -2180,6 +2206,7 @@ function useItem(user, str, idx) {
     }
     if (str === `steak in the shape of mettaton's face`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const steakText = [
@@ -2195,6 +2222,7 @@ function useItem(user, str, idx) {
     }
     if (str === `popato chisps`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         const popatochispsText = [
@@ -2223,6 +2251,7 @@ function useItem(user, str, idx) {
     }
     if (str === `last dream`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} used Last Dream. Through DETERMINATION, the dream became true.`
@@ -2232,6 +2261,7 @@ function useItem(user, str, idx) {
     }
     if (str === `puppydough icecream`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate Puppydough Icecream. Mmm! Tastes like puppies.`
@@ -2241,6 +2271,7 @@ function useItem(user, str, idx) {
     }
     if (str === `pumpkin rings`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate Pumpkin Rings. A small pumpkin cooked like onion rings.`
@@ -2250,6 +2281,7 @@ function useItem(user, str, idx) {
     }
     if (str === `croquet roll`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} hit a Croquet Roll into their mouth. Fried dough traditionally served with a mallet.`
@@ -2259,6 +2291,7 @@ function useItem(user, str, idx) {
     }
     if (str === `ghost fruit`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate a Ghost Fruit. It will never pass to the other side.`
@@ -2268,6 +2301,7 @@ function useItem(user, str, idx) {
     }
     if (str === `stoic onion`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate a Stoic Onion. They didn't cry...`
@@ -2277,6 +2311,7 @@ function useItem(user, str, idx) {
     }
     if (str === `rock candy`) {
         player[`inventory`].splice(idx, 1)
+        healAmt += burntPanBonus
         player[`hp`] += healAmt
         if (player[`hp`] > getUserMaxHP(user)) { player[`hp`] = getUserMaxHP(user) }
         let itemText = `* ${user} ate Rock Candy. It's a rock.`

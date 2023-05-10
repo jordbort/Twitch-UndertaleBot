@@ -575,71 +575,7 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
-    // HEAL (depricated "!ITEM")
-    // if (command === `!heal`) {
-    //     if (sendingPlayer[`dead`]) {
-    //         talk(channel, `Sorry ${sender}, you are dead! :(`)
-    //         return
-    //     }
-
-    //     if (toUser) {
-    //         if (toUser.toLowerCase() in players) {
-    //             if (players[toUser.toLowerCase()][`dead`]) {
-    //                 talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
-    //                 return
-    //             }
-    //         } else {
-    //             talk(channel, `${toUser} is not a registered player :(`)
-    //             return
-    //         }
-    //     }
-
-    //     let response
-    //     targetPlayer ? response = fetchGivenItemText(sender, toUser) : response = fetchItemText(sender)
-    //     talk(channel, response)
-    // }
-
-    // EQUIP (depricated)
-    // if (command === `!equip`) {
-    //     if (sendingPlayer[`dead`]) {
-    //         talk(channel, `Sorry ${sender}, you are dead! :(`)
-    //         return
-    //     }
-
-    //     if (toUser) {
-    //         if (toUser.toLowerCase() in players) {
-    //             if (players[toUser.toLowerCase()][`dead`]) {
-    //                 talk(channel, `Sorry ${sender}, ${toUser} is dead! :(`)
-    //                 return
-    //             }
-    //         } else {
-    //             talk(channel, `${toUser} is not a registered player :(`)
-    //             return
-    //         }
-    //     }
-
-    //     let response = `* ${sender} `
-    //     if (toUser && toUser.toLowerCase() !== sender.toLowerCase()) {
-    //         response += `gave ${toUser} `
-    //         response += fetchGivenWeaponOrArmor(toUser.toLowerCase())
-    //     } else {
-    //         response += fetchWeaponOrArmor(sender.toLowerCase())
-    //     }
-
-    //     // Stained Apron heal check (Not done for items or equip?) // after (now "heal") and equip are depricated, !item will check this
-    //     // if (sendingPlayer[`armor`] === `Stained Apron`) {
-    //     //     const stainedApronHealCheck = stainedApronHealToggle(sender)
-    //     //     if (stainedApronHealCheck) {
-    //     //         response += ` ${sender} recovered 1 HP!`
-    //     //         sendingPlayer[`hp`] += 1
-    //     //         if (sendingPlayer[`hp`] > getUserMaxHP(sender)) { sendingPlayer[`hp`] = getUserMaxHP(sender) }
-    //     //     }
-    //     // }
-
-    //     talk(channel, response)
-    // }
-
-    // MERCY
+    // MERCY or SPARE
     if (command === `!mercy`
         || command === `!spare`) {
         if (sendingPlayer[`dead`]) {
@@ -870,7 +806,7 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
-    // UNDERTALE/LOGO
+    // UNDERTALE or LOGO
     if (command === `!undertale`
         || command === `!logo`) { printLogo() }
 
@@ -1557,13 +1493,9 @@ function buyItem(user, str, price) {
         "the locket": 7
     }
 
-    if (player[`lv`] < itemLvThreshold[str]) {
-        return `${user}, that item isn't available to you! :(`
-    }
+    if (player[`lv`] < itemLvThreshold[str]) { return `${user}, that item isn't available to you! :(` }
 
-    if (player[`gold`] < price) {
-        return `${user}, that item costs ${price}G, you have ${player[`gold`]}G! :(`
-    }
+    if (player[`gold`] < price) { return `${user}, that item costs ${price}G, you have ${player[`gold`]}G! :(` }
 
     if (str === `monster candy`) {
         player[`gold`] -= price

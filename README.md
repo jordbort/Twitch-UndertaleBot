@@ -1,3 +1,5 @@
+<img src="https://github.com/jordbort/Twitch-UndertaleBot/assets/115664302/2260e16a-0681-4ca3-9547-d90c968a5fc0" alt="UNDERTALE logo">
+
 # UndertaleBot on Twitch
 This is under development! It is a Twitch chatbot that simulates encounters in the game Undertale. While the bot is online, you can also visit its Twitch chat and type `!join` to make the bot active in your Twitch chat as well, at least until next time the bot is rebooted.
 

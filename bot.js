@@ -674,10 +674,8 @@ function onMessageHandler(channel, tags, msg, self) {
         // Item prices
         const itemPrices = {
             // Consumable items
-            "monster candy": 0, // Four of a kind
             "spider donut": 7,
             "spider cider": 18,
-            "snowman piece": 0, // Two of a kind
             "nice cream": 15, // 25G later
             "bisicle": 15, // 30, 45, 70G later
             "cinnamon bunny": 25,
@@ -694,96 +692,54 @@ function onMessageHandler(channel, tags, msg, self) {
             "popato chisps": 25,
 
             // Weapons
-            "toy knife": 0,
             "tough glove": 50,
-            "ballet shoes": 0,
             "torn notebook": 55,
-            "burnt pan": 0,
             "empty gun": 350,
-            "worn dagger": 0,
-            "real knife": 0,
 
             // Armor
-            "faded ribbon": 0,
             "manly bandanna": 50,
-            "old tutu": 0,
             "cloudy glasses": 35,
             "temmie armor": 750,
-            "stained apron": 0,
-            "cowboy hat": 350,
-            "heart locket": 0,
-            "the locket": 0
+            "cowboy hat": 350
         }
 
         let queryItem = ``
 
-        const allItems = [
-            "bandage",
-            "monster candy",
+        const purchasableItems = [
             "spider donut",
             "spider cider",
-            "butterscotch pie",
-            "snail pie",
-            "snowman piece",
             "nice cream",
             "bisicle",
-            "unisicle",
             "cinnamon bunny",
-            "astronaut food",
             "crab apple",
             "sea tea",
-            "abandoned quiche",
             "temmie flakes",
-            "dog salad",
-            "instant noodles",
             "hot dog",
             "hot cat",
             "junk food",
-            "hush puppy",
             "starfait",
             "glamburger",
             "legendary hero",
             "steak in the shape of mettaton's face",
             "popato chisps",
-            "bad memory",
-            "last dream",
-
-            // Unused items
-            "puppydough icecream",
-            "pumpkin rings",
-            "croquet roll",
-            "ghost fruit",
-            "stoic onion",
-            "rock candy",
 
             // Weapons
-            `stick`,
-            `toy knife`,
             `tough glove`,
-            `ballet shoes`,
             `torn notebook`,
-            `burnt pan`,
             `empty gun`,
-            `worn dagger`,
-            `real knife`,
 
             // Armor
-            `faded ribbon`,
             `manly bandanna`,
-            `old tutu`,
             `cloudy glasses`,
             `temmie armor`,
-            `stained apron`,
-            `cowboy hat`,
-            `heart locket`,
-            `the locket`
+            `cowboy hat`
         ]
 
-        let isAnItem = false
-        for (idx in allItems) {
-            if (msg.toLowerCase().includes(allItems[idx])) {
+        const isAnItem = false
+        for (idx in purchasableItems) {
+            if (msg.toLowerCase().includes(purchasableItems[idx])) {
                 isAnItem = true
-                queryItem = allItems[idx]
+                queryItem = purchasableItems[idx]
                 break
             }
         }
@@ -793,13 +749,12 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response = `${sender} can buy: `
-        if (sendingPlayer[`lv`] >= 1) { response += `Monster Candy, Spider Donut, Spider Cider, Toy Knife, Faded Ribbon` }
-        if (sendingPlayer[`lv`] >= 2) { response += `, Snowman Piece, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Ballet Shoes, Manly Bandanna, Old Tutu` }
-        if (sendingPlayer[`lv`] >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses, Temmie Armor` }
-        if (sendingPlayer[`lv`] >= 4) { response += `, Hot Dog...?, Hot Cat, Burnt Pan, Stained Apron` }
+        if (sendingPlayer[`lv`] >= 1) { response += `Spider Donut, Spider Cider` }
+        if (sendingPlayer[`lv`] >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
+        if (sendingPlayer[`lv`] >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
+        if (sendingPlayer[`lv`] >= 4) { response += `, Temmie Armor, Hot Dog...?, Hot Cat` }
         if (sendingPlayer[`lv`] >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
-        if (sendingPlayer[`lv`] >= 6) { response += `, Popato Chisps, Worn Dagger, Heart Locket` }
-        if (sendingPlayer[`lv`] >= 7) { response += `, Real Knife, The Locket` }
+        if (sendingPlayer[`lv`] >= 6) { response += `, Popato Chisps` }
 
         if (queryItem) { response = buyItem(sender, queryItem, itemPrices[queryItem]) }
 
@@ -1417,14 +1372,40 @@ function calculateUserNextLV(user) {
 
 function calculateUserLV(user) {
     const player = players[user.toLowerCase()]
+    let collectedItems = []
     while (player[`next`] <= 0) {
         player[`lv`] += 1
+        if (player[`lv`] === 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
+        if (player[`lv`] === 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
+        if (player[`lv`] === 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
+        if (player[`lv`] === 5) { collectedItems.push(`Instant Noodles`) }
+        if (player[`lv`] === 6) { collectedItems.push(`Hush Puppy`) }
+        if (player[`lv`] === 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
+        if (player[`lv`] === 8) { collectedItems.push(`Bad Memory`) }
+        if (player[`lv`] === 9) { collectedItems.push(`Last Dream`) }
+        if (player[`lv`] === 10) { collectedItems.push(`Real Knife`, `The Locket`) }
+        if (player[`lv`] === 11) { collectedItems.push(`Puppydough Icecream`) }
+        if (player[`lv`] === 12) { collectedItems.push(`Pumpkin Rings`) }
+        if (player[`lv`] === 13) { collectedItems.push(`Croquet Roll`) }
+        if (player[`lv`] === 14) { collectedItems.push(`Ghost Fruit`) }
+        if (player[`lv`] === 15) { collectedItems.push(`Stoic Onion`) }
+        if (player[`lv`] === 16) { collectedItems.push(`Rock Candy`) }
         player[`next`] += calculateUserNextLV(user)
         player[`at`] = calculateUserATK(user)
         player[`df`] = calculateUserDEF(user)
         player[`hp`] += 4
     }
+    if (collectedItems.length) {
+        for (const idx in collectedItems) { player[`inventory`].push(collectedItems[idx]) }
+        const msgDelay = chatroom === `#undertalebot` ? 1000 : 2000
+        const response = `${user} found: ` + collectedItems
+        setTimeout(function () {
+            client.say(chatroom, response)
+            console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${response}${resetTxt}`)
+        }, msgDelay)
+    }
     console.log(`${cyanBg} ${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]} / ${getUserMaxHP(user)} ${resetTxt}`)
+    console.log(`Inventory:`, player[`inventory`])
 }
 
 function printLogo() {
@@ -1452,10 +1433,8 @@ function buyItem(user, str, price) {
 
     const itemLvThreshold = {
         // Consumable items
-        "monster candy": 1,
         "spider donut": 1,
         "spider cider": 1,
-        "snowman piece": 2,
         "nice cream": 2,
         "bisicle": 2,
         "cinnamon bunny": 2,
@@ -1472,36 +1451,21 @@ function buyItem(user, str, price) {
         "popato chisps": 6,
 
         // Weapons
-        "toy knife": 1,
         "tough glove": 2,
-        "ballet shoes": 2,
         "torn notebook": 3,
-        "burnt pan": 4,
         "empty gun": 5,
-        "worn dagger": 6,
-        "real knife": 7,
 
         // Armor
-        "faded ribbon": 1,
         "manly bandanna": 2,
-        "old tutu": 2,
         "cloudy glasses": 3,
-        "temmie armor": 3,
-        "stained apron": 4,
-        "cowboy hat": 5,
-        "heart locket": 6,
-        "the locket": 7
+        "temmie armor": 4,
+        "cowboy hat": 5
     }
 
-    if (player[`lv`] < itemLvThreshold[str]) { return `${user}, that item isn't available to you! :(` }
+    if (player[`lv`] < itemLvThreshold[str]) { return `${user}, that item isn't available to you yet! :(` }
 
     if (player[`gold`] < price) { return `${user}, that item costs ${price}G, you have ${player[`gold`]}G! :(` }
 
-    if (str === `monster candy`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Monster Candy`)
-        return `* ${user} bought the Monster Candy!`
-    }
     if (str === `spider donut`) {
         player[`gold`] -= price
         player[`inventory`].push(`Spider Donut`)
@@ -1511,21 +1475,6 @@ function buyItem(user, str, price) {
         player[`gold`] -= price
         player[`inventory`].push(`Spider Cider`)
         return `* ${user} bought the Spider Cider!`
-    }
-    if (str === `toy knife`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Toy Knife`)
-        return `* ${user} bought the Toy Knife!`
-    }
-    if (str === `faded ribbon`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Faded Ribbon`)
-        return `* ${user} bought the Faded Ribbon!`
-    }
-    if (str === `snowman piece`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Snowman Piece`)
-        return `* ${user} bought the Snowman Piece!`
     }
     if (str === `nice cream`) {
         player[`gold`] -= price
@@ -1547,20 +1496,10 @@ function buyItem(user, str, price) {
         player[`inventory`].push(`Tough Glove`)
         return `* ${user} bought the Tough Glove!`
     }
-    if (str === `ballet shoes`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Ballet Shoes`)
-        return `* ${user} bought the Ballet Shoes!`
-    }
     if (str === `manly bandanna`) {
         player[`gold`] -= price
         player[`inventory`].push(`Manly Bandanna`)
         return `* ${user} bought the Manly Bandanna!`
-    }
-    if (str === `old tutu`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Old Tutu`)
-        return `* ${user} bought the Old Tutu!`
     }
     if (str === `crab apple`) {
         player[`gold`] -= price
@@ -1602,16 +1541,6 @@ function buyItem(user, str, price) {
         player[`inventory`].push(`Hot Cat`)
         return `* ${user} bought the Hot Cat!`
     }
-    if (str === `burnt pan`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Burnt Pan`)
-        return `* ${user} bought the Burnt Pan!`
-    }
-    if (str === `stained apron`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Stained Apron`)
-        return `* ${user} bought the Stained Apron!`
-    }
     if (str === `junk food`) {
         player[`gold`] -= price
         player[`inventory`].push(`Junk Food`)
@@ -1651,26 +1580,6 @@ function buyItem(user, str, price) {
         player[`gold`] -= price
         player[`inventory`].push(`Popato Chisps`)
         return `* ${user} bought the Popato Chisps!`
-    }
-    if (str === `worn dagger`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Worn Dagger`)
-        return `* ${user} bought the Worn Dagger!`
-    }
-    if (str === `heart locket`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Heart Locket`)
-        return `* ${user} bought the Heart Locket!`
-    }
-    if (str === `real knife`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`Real Knife`)
-        return `* ${user} bought the Real Knife!`
-    }
-    if (str === `the locket`) {
-        player[`gold`] -= price
-        player[`inventory`].push(`The Locket`)
-        return `* ${user} bought the The Locket!`
     }
     return `If you are reading this, I messed up somehow.`
 }

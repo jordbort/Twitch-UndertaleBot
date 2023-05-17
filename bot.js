@@ -2,7 +2,7 @@ require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const SELECTED_CHANNEL = process.env.CHANNEL_2
+const SELECTED_CHANNEL = process.env.CHANNEL_1
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -150,7 +150,7 @@ function onMessageHandler(channel, tags, msg, self) {
             armor: `Bandage`,
             gold: 0,
             stainedApronHealTime: false,
-            inventory: [`Monster Candy`]
+            inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
         playerSave[`${sender.toLowerCase()}`] = {
             lv: 1,
@@ -164,7 +164,7 @@ function onMessageHandler(channel, tags, msg, self) {
             armor: `Bandage`,
             gold: 0,
             stainedApronHealTime: false,
-            inventory: [`Monster Candy`]
+            inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
     }
     const sendingPlayer = players[sender.toLowerCase()]
@@ -735,7 +735,7 @@ function onMessageHandler(channel, tags, msg, self) {
             `cowboy hat`
         ]
 
-        const isAnItem = false
+        let isAnItem = false
         for (idx in purchasableItems) {
             if (msg.toLowerCase().includes(purchasableItems[idx])) {
                 isAnItem = true
@@ -1288,7 +1288,7 @@ function deathCheck(chatroom, user, target) {
             sendingPlayer[`next`] -= awardedEXP
             if (sendingPlayer[`next`] <= 0) {
                 response += ` ${user}'s LOVE increased.`
-                calculateUserLV(user)
+                response += calculateUserLV(user)
             }
         } else {
             if (sendingPlayer[`gold`] > 0) {
@@ -1372,6 +1372,7 @@ function calculateUserNextLV(user) {
 
 function calculateUserLV(user) {
     const player = players[user.toLowerCase()]
+    let foundItemsAppend = ``
     let collectedItems = []
     while (player[`next`] <= 0) {
         player[`lv`] += 1
@@ -1397,15 +1398,11 @@ function calculateUserLV(user) {
     }
     if (collectedItems.length) {
         for (const idx in collectedItems) { player[`inventory`].push(collectedItems[idx]) }
-        const msgDelay = chatroom === `#undertalebot` ? 1000 : 2000
-        const response = `${user} found: ` + collectedItems
-        setTimeout(function () {
-            client.say(chatroom, response)
-            console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${response}${resetTxt}`)
-        }, msgDelay)
+        foundItemsAppend = ` ${user} found: ` + collectedItems
     }
     console.log(`${cyanBg} ${user} reached LV ${player[`lv`]}, next: ${player[`next`]}, ATK: ${player[`at`]}, DEF: ${player[`df`]}, HP: ${player[`hp`]} / ${getUserMaxHP(user)} ${resetTxt}`)
     console.log(`Inventory:`, player[`inventory`])
+    return foundItemsAppend
 }
 
 function printLogo() {
@@ -1627,7 +1624,7 @@ function useItem(user, str, idx) {
     const player = players[user.toLowerCase()]
     let healAmt = consumableItems[str]
     const burntPanBonus = player[`weapon`] === `Burnt Pan` ? 4 : 0
-    if (burntPanBonus > 0) { console.log(`${magentaBg} ${sender} is using the Burnt Pan, heal amount +${burntPanBonus} ${resetTxt}`) }
+    if (burntPanBonus > 0) { console.log(`${magentaBg} ${user} is using the Burnt Pan, heal amount +${burntPanBonus} ${resetTxt}`) }
 
     if (str === `bandage`) {
         player[`inventory`].splice(idx, 1)

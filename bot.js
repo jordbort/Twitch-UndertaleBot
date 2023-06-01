@@ -761,6 +761,16 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    if (command === `!commands`) {
+        const response = `!fight: Choose another chat member to attack, !act: Do an action by yourself or with another chat member, !item: Check for (or use) items in your inventory, !mercy: Choose another chat member to spare, !get: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
+        talk(channel, response)
+    }
+
+    if (command === `!help`) {
+        const response = `${sender}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is streaming, you can use !join in its channel to make it monitor your channel's chat too!`
+        talk(channel, response)
+    }
+
     // UNDERTALE or LOGO
     if (command === `!undertale`
         || command === `!logo`) { printLogo() }

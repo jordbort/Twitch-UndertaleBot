@@ -278,8 +278,10 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`Inventory:`, sendingPlayer[`inventory`])
     }
 
-    // STATS
-    if (command === `!stats`) {
+    // STAT(S)
+    if (command === `!stats`
+    || command === `!stat`
+    || command === `!status`) {
         let response
         let attackBoost = 0
         if (targetPlayer) {
@@ -767,7 +769,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     if (command === `!help`) {
-        const response = `${sender}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is streaming, you can use !join in its channel to make it monitor your channel's chat too!`
+        const response = `${sender}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
         talk(channel, response)
     }
 

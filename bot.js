@@ -445,7 +445,7 @@ function onMessageHandler(channel, tags, msg, self) {
             }
         }
 
-        let response = `* ${sender}`
+        let response = `* ${sender} `
         targetPlayer ? response += getAction(sender, toUser) : response += getThirdPersonFlavorText()
 
         // Stained Apron heal check
@@ -763,11 +763,13 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    // COMMANDS
     if (command === `!commands`) {
         const response = `!fight: Choose another chat member to attack, !act: Do an action by yourself or with another chat member, !item: Check for (or use) items in your inventory, !mercy: Choose another chat member to spare, !get: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
         talk(channel, response)
     }
 
+    // HELP
     if (command === `!help`) {
         const response = `${sender}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
         talk(channel, response)
@@ -1423,6 +1425,9 @@ function printLogo() {
     const rdSq = `\x1b[41m  \x1b[0m`
     const bkSq = `\x1b[40m  \x1b[0m`
 
+    // Colored text
+    console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
+
     // UNDERTALE logo
     //          U (10 blocks wide)                                                           N (10 blocks wide)                                                           D (9 blocks wide)                                                     E (8 blocks wide)                                              R (10 blocks wide)                                                           T (10 blocks wide)                                                           A (9 blocks wide)                                                     L (8 blocks wide)                                              E (8 blocks wide)
     console.log(gySq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + gySq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + gySq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 1 ]
@@ -1435,6 +1440,15 @@ function printLogo() {
     console.log(whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 8 ]
     console.log(whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 9 ]
     //          [  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][ 8 ]
+    
+    // List of basic commands
+    console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
+    console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
+    console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Check for (or use) items in your inventory${resetTxt}`)
+    console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
+    console.log(`${greenBg} !get ${resetTxt}`, `${greenTxt}- Spend gold on items, or check what is possible to buy${resetTxt}`)
+    console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state${resetTxt}`)
+    console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file${resetTxt}`)
 }
 
 function buyItem(user, str, price) {
@@ -1638,6 +1652,7 @@ function useItem(user, str, idx) {
     const burntPanBonus = player[`weapon`] === `Burnt Pan` ? 4 : 0
     if (burntPanBonus > 0) { console.log(`${magentaBg} ${user} is using the Burnt Pan, heal amount +${burntPanBonus} ${resetTxt}`) }
 
+    // Consumable items
     if (str === `bandage`) {
         player[`inventory`].splice(idx, 1)
         healAmt += burntPanBonus
@@ -2381,14 +2396,6 @@ function useItem(user, str, idx) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
-    console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
     printLogo()
-    console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
-    console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
-    console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Check for (or use) items in your inventory${resetTxt}`)
-    console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
-    console.log(`${greenBg} !get ${resetTxt}`, `${greenTxt}- Spend gold on items, or check what is possible to buy${resetTxt}`)
-    console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state${resetTxt}`)
-    console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file${resetTxt}`)
     client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
 }

@@ -810,7 +810,7 @@ function onMessageHandler(channel, tags, msg, self) {
     if (msg.toLowerCase().includes(`hello bot`)
         || msg.toLowerCase().includes(`hey bot`)
         || msg.toLowerCase().includes(`hi bot`)
-        || msg.toLowerCase().includes(`sup bot`)
+        || msg.toLowerCase().includes(`up bot`)
         || msg.toLowerCase().includes(`bot hi`)
         || msg.toLowerCase().includes(`bot hey`)
         || msg.toLowerCase().includes(`bot hello`)
@@ -822,18 +822,14 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // UNDERTALE BOT HI
-    if (msg.toLowerCase().includes(`undertalebot hello`)
-        || msg.toLowerCase().includes(`undertalebot hey`)
-        || msg.toLowerCase().includes(`undertalebot hi`)
-        || msg.toLowerCase().includes(`undertalebot sup`)
-        || msg.toLowerCase().includes(`hi undertalebot`)
+    if (msg.toLowerCase().includes(`hi undertalebot`)
         || msg.toLowerCase().includes(`hey undertalebot`)
         || msg.toLowerCase().includes(`hello undertalebot`)
-        || msg.toLowerCase().includes(`sup undertalebot`)
+        || msg.toLowerCase().includes(`up undertalebot`)
         || msg.toLowerCase().includes(`hi @undertalebot`)
         || msg.toLowerCase().includes(`hey @undertalebot`)
         || msg.toLowerCase().includes(`hello @undertalebot`)
-        || msg.toLowerCase().includes(`sup @undertalebot`)) {
+        || msg.toLowerCase().includes(`up @undertalebot`)) {
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`

@@ -268,6 +268,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // LOAD
     if (command === `!load`) {
         players[sender.toLowerCase()] = { ...playerSave[sender.toLowerCase()] }
+        players[sender.toLowerCase()][`inventory`] = playerSave[sender.toLowerCase()][`inventory`]
 
         let response = `"${sender}" `
         let attackBoost = 0
@@ -275,7 +276,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (players[sender.toLowerCase()][`armor`] === `Temmie Armor`) { attackBoost = 10 }
         response += `LV: ${players[sender.toLowerCase()][`lv`]}, HP: ${players[sender.toLowerCase()][`hp`]}/${getUserMaxHP(sender)}, AT: ${players[sender.toLowerCase()][`at`]}(${weaponsATK[players[sender.toLowerCase()][`weapon`]] + attackBoost}), DF: ${players[sender.toLowerCase()][`df`]}(${armorDEF[players[sender.toLowerCase()][`armor`]]}), EXP: ${players[sender.toLowerCase()][`exp`]}, NEXT: ${players[sender.toLowerCase()][`next`]}, WEAPON: ${players[sender.toLowerCase()][`weapon`]}, ARMOR: ${players[sender.toLowerCase()][`armor`]}, GOLD: ${players[sender.toLowerCase()][`gold`]}`
         talk(channel, response)
-        console.log(`Inventory:`, sendingPlayer[`inventory`])
+        console.log(`Inventory:`, players[sender.toLowerCase()][`inventory`])
     }
 
     // STAT(S)

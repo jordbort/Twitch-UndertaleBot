@@ -170,15 +170,15 @@ function onMessageHandler(channel, tags, msg, self) {
     const sendingPlayer = players[sender.toLowerCase()]
     const targetPlayer = toUser.toLowerCase() !== sender.toLowerCase() && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
 
-    // Log message
-    console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
-
     // *****************
     // ** REPLY CASES **
     // *****************
 
     // JOIN
     if (command === `!join` && channel === `#undertalebot`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const user = sender.toLowerCase()
 
         let index = -1
@@ -209,6 +209,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // MEMORY
     if (command === `!memory`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response = `Here's everyone I know: `
         for (const player in players) {
             const logColor = players[player][`dead`] ? redBg : greenBg
@@ -220,6 +223,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // SAVE
     if (command === `!save`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -267,6 +273,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // LOAD
     if (command === `!load`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         players[sender.toLowerCase()] = { ...playerSave[sender.toLowerCase()] }
         players[sender.toLowerCase()][`inventory`] = playerSave[sender.toLowerCase()][`inventory`]
 
@@ -281,8 +290,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // STAT(S)
     if (command === `!stats`
-    || command === `!stat`
-    || command === `!status`) {
+        || command === `!stat`
+        || command === `!status`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         let attackBoost = 0
         if (targetPlayer) {
@@ -301,6 +313,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // REVIVE (for testing, mods can also use)
     if (command === `!revive`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         if (sender === `JPEGSTRIPES` || senderIsAMod) {
             for (const player in players) {
@@ -317,6 +332,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // SPAMTON QUOTE
     if (command === `!spamton`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const response = getSpamtonQuote(args[0])
         talk(channel, response)
     }
@@ -324,6 +342,9 @@ function onMessageHandler(channel, tags, msg, self) {
     // FIGHT or ATTACK
     if (command === `!fight`
         || command === `!attack`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -429,6 +450,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ACT
     if (command === `!act`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -466,6 +490,9 @@ function onMessageHandler(channel, tags, msg, self) {
     if (command === `!item`
         || command === `!items`
         || command === `!use`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const inventory = sendingPlayer[`inventory`]
         console.log(`Inventory:`, inventory)
 
@@ -581,6 +608,9 @@ function onMessageHandler(channel, tags, msg, self) {
     // MERCY or SPARE
     if (command === `!mercy`
         || command === `!spare`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -639,6 +669,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // HP
     if (command === `!hp`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         if (targetPlayer) {
             response = `${toUser} has ${targetPlayer[`hp`]} HP :)`
@@ -654,6 +687,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // GOLD
     if (command === `!gold`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         if (targetPlayer) {
             response = `${toUser} has ${targetPlayer[`gold`]} G :)`
@@ -669,6 +705,9 @@ function onMessageHandler(channel, tags, msg, self) {
     if (command === `!get`
         || command === `!buy`
         || command === `!shop`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         if (sendingPlayer[`dead`]) {
             talk(channel, `Sorry ${sender}, you are dead! :(`)
             return
@@ -766,12 +805,18 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // COMMANDS
     if (command === `!commands`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const response = `!fight: Choose another chat member to attack, !act: Do an action by yourself or with another chat member, !item: Check for (or use) items in your inventory, !mercy: Choose another chat member to spare, !get: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
         talk(channel, response)
     }
 
     // HELP
     if (command === `!help`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const response = `${sender}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
         talk(channel, response)
     }
@@ -784,6 +829,9 @@ function onMessageHandler(channel, tags, msg, self) {
     if (msg.toLowerCase().includes(`am i sub`)
         || msg.toLowerCase().includes(`am i a sub`)
         || msg.toLowerCase().includes(`do i have a sub`)) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         senderIsSubbed ? response = `Yes ${sender}, you are subbed :)` : response = `No ${sender}, you aren't subbed :(`
         talk(channel, response)
@@ -792,6 +840,9 @@ function onMessageHandler(channel, tags, msg, self) {
     // AM I A MOD
     if (msg.toLowerCase().includes(`am i a mod`)
         || msg.toLowerCase().includes(`am i mod`)) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         senderIsAMod ? response = `Yes ${sender}, you are a moderator :)` : response = `No ${sender}, you aren't a moderator :(`
         talk(channel, response)
@@ -801,6 +852,9 @@ function onMessageHandler(channel, tags, msg, self) {
     if (msg.toLowerCase().includes(`am i vip`)
         || msg.toLowerCase().includes(`am i a vip`)
         || msg.toLowerCase().includes(`do i have vip`)) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         let response
         senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
         talk(channel, response)
@@ -815,6 +869,9 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`bot hey`)
         || msg.toLowerCase().includes(`bot hello`)
         || msg.toLowerCase().includes(`bot sup`)) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
@@ -830,6 +887,9 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`hey @undertalebot`)
         || msg.toLowerCase().includes(`hello @undertalebot`)
         || msg.toLowerCase().includes(`up @undertalebot`)) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const greetings = [`Hi`, `Hey`, `Hello`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`
@@ -846,6 +906,9 @@ function onMessageHandler(channel, tags, msg, self) {
         || msg.toLowerCase().includes(`night undertalebot`)
         || msg.toLowerCase().includes(`gn @undertalebot`)
         || msg.toLowerCase().includes(`night @undertalebot`)) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
         const greetings = [`Good night`, `Sleep well`, `See you later`]
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
@@ -1437,7 +1500,7 @@ function printLogo() {
     console.log(whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 8 ]
     console.log(whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 9 ]
     //          [  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][ 10  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][  9  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][  8  ][space][  1  ][  2  ][  3  ][  4  ][  5  ][  6  ][  7  ][ 8 ]
-    
+
     // List of basic commands
     console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
     console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)

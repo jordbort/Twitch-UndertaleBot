@@ -701,9 +701,9 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
-    // Buy item (!buy !shop !get ???)
-    if (command === `!get`
-        || command === `!buy`
+    // BUY or SHOP or GET
+    if (command === `!buy`
+        || command === `!get`
         || command === `!shop`) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
@@ -808,7 +808,7 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
-        const response = `!fight: Choose another chat member to attack, !act: Do an action by yourself or with another chat member, !item: Check for (or use) items in your inventory, !mercy: Choose another chat member to spare, !get: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
+        const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
         talk(channel, response)
     }
 
@@ -823,7 +823,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // UNDERTALE or LOGO
     if (command === `!undertale`
-        || command === `!logo`) { printLogo() }
+        || command === `!logo`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+        printLogo()
+    }
 
     // AM I SUBBED
     if (msg.toLowerCase().includes(`am i sub`)
@@ -1506,7 +1510,7 @@ function printLogo() {
     console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
     console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Check for (or use) items in your inventory${resetTxt}`)
     console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
-    console.log(`${greenBg} !get ${resetTxt}`, `${greenTxt}- Spend gold on items, or check what is possible to buy${resetTxt}`)
+    console.log(`${greenBg} !buy ${resetTxt}`, `${greenTxt}- Spend gold on items, or check what is possible to buy${resetTxt}`)
     console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state${resetTxt}`)
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file${resetTxt}`)
 }

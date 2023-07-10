@@ -902,7 +902,6 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // GN BOT
     if (msg.toLowerCase().includes(`gn bot`)
-        || msg.toLowerCase().includes(`night bot`)
         || msg.toLowerCase().includes(`undertalebot gn`)
         || msg.toLowerCase().includes(`undertalebot good night`)
         || msg.toLowerCase().includes(`undertalebot night`)

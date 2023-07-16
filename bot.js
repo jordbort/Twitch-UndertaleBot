@@ -680,6 +680,23 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    // EXP or EXPERIENCE
+    if (command === `!exp`
+        || command === `!experience`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        let response
+        if (targetPlayer) {
+            response = `${toUser} has ${targetPlayer[`exp`]} EXP`
+        } else if (toUser) {
+            response = `${toUser} isn't a known player!`
+        } else {
+            response = `${sender} has ${sendingPlayer[`exp`]} EXP`
+        }
+        talk(channel, response)
+    }
+
     // BUY or SHOP or GET
     if (command === `!buy`
         || command === `!get`

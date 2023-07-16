@@ -697,6 +697,22 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    // WEAPON
+    if (command === `!weapon`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        let response
+        if (targetPlayer) {
+            response = `${toUser} has the ${targetPlayer[`weapon`]} equipped`
+        } else if (toUser) {
+            response = `${toUser} isn't a known player!`
+        } else {
+            response = `${sender} has the ${sendingPlayer[`weapon`]} equipped`
+        }
+        talk(channel, response)
+    }
+
     // BUY or SHOP or GET
     if (command === `!buy`
         || command === `!get`

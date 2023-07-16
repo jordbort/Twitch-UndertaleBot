@@ -9,7 +9,7 @@ When the bot is active in a Twitch channel, it keeps track of everyone sending m
 ## Main commands
 `!fight @user` or `!attack @user`
 
-This command attacks the user specified (or the user who used the command, if none is specified). There is a 25% chance that you'll "miss", otherwise the ATK stat + weapon damage + a random number will be used to calculate damage, from which the DEF stat and armor bonuses are deducted. If the user kills a user, the bot also sends a message that the dead user should "stay determined..." When a player kills another user, they receive all their EXP and gold (if any), plus a base of 10 EXP. Users cannot use !fight if they are dead, nor can the command be used on a dead user or a user that isn't in the bot's memory.
+This command attacks the user specified (or the user who used the command, if none is specified). There is a 25% chance that you'll "miss", otherwise the ATK stat + weapon damage + a random number will be used to calculate damage, from which the DEF stat and armor bonuses are deducted. If the user kills a user, the bot also sends a message that the dead user should "stay determined..." When a player kills another user, they receive all their EXP and gold (if any), plus a base of 10 EXP. Users cannot use !fight if they are dead, nor can the command be used on a dead user or a user that isn't in the bot's memory. If users try to fight the bot, it suggests that they try fighting the dummy instead.
 
 `!act @user`
 
@@ -36,9 +36,13 @@ This command SAVEs the user's current status, which can then be loaded at any ti
 This command loads the user's SAVE state. If the user hasn't used the !save command yet, the user reverts to their original SAVE, which is their base stats. Using this command is the only way to come back after being killed. It is not necessary to use this command to enter the game.
 
 ## Other commands
-`!stats @user`
+`!stats @user` or `!stat @user` or `!status @user`
 
-This command checks the current stats of the user specified (or the user who used the command, if none is specified). Stats include LV, AT, DF, EXP, Next EXP to increase LV, Weapon, Armor, and Gold. This command cannot be used on a user that isn't in the bot's memory.
+This command checks the current stats of the user specified (or the user who used the command, if none is specified). Stats include LV, AT, DF, EXP, Next EXP to increase LV, Weapon, Armor, and Gold. This command cannot be used on a user that isn't in the bot's memory. Individual stats can also be checked with `!hp`, `!gold`, `!exp`, `!next`, `!weapon`, and `!armor`
+
+`!intro`
+
+This command uses random battle-starting text from Undertale. Some text is rarer than others, but it's all just for fun. Users cannot use !intro if they are dead.
 
 `!spamton <number>`
 
@@ -48,6 +52,14 @@ This command returns a random Spamton quote from Deltarune. Optionally, a number
 
 This command returns a list of each chat member the bot has acknowledged in memory. This data is lost when the bot's server is dropped.
 
+`!help`
+
+This command posts a brief summary of why the bot exists and how to use it.
+
+`!commands`
+
+This command posts a short list of commonly-used commands to help new users get started.
+
 `Easter eggs/fun stuff`
 
-The bot will respond if you say hi to it, or say good night. The bot will also tell a player whether they are subscribed, are a moderator, or have VIP status in a given channel. A moderator in a given channel can also use the !revive command to bring all users in chat back to full HP. All of these commands were made in early development, and will likely be removed in the future.
+The bot will respond if you say hi to it, or say good night. The bot will also tell a player whether they are subscribed, are a moderator, or have VIP status in a given channel. All of these commands were made in early development, and will likely be removed in the future.

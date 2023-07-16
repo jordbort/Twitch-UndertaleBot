@@ -697,6 +697,22 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    // NEXT
+    if (command === `!next`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        let response
+        if (targetPlayer) {
+            response = `${toUser}'s LV will increase with ${targetPlayer[`next`]} more EXP`
+        } else if (toUser) {
+            response = `${toUser} isn't a known player!`
+        } else {
+            response = `${sender}'s LV will increase with ${sendingPlayer[`next`]} more EXP`
+        }
+        talk(channel, response)
+    }
+
     // WEAPON
     if (command === `!weapon`) {
         // Log message

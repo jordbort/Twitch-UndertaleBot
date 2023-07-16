@@ -212,7 +212,7 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
-        let response = `Here's everyone I know: `
+        let response = `Players: `
         for (const player in players) {
             const logColor = players[player][`dead`] ? redBg : greenBg
             response += `${player} `

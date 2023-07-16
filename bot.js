@@ -288,6 +288,93 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`Inventory:`, players[sender.toLowerCase()][`inventory`])
     }
 
+    // INTRO
+    if (command === `!intro`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        if (sendingPlayer[`dead`]) {
+            talk(channel, `Sorry ${sender}, you are dead! :(`)
+            return
+        }
+
+        let response = `* `
+        const introText = [
+            `${sender} and co. decided to pick on you!`,
+            `${sender} appeared.`,
+            `${sender} appeared.`,
+            `${sender} appeared.`,
+            `${sender} appears.`,
+            `${sender} appears.`,
+            `${sender} appears. Jerry came, too.`,
+            `${sender} approached meekly!`,
+            `${sender} assaults you!`,
+            `${sender} attacked!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} attacks!`,
+            `${sender} blocked the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way!`,
+            `${sender} blocks the way.`,
+            `${sender} bounds towards you!`,
+            `${sender} came out of the earth!`,
+            `${sender} clings to you!`,
+            `${sender} confronts you, sighing. Jerry.`,
+            `${sender} confronts you!`,
+            `${sender} crawled up close!`,
+            `${sender} crawled up close!`,
+            `${sender} decided to pick on you!`,
+            `${sender} drew near!`,
+            `${sender} drew near!`,
+            `${sender} drew near!`,
+            `${sender} drew near!`,
+            `${sender} drew near.`,
+            `${sender} emerges from the shadows.`,
+            `${sender} emerges from the shadows.`,
+            `${sender} flexes in!`,
+            `${sender} flutters forth!`,
+            `${sender} flutters forth!`,
+            `${sender} flutters in.`,
+            `${sender} gets in the way! Not on purpose or anything.`,
+            `${sender} hides in the corner but somehow encounters you anyway.`,
+            `${sender} hissed out of the earth!`,
+            `${sender} hopped close!`,
+            `${sender} hopped in...?`,
+            `${sender} hopped towards you.`,
+            `${sender} pops out of their hat!`,
+            `${sender} rushed in!`,
+            `${sender} saunters up!`,
+            `${sender} shuffles up.`,
+            `${sender} slithered out of the earth!`,
+            `${sender} strolls in.`,
+            `${sender} struts into view.`,
+            `${sender} swooped in!`,
+            `${sender} traps you!`,
+            `${sender} was already there, waiting for you.`,
+            `Here comes ${sender}.`,
+            `Here comes ${sender}. Same as usual.`,
+            `It's ${sender}.`,
+            `It's ${sender}.`,
+            `Special enemy ${sender} appears here to defeat you!!`,
+            `You encountered ${sender}.`,
+            `You tripped over ${sender}.`
+        ]
+        const randIntroText = Math.floor(Math.random() * introText.length)
+        response += introText[randIntroText]
+        talk(channel, response)
+    }
+
     // STAT(S)
     if (command === `!stats`
         || command === `!stat`

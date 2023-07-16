@@ -207,6 +207,39 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(`#undertalebot`, `${sender}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
     }
 
+    // RECRUIT
+    if (command === `!recruit`
+        && channel === `#undertalebot`
+        && sender === `JPEGSTRIPES`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        const newUser = toUser.toLowerCase()
+
+        if (!newUser) {
+            talk(channel, `All users: ${globalUsers}`)
+            return
+        }
+
+        if (globalUsers.includes(newUser)) {
+            talk(channel, `${newUser} is already recruited!`)
+            return
+        }
+
+        const client = new tmi.client({
+            identity: {
+                username: BOT_USERNAME,
+                password: OAUTH_TOKEN
+            },
+            channels: [newUser]
+        })
+        client.on('message', onMessageHandler)
+        client.connect()
+
+        globalUsers.push(newUser)
+        talk(`#undertalebot`, `${newUser} has been recruited!`)
+    }
+
     // MEMORY
     if (command === `!memory`) {
         // Log message

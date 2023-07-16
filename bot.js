@@ -175,20 +175,14 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
 
     // JOIN
-    if (command === `!join` && channel === `#undertalebot`) {
+    if (command === `!join`
+        && channel === `#undertalebot`) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
         const user = sender.toLowerCase()
 
-        let index = -1
-        for (const idx in globalUsers) {
-            if (globalUsers[idx] === user) {
-                index = idx
-                break
-            }
-        }
-        if (index >= 0) {
+        if (globalUsers.includes(user)) {
             talk(channel, `${sender}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
             return
         }

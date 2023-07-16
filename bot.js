@@ -655,13 +655,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has ${targetPlayer[`hp`]} HP :)`
-            if (targetPlayer[`dead`]) { response += ` ${toUser} is dead :(` }
+            response = `${toUser} has ${targetPlayer[`hp`]} HP`
         } else if (toUser) {
-            response = `${toUser} isn't registered :(`
+            response = `${toUser} isn't a known player!`
         } else {
-            response = `${sender} has ${sendingPlayer[`hp`]} HP :)`
-            if (sendingPlayer[`dead`]) { response += ` You are dead :(` }
+            response = `${sender} has ${sendingPlayer[`hp`]} HP`
         }
         talk(channel, response)
     }
@@ -673,11 +671,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has ${targetPlayer[`gold`]} G :)`
+            response = `${toUser} has ${targetPlayer[`gold`]} G`
         } else if (toUser) {
-            response = `${toUser} isn't registered :(`
+            response = `${toUser} isn't a known player!`
         } else {
-            response = `${sender} has ${sendingPlayer[`gold`]} G :)`
+            response = `${sender} has ${sendingPlayer[`gold`]} G`
         }
         talk(channel, response)
     }

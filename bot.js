@@ -704,11 +704,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has the ${targetPlayer[`weapon`]} equipped`
+            response = `${toUser} has the ${targetPlayer[`weapon`]} equipped (${weaponsATK[targetPlayer[`weapon`]]} ATK)`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
-            response = `${sender} has the ${sendingPlayer[`weapon`]} equipped`
+            response = `${sender} has the ${sendingPlayer[`weapon`]} equipped (${weaponsATK[sendingPlayer[`weapon`]]} ATK)`
         }
         talk(channel, response)
     }
@@ -720,11 +720,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has the ${targetPlayer[`armor`]} equipped`
+            response = `${toUser} has the ${targetPlayer[`armor`]} equipped (${armorDEF[targetPlayer[`armor`]]} DEF)`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
-            response = `${sender} has the ${sendingPlayer[`armor`]} equipped`
+            response = `${sender} has the ${sendingPlayer[`armor`]} equipped (${armorDEF[sendingPlayer[`armor`]]} DEF)`
         }
         talk(channel, response)
     }

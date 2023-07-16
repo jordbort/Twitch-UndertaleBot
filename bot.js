@@ -424,8 +424,11 @@ function onMessageHandler(channel, tags, msg, self) {
                     talk(channel, `${toUser} is already dead! :(`)
                     return
                 }
+            } else if (toUser.toLowerCase() === `undertalebot`) {
+                talk(channel, `You can't fight me, but you can try fighting the dummy!`)
+                return
             } else {
-                talk(channel, `${toUser} is not a registered player :(`)
+                talk(channel, `${toUser} isn't a known player!`)
                 return
             }
         }

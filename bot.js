@@ -248,6 +248,23 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    // REVIVE (for testing, mods can also use)
+    if (command === `!revive`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        let response
+        if (sender === `JPEGSTRIPES` || senderIsAMod) {
+            players[`dummy`][`hp`] = getUserMaxHP(`dummy`)
+            players[`dummy`][`dead`] = false
+            response = `Dummy is alive :)`
+            talk(channel, response)
+        } else {
+            response = `You can't use this command, ${sender} ;)`
+            talk(channel, response)
+        }
+    }
+
     // SAVE
     if (command === `!save`) {
         // Log message

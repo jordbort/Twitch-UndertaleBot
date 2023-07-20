@@ -1096,6 +1096,23 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(channel, response)
     }
 
+    // Viewer bot identifier
+    if (command === `is` && msg.toLowerCase().includes(`bot?`)) {
+        const url = `https://api.twitchinsights.net/v1/bots/all`
+        let botIndex = -1
+        fetch(url)
+            .then((response) => response.json())
+            .then((json) => {
+                for (let i = 0; i < json.bots.length; i++) {
+                    if (json.bots[i][0] === args[0]) {
+                        botIndex = i
+                        console.log(`${args[0]} found at index ${i}. Currently watching ${json.bots[i][1]} channels`)
+                    }
+                }
+                botIndex >= 0 ? talk(channel, `${args[0]} is currently watching ${json.bots[botIndex][1]} Twitch channels`) : talk(channel, `${args[0]} is not a known bot at this time`)
+            })
+    }
+
     function talk(chatroom, resp) {
         client.say(chatroom, resp)
         console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)

@@ -1107,6 +1107,7 @@ function onMessageHandler(channel, tags, msg, self) {
                     if (json.bots[i][0] === args[0]) {
                         botIndex = i
                         console.log(`${args[0]} found at index ${i}. Currently watching ${json.bots[i][1]} channels`)
+                        break
                     }
                 }
                 botIndex >= 0 ? talk(channel, `${args[0]} is currently watching ${json.bots[botIndex][1]} Twitch channels`) : talk(channel, `${args[0]} is not a known bot at this time`)

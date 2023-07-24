@@ -420,9 +420,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // STAT(S)
-    if (command === `!stats`
-        || command === `!stat`
-        || command === `!status`) {
+    if ([`!stats`, `!stat`, `!status`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -452,8 +450,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // FIGHT or ATTACK
-    if (command === `!fight`
-        || command === `!attack`) {
+    if ([`!fight`, `!attack`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -602,9 +599,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // ITEM or ITEMS or USE
-    if (command === `!item`
-        || command === `!items`
-        || command === `!use`) {
+    if ([`!item`, `!items`, `!use`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -721,8 +716,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // MERCY or SPARE
-    if (command === `!mercy`
-        || command === `!spare`) {
+    if ([`!mercy`, `!spare`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -815,8 +809,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // EXP or EXPERIENCE
-    if (command === `!exp`
-        || command === `!experience`) {
+    if ([`!exp`, `!experience`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -880,9 +873,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // BUY or SHOP or GET
-    if (command === `!buy`
-        || command === `!get`
-        || command === `!shop`) {
+    if ([`!buy`, `!get`, `!shop`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -1000,8 +991,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // UNDERTALE or LOGO
-    if (command === `!undertale`
-        || command === `!logo`) {
+    if ([`!undertale`, `!logo`].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
         printLogo()

@@ -2,7 +2,21 @@ require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const SELECTED_CHANNEL = process.env.CHANNEL_1
+const CHANNEL_1 = process.env.CHANNEL_1
+const CHANNEL_2 = process.env.CHANNEL_2
+const CHANNEL_3 = process.env.CHANNEL_3
+const CHANNEL_4 = process.env.CHANNEL_4
+const CHANNEL_5 = process.env.CHANNEL_5
+const CHANNEL_6 = process.env.CHANNEL_6
+const CHANNEL_7 = process.env.CHANNEL_7
+const LEMONY_FRESH = [
+    CHANNEL_2,
+    CHANNEL_3,
+    CHANNEL_4,
+    CHANNEL_5,
+    CHANNEL_6,
+    CHANNEL_7
+]
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -39,7 +53,7 @@ const opts = {
         password: OAUTH_TOKEN
     },
     channels: [
-        SELECTED_CHANNEL
+        CHANNEL_1
     ]
 }
 
@@ -204,7 +218,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // RECRUIT
     if (command === `!recruit`
         && channel === `#undertalebot`
-        && sender === `JPEGSTRIPES`) {
+        && sender.toLowerCase() === CHANNEL_2) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
@@ -231,6 +245,35 @@ function onMessageHandler(channel, tags, msg, self) {
                 talk(channel, `${newUser} has been recruited!`)
             }
         }
+        return
+    }
+
+    // LEMONY FRESH
+    if (command === `!lemonyfresh`
+        && channel === `#undertalebot`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
+
+        let response = `Lemony Fresh! `
+
+        if (sender === CHANNEL_2) {
+            const invalid = globalUsers.some((idx) => LEMONY_FRESH.includes(idx))
+            if (invalid) {
+                response += `:(`
+            } else {
+                response += `:)`
+                const client = new tmi.client({
+                    identity: {
+                        username: BOT_USERNAME,
+                        password: OAUTH_TOKEN
+                    },
+                    channels: LEMONY_FRESH
+                })
+                client.on('message', onMessageHandler)
+                client.connect()
+            }
+        } else { response += `🍋️` }
+        talk(channel, response)
         return
     }
 
@@ -2628,5 +2671,5 @@ function useItem(user, str, idx) {
 function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`)
     printLogo()
-    client.say(SELECTED_CHANNEL, `I have been rebooted :)`)
+    client.say(CHANNEL_1, `I have been rebooted :)`)
 }

@@ -208,30 +208,30 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
-        const newUser = toUser.toLowerCase()
-
-        if (!newUser) {
+        if (!args.length) {
             talk(channel, `All users: ${globalUsers}`)
             return
         }
 
-        if (globalUsers.includes(newUser)) {
-            talk(channel, `${newUser} is already recruited!`)
-            return
+        for (const idx in args) {
+            const newUser = args[idx].toLowerCase()
+            if (globalUsers.includes(newUser)) {
+                talk(channel, `${newUser} is already recruited!`)
+            } else {
+                globalUsers.push(newUser)
+                const client = new tmi.client({
+                    identity: {
+                        username: BOT_USERNAME,
+                        password: OAUTH_TOKEN
+                    },
+                    channels: [newUser]
+                })
+                client.on('message', onMessageHandler)
+                client.connect()
+                talk(channel, `${newUser} has been recruited!`)
+            }
         }
-
-        const client = new tmi.client({
-            identity: {
-                username: BOT_USERNAME,
-                password: OAUTH_TOKEN
-            },
-            channels: [newUser]
-        })
-        client.on('message', onMessageHandler)
-        client.connect()
-
-        globalUsers.push(newUser)
-        talk(`#undertalebot`, `${newUser} has been recruited!`)
+        return
     }
 
     // MEMORY

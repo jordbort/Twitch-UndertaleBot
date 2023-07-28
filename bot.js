@@ -256,18 +256,26 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response = `Lemony Fresh! `
 
-        if (sender === CHANNEL_2) {
+        if (sender.toLowerCase() === CHANNEL_2) {
             const invalid = globalUsers.some((idx) => LEMONY_FRESH.includes(idx))
             if (invalid) {
                 response += `:(`
             } else {
                 response += `:)`
+                LEMONY_FRESH.forEach((user) => globalUsers.push(user))
                 const client = new tmi.client({
                     identity: {
                         username: BOT_USERNAME,
                         password: OAUTH_TOKEN
                     },
-                    channels: LEMONY_FRESH
+                    channels: [
+                        CHANNEL_2,
+                        CHANNEL_3,
+                        CHANNEL_4,
+                        CHANNEL_5,
+                        CHANNEL_6,
+                        CHANNEL_7
+                    ]
                 })
                 client.on('message', onMessageHandler)
                 client.connect()

@@ -141,9 +141,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // Message context
     const sender = tags["display-name"]
-    const senderIsSubbed = tags["subscriber"]
-    const senderIsAMod = tags["mod"]
-    const senderIsVIP = tags["vip"]
+    const senderIsSubbed = tags.subscriber
+    const senderIsAMod = tags.mod
+    const senderIsVIP = tags.vip
 
     // Command and arguments parser
     const args = msg.split(' ')
@@ -152,7 +152,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // Add/manage players
     if (!(sender.toLowerCase() in players)) {
-        players[`${sender.toLowerCase()}`] = {
+        players[sender.toLowerCase()] = {
             lv: 1,
             hp: 20,
             dead: false,
@@ -166,7 +166,7 @@ function onMessageHandler(channel, tags, msg, self) {
             stainedApronHealTime: false,
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
-        playerSave[`${sender.toLowerCase()}`] = {
+        playerSave[sender.toLowerCase()] = {
             lv: 1,
             hp: 20,
             dead: false,
@@ -213,6 +213,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         globalUsers.push(user)
         talk(`#undertalebot`, `${sender}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+        return
     }
 
     // RECRUIT
@@ -257,7 +258,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `Lemony Fresh! `
 
         if (sender.toLowerCase() === CHANNEL_2) {
-            const invalid = globalUsers.some((idx) => LEMONY_FRESH.includes(idx))
+            const invalid = globalUsers.some((user) => LEMONY_FRESH.includes(user))
             if (invalid) {
                 response += `:(`
             } else {
@@ -297,6 +298,7 @@ function onMessageHandler(channel, tags, msg, self) {
             console.log(`${logColor} ${player} LV: ${players[player][`lv`]}, HP: ${players[player][`hp`]}/${getUserMaxHP(player)}, AT: ${players[player][`at`]}, DF: ${players[player][`df`]}, EXP: ${players[player][`exp`]}, NEXT: ${players[player][`next`]}, Weapon: ${players[player][`weapon`]}, Armor: ${players[player][`armor`]}, Gold: ${players[player][`gold`]} ${resetTxt}`)
         }
         talk(channel, response)
+        return
     }
 
     // REVIVE (for testing, mods can also use)
@@ -314,6 +316,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `You can't use this command, ${sender} ;)`
             talk(channel, response)
         }
+        return
     }
 
     // SAVE
@@ -364,6 +367,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const randSaveText = Math.floor(Math.random() * saveText.length)
         response += saveText[randSaveText]
         talk(channel, response)
+        return
     }
 
     // LOAD
@@ -381,6 +385,7 @@ function onMessageHandler(channel, tags, msg, self) {
         response += `LV: ${players[sender.toLowerCase()][`lv`]}, HP: ${players[sender.toLowerCase()][`hp`]}/${getUserMaxHP(sender)}, AT: ${players[sender.toLowerCase()][`at`]}(${weaponsATK[players[sender.toLowerCase()][`weapon`]] + attackBoost}), DF: ${players[sender.toLowerCase()][`df`]}(${armorDEF[players[sender.toLowerCase()][`armor`]]}), EXP: ${players[sender.toLowerCase()][`exp`]}, NEXT: ${players[sender.toLowerCase()][`next`]}, WEAPON: ${players[sender.toLowerCase()][`weapon`]}, ARMOR: ${players[sender.toLowerCase()][`armor`]}, GOLD: ${players[sender.toLowerCase()][`gold`]}`
         talk(channel, response)
         console.log(`Inventory:`, players[sender.toLowerCase()][`inventory`])
+        return
     }
 
     // INTRO
@@ -468,6 +473,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const randIntroText = Math.floor(Math.random() * introText.length)
         response += introText[randIntroText]
         talk(channel, response)
+        return
     }
 
     // STAT(S)
@@ -489,6 +495,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `"${sender}" LV: ${sendingPlayer[`lv`]}, HP: ${sendingPlayer[`hp`]}/${getUserMaxHP(sender)}, AT: ${sendingPlayer[`at`]}(${weaponsATK[sendingPlayer[`weapon`]] + attackBoost}), DF: ${sendingPlayer[`df`]}(${armorDEF[sendingPlayer[`armor`]]}), EXP: ${sendingPlayer[`exp`]}, NEXT: ${sendingPlayer[`next`]}, WEAPON: ${sendingPlayer[`weapon`]}, ARMOR: ${sendingPlayer[`armor`]}, GOLD: ${sendingPlayer[`gold`]}`
         }
         talk(channel, response)
+        return
     }
 
     // SPAMTON QUOTE
@@ -498,6 +505,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         const response = getSpamtonQuote(args[0])
         talk(channel, response)
+        return
     }
 
     // FIGHT or ATTACK
@@ -609,6 +617,7 @@ function onMessageHandler(channel, tags, msg, self) {
             }
             deathCheck(channel, sender, sender)
         }
+        return
     }
 
     // ACT
@@ -647,6 +656,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         talk(channel, response)
+        return
     }
 
     // ITEM or ITEMS or USE
@@ -764,6 +774,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         const response = useItem(sender, usedItem, index)
         talk(channel, response)
+        return
     }
 
     // MERCY or SPARE
@@ -825,6 +836,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         talk(channel, response)
         console.log(`${cyanBg} sender: ${sender} ${sendingPlayer[`hp`]}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer[`hp`] : ``}, randNum: ${randNum} ${resetTxt}`)
+        return
     }
 
     // HP
@@ -841,6 +853,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender} has ${sendingPlayer[`hp`]} HP`
         }
         talk(channel, response)
+        return
     }
 
     // GOLD
@@ -857,6 +870,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender} has ${sendingPlayer[`gold`]} G`
         }
         talk(channel, response)
+        return
     }
 
     // EXP or EXPERIENCE
@@ -873,6 +887,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender} has ${sendingPlayer[`exp`]} EXP`
         }
         talk(channel, response)
+        return
     }
 
     // NEXT
@@ -889,6 +904,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender}'s LV will increase with ${sendingPlayer[`next`]} more EXP`
         }
         talk(channel, response)
+        return
     }
 
     // WEAPON
@@ -905,6 +921,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender} has the ${sendingPlayer[`weapon`]} equipped (${weaponsATK[sendingPlayer[`weapon`]]} ATK)`
         }
         talk(channel, response)
+        return
     }
 
     // ARMOR
@@ -921,6 +938,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response = `${sender} has the ${sendingPlayer[`armor`]} equipped (${armorDEF[sendingPlayer[`armor`]]} DEF)`
         }
         talk(channel, response)
+        return
     }
 
     // BUY or SHOP or GET
@@ -1021,6 +1039,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (queryItem) { response = buyItem(sender, queryItem, itemPrices[queryItem]) }
 
         talk(channel, response)
+        return
     }
 
     // COMMANDS
@@ -1030,6 +1049,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
         talk(channel, response)
+        return
     }
 
     // HELP
@@ -1039,6 +1059,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         const response = `${sender}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
         talk(channel, response)
+        return
     }
 
     // UNDERTALE or LOGO
@@ -1046,6 +1067,7 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
         printLogo()
+        return
     }
 
     // AM I SUBBED
@@ -1058,6 +1080,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         senderIsSubbed ? response = `Yes ${sender}, you are subbed :)` : response = `No ${sender}, you aren't subbed :(`
         talk(channel, response)
+        return
     }
 
     // AM I A MOD
@@ -1069,6 +1092,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         senderIsAMod ? response = `Yes ${sender}, you are a moderator :)` : response = `No ${sender}, you aren't a moderator :(`
         talk(channel, response)
+        return
     }
 
     // AM I VIP
@@ -1081,6 +1105,7 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         senderIsVIP ? response = `Yes ${sender}, you have VIP status :)` : response = `No ${sender}, you don't have VIP status :(`
         talk(channel, response)
+        return
     }
 
     // HELLO BOT
@@ -1099,6 +1124,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
         talk(channel, response)
+        return
     }
 
     // UNDERTALE BOT HI
@@ -1117,6 +1143,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! How are you? :)`
         talk(channel, response)
+        return
     }
 
     // GN BOT
@@ -1135,6 +1162,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const greeting = greetings[Math.floor(Math.random() * greetings.length)]
         const response = `${greeting}, ${sender}! :)`
         talk(channel, response)
+        return
     }
 
     function talk(chatroom, resp) {

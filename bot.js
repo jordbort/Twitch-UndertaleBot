@@ -226,7 +226,7 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
         if (!args.length) {
-            talk(channel, `All users: ${globalUsers}`)
+            talk(channel, `All users: ${globalUsers.join(', ')}`)
             return
         }
 
@@ -691,7 +691,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         if (!usedItem) {
-            talk(channel, `${sender}'s items: ${inventory}`)
+            talk(channel, `${sender}'s items: ${inventory.join(', ')}`)
             return
         }
 

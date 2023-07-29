@@ -9,13 +9,15 @@ const CHANNEL_4 = process.env.CHANNEL_4
 const CHANNEL_5 = process.env.CHANNEL_5
 const CHANNEL_6 = process.env.CHANNEL_6
 const CHANNEL_7 = process.env.CHANNEL_7
-const LEMONY_FRESH = [
+const CHANNEL_8 = process.env.CHANNEL_8
+const squad = [
     CHANNEL_2,
     CHANNEL_3,
     CHANNEL_4,
     CHANNEL_5,
     CHANNEL_6,
-    CHANNEL_7
+    CHANNEL_7,
+    CHANNEL_8
 ]
 
 // Terminal colors
@@ -249,21 +251,23 @@ function onMessageHandler(channel, tags, msg, self) {
         return
     }
 
-    // LEMONY FRESH
-    if (command === `!lemonyfresh`
+    // ALL
+    if (command === `!all`
         && channel === `#undertalebot`) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 
-        let response = `Lemony Fresh! `
+        let response
 
-        if (sender.toLowerCase() === CHANNEL_2) {
-            const invalid = globalUsers.some((user) => LEMONY_FRESH.includes(user))
+        if (!sender.toLowerCase() === CHANNEL_2) {
+            return
+        } else {
+            const invalid = globalUsers.some((user) => squad.includes(user))
             if (invalid) {
-                response += `:(`
+                response = `Someone is already recruited :( ${globalUsers.join(', ')}`
             } else {
-                response += `:)`
-                LEMONY_FRESH.forEach((user) => globalUsers.push(user))
+                response = `Squad up! :)`
+                squad.forEach((user) => globalUsers.push(user))
                 const client = new tmi.client({
                     identity: {
                         username: BOT_USERNAME,
@@ -275,13 +279,14 @@ function onMessageHandler(channel, tags, msg, self) {
                         CHANNEL_4,
                         CHANNEL_5,
                         CHANNEL_6,
-                        CHANNEL_7
+                        CHANNEL_7,
+                        CHANNEL_8
                     ]
                 })
                 client.on('message', onMessageHandler)
                 client.connect()
             }
-        } else { response += `🍋️` }
+        }
         talk(channel, response)
         return
     }

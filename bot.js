@@ -253,7 +253,8 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ALL
     if (command === `!all`
-        && channel === `#undertalebot`) {
+        && channel === `#undertalebot`
+        && sender.toLowerCase() === CHANNEL_2) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer[`dead`] ? redTxt : greenTxt}${sender}:${resetTxt}`, msg)
 

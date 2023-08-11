@@ -260,33 +260,29 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
 
-        if (!sender.toLowerCase() === CHANNEL_2) {
-            return
+        const invalid = globalUsers.some((user) => squad.includes(user))
+        if (invalid) {
+            response = `Someone is already recruited :( ${globalUsers.join(', ')}`
         } else {
-            const invalid = globalUsers.some((user) => squad.includes(user))
-            if (invalid) {
-                response = `Someone is already recruited :( ${globalUsers.join(', ')}`
-            } else {
-                response = `Squad up! :)`
-                squad.forEach((user) => globalUsers.push(user))
-                const client = new tmi.client({
-                    identity: {
-                        username: BOT_USERNAME,
-                        password: OAUTH_TOKEN
-                    },
-                    channels: [
-                        CHANNEL_2,
-                        CHANNEL_3,
-                        CHANNEL_4,
-                        CHANNEL_5,
-                        CHANNEL_6,
-                        CHANNEL_7,
-                        CHANNEL_8
-                    ]
-                })
-                client.on('message', onMessageHandler)
-                client.connect()
-            }
+            response = `Squad up! :)`
+            squad.forEach((user) => globalUsers.push(user))
+            const client = new tmi.client({
+                identity: {
+                    username: BOT_USERNAME,
+                    password: OAUTH_TOKEN
+                },
+                channels: [
+                    CHANNEL_2,
+                    CHANNEL_3,
+                    CHANNEL_4,
+                    CHANNEL_5,
+                    CHANNEL_6,
+                    CHANNEL_7,
+                    CHANNEL_8
+                ]
+            })
+            client.on('message', onMessageHandler)
+            client.connect()
         }
         talk(channel, response)
         return

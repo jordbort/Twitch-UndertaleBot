@@ -2737,15 +2737,12 @@ function onConnectedHandler(addr, port) {
         console.log(`* Connected to ${addr}:${port}`)
         setTimeout(() => {
             client.say(CHANNEL_1, `I have been rebooted :)`)
-            console.log(`* Ready!`)
+            console.log(`* UndertaleBot blocks the way!`)
         }, 3000)
     } else {
+        console.log(`* Reconnected to ${addr}:${port}`)
         client.say(CHANNEL_1, `Reconnecting...`)
-        console.log(`* Reconnecting...`)
-        setTimeout(() => {
-            client.say(CHANNEL_1, `Reconnected!`)
-            console.log(`* Reconnected to ${addr}:${port}`)
-        }, 3000)
+        setTimeout(() => client.say(CHANNEL_1, `Reconnected!`), 3000)
     }
     firstConnection = false
 }

@@ -216,8 +216,8 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        for (const idx in args) {
-            const newUser = args[idx].toLowerCase()
+        for (const str of args) {
+            const newUser = str.toLowerCase()
             if (globalUsers.includes(newUser)) {
                 talk(channel, `${newUser} is already recruited!`)
             } else {
@@ -746,10 +746,10 @@ function onMessageHandler(channel, tags, msg, self) {
         ]
 
         let isAnItem = false
-        for (idx in allItems) {
-            if (msg.toLowerCase().includes(allItems[idx])) {
+        for (const item of allItems) {
+            if (msg.toLowerCase().includes(item)) {
                 isAnItem = true
-                usedItem = allItems[idx]
+                usedItem = item
                 break
             }
         }
@@ -1025,10 +1025,10 @@ function onMessageHandler(channel, tags, msg, self) {
         ]
 
         let isAnItem = false
-        for (idx in purchasableItems) {
-            if (msg.toLowerCase().includes(purchasableItems[idx])) {
+        for (const item of purchasableItems) {
+            if (msg.toLowerCase().includes(item)) {
                 isAnItem = true
-                queryItem = purchasableItems[idx]
+                queryItem = item
                 break
             }
         }
@@ -1666,8 +1666,8 @@ function calculateUserLV(user) {
         player.hp += 4
     }
     if (collectedItems.length) {
-        for (const idx in collectedItems) { player.inventory.push(collectedItems[idx]) }
-        foundItemsAppend = ` ${user} found: ` + collectedItems
+        for (const item of collectedItems) { player.inventory.push(item) }
+        foundItemsAppend = ` ${user} found: ` + collectedItems.join(`, `)
     }
     console.log(`${cyanBg} ${user} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
     console.log(`Inventory:`, player.inventory)

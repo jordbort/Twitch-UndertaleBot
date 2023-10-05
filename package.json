@@ -5,7 +5,8 @@
   "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon bot.js"
+    "dev": "nodemon bot.js",
+    "nowarn": "node --no-warnings bot.js"
   },
   "keywords": [],
   "author": "",

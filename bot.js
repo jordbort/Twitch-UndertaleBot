@@ -814,9 +814,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 talk(channel, response)
                 return
             } else if (randNum === 1) {
-                const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-                const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
-                response += `YOU WON! ${capsTarget} was spared. ${capsSender} earned 0 EXP and ${randGoldAmt} gold.`
+                response += `YOU WON! ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} was spared. ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} earned 0 EXP and ${randGoldAmt} gold.`
                 sendingPlayer.gold += randGoldAmt
                 sendingPlayer.hp = getUserMaxHP(user)
                 targetPlayer.hp = getUserMaxHP(toUser.toLowerCase())
@@ -824,11 +822,11 @@ function onMessageHandler(channel, tags, msg, self) {
                 console.log(`${cyanBg} sender: ${sendingPlayer.displayName} ${sendingPlayer.hp}, target: ${targetPlayer.displayName || `none`} ${targetPlayer ? targetPlayer.hp : ``}, randNum: ${randNum} ${resetTxt}`)
                 return
             } else {
-                response += `${capsSender} tried to spare ${targetPlayer.displayName}. ${capsTarget}`
+                response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare ${targetPlayer.displayName}. ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}`
                 response += getThirdPersonFlavorText()
             }
         } else {
-            response += `${capsSender} tried to spare themself. But nothing happened.`
+            response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`
         }
 
         // Stained Apron heal check

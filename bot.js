@@ -81,7 +81,7 @@ const baseAT = -2
 const baseDF = 0.25
 
 // Initializing players
-let players = {
+const players = {
     dummy: {
         displayName: `the Dummy`,
         lv: 1,
@@ -193,7 +193,6 @@ function onMessageHandler(channel, tags, msg, self) {
     }
     const sendingPlayer = players[user]
     const targetPlayer = toUser.toLowerCase() !== user && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
-    console.log(`<${sendingPlayer.displayName}> targetPlayer =`, targetPlayer?.displayName || targetPlayer)
 
     // *****************
     // ** REPLY CASES **
@@ -228,7 +227,7 @@ function onMessageHandler(channel, tags, msg, self) {
                         username: BOT_USERNAME,
                         password: OAUTH_TOKEN
                     },
-                    channels: [newUser]
+                    channels: [`#${newUser}`]
                 })
                 client.on('message', onMessageHandler)
                 client.connect()
@@ -259,13 +258,13 @@ function onMessageHandler(channel, tags, msg, self) {
                     password: OAUTH_TOKEN
                 },
                 channels: [
-                    CHANNEL_2,
-                    CHANNEL_3,
-                    CHANNEL_4,
-                    CHANNEL_5,
-                    CHANNEL_6,
-                    CHANNEL_7,
-                    CHANNEL_8
+                    `#${CHANNEL_2}`,
+                    `#${CHANNEL_3}`,
+                    `#${CHANNEL_4}`,
+                    `#${CHANNEL_5}`,
+                    `#${CHANNEL_6}`,
+                    `#${CHANNEL_7}`,
+                    `#${CHANNEL_8}`
                 ]
             })
             client.on('message', onMessageHandler)
@@ -280,13 +279,13 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const allPlayers = Object.keys(players)
-        const response = `Players: ${allPlayers.join(`, `)}`
+        const allPlayers = []
         for (const player in players) {
             const logColor = players[player].dead ? redBg : greenBg
             console.log(`${logColor} ${players[player].displayName} LV: ${players[player].lv}, HP: ${players[player].hp}/${getUserMaxHP(player)}, AT: ${players[player].at}, DF: ${players[player].df}, EXP: ${players[player].exp}, NEXT: ${players[player].next}, Weapon: ${players[player].weapon}, Armor: ${players[player].armor}, Gold: ${players[player].gold} ${resetTxt}`)
+            allPlayers.push(players[player].displayName)
         }
-        talk(channel, response)
+        talk(channel, `Players: ${allPlayers.join(`, `)}`)
         return
     }
 
@@ -2660,13 +2659,13 @@ function onConnectedHandler(addr, port) {
         printLogo()
         console.log(`* Connected to ${addr}:${port}`)
         setTimeout(() => {
-            client.say(CHANNEL_1, `I have been rebooted :)`)
+            client.say(`#${CHANNEL_1}`, `I have been rebooted :)`)
             console.log(`* UndertaleBot blocks the way!`)
         }, 3000)
     } else {
         console.log(`* Reconnected to ${addr}:${port}`)
-        client.say(CHANNEL_1, `Reconnecting...`)
-        setTimeout(() => client.say(CHANNEL_1, `Reconnected!`), 3000)
+        client.say(`#${CHANNEL_1}`, `Reconnecting...`)
+        setTimeout(() => client.say(`#${CHANNEL_1}`, `Reconnected!`), 3000)
     }
     firstConnection = false
 }

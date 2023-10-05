@@ -633,7 +633,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (toUser) {
             if (toUser.toLowerCase() in players) {
                 if (targetPlayer.dead) {
-                    talk(channel, `Sorry ${sendingPlayer.displayName}, ${toUser} is dead! :(`)
+                    talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser.toLowerCase()].displayName} is dead! :(`)
                     return
                 }
             } else {
@@ -811,7 +811,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 return
                 // If toUser is dead
             } else if (targetPlayer.dead) {
-                response = `Sorry ${sendingPlayer.displayName}, ${toUser} is dead! :(`
+                response = `Sorry ${sendingPlayer.displayName}, ${players[toUser.toLowerCase()].displayName} is dead! :(`
                 talk(channel, response)
                 return
             } else if (randNum === 1) {
@@ -1396,6 +1396,7 @@ function getThirdPersonFlavorText() {
 function getAction(sendingPlayer, targetPlayer) {
     const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
     const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
+    const randGold = Math.ceil(Math.random() * 10) * 5
     const actions = [
         ` and the others celebrate ${targetPlayer.displayName}'s disappearance.`,
         ` and the others ditch ${targetPlayer.displayName} when they look away!`,
@@ -1479,10 +1480,10 @@ function getAction(sendingPlayer, targetPlayer) {
         ` wiggles their hips. ${capsTarget} wiggles back. What a meaningful conversation!`
     ]
 
-    // If user paid the target gold
     const randAction = Math.floor(Math.random() * actions.length)
+
+    // If user paid the target gold
     if (randAction === 40) {
-        const randGold = Math.ceil(Math.random() * 10) * 5
         const differenceInGold = sendingPlayer.gold - randGold
         console.log(`randGold: ${randGold}, senderGold: ${sendingPlayer.gold}, differenceInGold: ${differenceInGold}`)
         if (sendingPlayer.gold <= 0) {
@@ -1494,9 +1495,9 @@ function getAction(sendingPlayer, targetPlayer) {
         } else {
             sendingPlayer.gold -= randGold
             targetPlayer.gold += randGold
-            return ` pays ${randGold}G. ${capsTarget} reduces their ATTACK for this turn!`
         }
     }
+
     return actions[randAction]
 }
 

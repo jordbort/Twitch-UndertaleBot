@@ -193,6 +193,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
     const sendingPlayer = players[user]
     const targetPlayer = toUser.toLowerCase() !== user && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
+    console.log(`<${sendingPlayer.displayName}> targetPlayer =`, targetPlayer?.displayName || targetPlayer)
 
     // *****************
     // ** REPLY CASES **
@@ -475,10 +476,11 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         let attackBoost = 0
-        if (targetPlayer) {
-            if (targetPlayer.armor === `Cowboy Hat`) { attackBoost = 5 }
-            if (targetPlayer.armor === `Temmie Armor`) { attackBoost = 10 }
-            response = `"${toUser}" LV: ${targetPlayer.lv}, HP: ${targetPlayer.hp}/${getUserMaxHP(toUser)}, AT: ${targetPlayer.at}(${weaponsATK[targetPlayer.weapon] + attackBoost}), DF: ${targetPlayer.df}(${armorDEF[targetPlayer.armor]}), EXP: ${targetPlayer.exp}, NEXT: ${targetPlayer.next}, WEAPON: ${targetPlayer.weapon}, ARMOR: ${targetPlayer.armor}, GOLD: ${targetPlayer.gold}`
+        if (toUser && toUser.toLowerCase() in players) {
+            const target = players[toUser.toLowerCase()]
+            if (target.armor === `Cowboy Hat`) { attackBoost = 5 }
+            if (target.armor === `Temmie Armor`) { attackBoost = 10 }
+            response = `"${target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser.toLowerCase())}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
         } else if (toUser) {
             response = `${toUser} isn't registered :(`
         } else {
@@ -518,7 +520,7 @@ function onMessageHandler(channel, tags, msg, self) {
         // Stop if target is the bot, dead, or not known
         if (toUser) {
             if (toUser.toLowerCase() in players) {
-                if (targetPlayer.dead) {
+                if (players[toUser.toLowerCase()].dead) {
                     talk(channel, `${toUser} is already dead! :(`)
                     return
                 }
@@ -641,7 +643,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response = `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)}`
-        targetPlayer ? response += getAction(user, toUser.toLowerCase()) : response += getThirdPersonFlavorText()
+        targetPlayer ? response += getAction(sendingPlayer, targetPlayer) : response += getThirdPersonFlavorText()
 
         // Stained Apron heal check
         if (sendingPlayer.armor === `Stained Apron`) {
@@ -813,20 +815,21 @@ function onMessageHandler(channel, tags, msg, self) {
                 talk(channel, response)
                 return
             } else if (randNum === 1) {
-                response += `YOU WON! ${toUser} was spared. ${sendingPlayer.displayName} earned 0 EXP and ${randGoldAmt} gold.`
+                const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
+                const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
+                response += `YOU WON! ${capsTarget} was spared. ${capsSender} earned 0 EXP and ${randGoldAmt} gold.`
                 sendingPlayer.gold += randGoldAmt
                 sendingPlayer.hp = getUserMaxHP(user)
-                targetPlayer.hp = getUserMaxHP(toUser)
-
+                targetPlayer.hp = getUserMaxHP(toUser.toLowerCase())
                 talk(channel, response)
-                console.log(`${cyanBg} sender: ${sendingPlayer.displayName} ${sendingPlayer.hp}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer.hp : ``}, randNum: ${randNum} ${resetTxt}`)
+                console.log(`${cyanBg} sender: ${sendingPlayer.displayName} ${sendingPlayer.hp}, target: ${targetPlayer.displayName || `none`} ${targetPlayer ? targetPlayer.hp : ``}, randNum: ${randNum} ${resetTxt}`)
                 return
             } else {
-                response += `${sendingPlayer.displayName} tried to spare ${toUser}. ${toUser}`
+                response += `${capsSender} tried to spare ${targetPlayer.displayName}. ${capsTarget}`
                 response += getThirdPersonFlavorText()
             }
         } else {
-            response += `${sendingPlayer.displayName} tried to spare themself. But nothing happened.`
+            response += `${capsSender} tried to spare themself. But nothing happened.`
         }
 
         // Stained Apron heal check
@@ -1390,12 +1393,9 @@ function getThirdPersonFlavorText() {
     return actions[Math.floor(Math.random() * actions.length)]
 }
 
-function getAction(user, target) {
-    const sendingPlayer = players[user]
+function getAction(sendingPlayer, targetPlayer) {
     const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-    const targetPlayer = players[target]
     const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
-    const randGold = Math.ceil(Math.random() * 10) * 5
     const actions = [
         ` and the others celebrate ${targetPlayer.displayName}'s disappearance.`,
         ` and the others ditch ${targetPlayer.displayName} when they look away!`,
@@ -1482,18 +1482,19 @@ function getAction(user, target) {
     // If user paid the target gold
     const randAction = Math.floor(Math.random() * actions.length)
     if (randAction === 40) {
-        const senderGold = players[user].gold
-        const differenceInGold = senderGold - randGold
-        console.log(`randGold: ${randGold}, senderGold: ${senderGold}, differenceInGold: ${differenceInGold}`)
-        if (userGold <= 0) {
-            return `is out of money. ${targetPlayer.displayName} shakes their head.`
+        const randGold = Math.ceil(Math.random() * 10) * 5
+        const differenceInGold = sendingPlayer.gold - randGold
+        console.log(`randGold: ${randGold}, senderGold: ${sendingPlayer.gold}, differenceInGold: ${differenceInGold}`)
+        if (sendingPlayer.gold <= 0) {
+            return ` is out of money. ${capsTarget} shakes their head.`
         } else if (differenceInGold < 0) {
-            players[target.toLowerCase()].gold += senderGold
-            players[user].gold = 0
-            return `empties their pockets. ${targetPlayer.displayName} lowers the price.`
+            targetPlayer.gold += sendingPlayer.gold
+            sendingPlayer.gold = 0
+            return ` empties their pockets. ${capsTarget} lowers the price.`
         } else {
-            players[user].gold -= randGold
-            players[target.toLowerCase()].gold += randGold
+            sendingPlayer.gold -= randGold
+            targetPlayer.gold += randGold
+            return ` pays ${randGold}G. ${capsTarget} reduces their ATTACK for this turn!`
         }
     }
     return actions[randAction]

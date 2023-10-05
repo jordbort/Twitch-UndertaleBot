@@ -83,6 +83,7 @@ const baseDF = 0.25
 // Initializing players
 let players = {
     dummy: {
+        displayName: `the Dummy`,
         lv: 1,
         hp: 20,
         dead: false,
@@ -159,7 +160,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // Add/manage players
     if (!(user in players)) {
-        players.user = {
+        players[user] = {
             displayName: displayName,
             lv: 1,
             hp: 20,
@@ -174,7 +175,7 @@ function onMessageHandler(channel, tags, msg, self) {
             stainedApronHealTime: false,
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
-        playerSave.user = {
+        playerSave[user] = {
             displayName: displayName,
             lv: 1,
             hp: 20,
@@ -190,7 +191,7 @@ function onMessageHandler(channel, tags, msg, self) {
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
     }
-    const sendingPlayer = players.user
+    const sendingPlayer = players[user]
     const targetPlayer = toUser.toLowerCase() !== user && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
 
     // *****************
@@ -278,11 +279,11 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response = `Players: `
+        const allPlayers = Object.keys(players)
+        const response = `Players: ${allPlayers.join(`, `)}`
         for (const player in players) {
-            const logColor = players.player.dead ? redBg : greenBg
-            response += `${player} `
-            console.log(`${logColor} ${player} LV: ${players.player.lv}, HP: ${players.player.hp}/${getUserMaxHP(player)}, AT: ${players.player.at}, DF: ${players.player.df}, EXP: ${players.player.exp}, NEXT: ${players.player.next}, Weapon: ${players.player.weapon}, Armor: ${players.player.armor}, Gold: ${players.player.gold} ${resetTxt}`)
+            const logColor = players[player].dead ? redBg : greenBg
+            console.log(`${logColor} ${players[player].displayName} LV: ${players[player].lv}, HP: ${players[player].hp}/${getUserMaxHP(player)}, AT: ${players[player].at}, DF: ${players[player].df}, EXP: ${players[player].exp}, NEXT: ${players[player].next}, Weapon: ${players[player].weapon}, Armor: ${players[player].armor}, Gold: ${players[player].gold} ${resetTxt}`)
         }
         talk(channel, response)
         return
@@ -316,7 +317,7 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        playerSave.user = { ...players.user }
+    playerSave[user] = { ...players[user] }
 
         let response = `* `
         const saveText = [
@@ -362,16 +363,16 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        players.user = { ...playerSave.user }
-        players.user.inventory = playerSave.user.inventory
+        players[user] = { ...playerSave[user] }
+        players[user].inventory = playerSave[user].inventory
 
         let response = `"${sendingPlayer.displayName}" `
         let attackBoost = 0
-        if (players.user.armor === `Cowboy Hat`) { attackBoost = 5 }
-        if (players.user.armor === `Temmie Armor`) { attackBoost = 10 }
-        response += `LV: ${players.user.lv}, HP: ${players.user.hp}/${getUserMaxHP(user)}, AT: ${players.user.at}(${weaponsATK[players.user.weapon] + attackBoost}), DF: ${players.user.df}(${armorDEF[players.user.armor]}), EXP: ${players.user.exp}, NEXT: ${players.user.next}, WEAPON: ${players.user.weapon}, ARMOR: ${players.user.armor}, GOLD: ${players.user.gold}`
+        if (players[user].armor === `Cowboy Hat`) { attackBoost = 5 }
+        if (players[user].armor === `Temmie Armor`) { attackBoost = 10 }
+        response += `LV: ${players[user].lv}, HP: ${players[user].hp}/${getUserMaxHP(user)}, AT: ${players[user].at}(${weaponsATK[players[user].weapon] + attackBoost}), DF: ${players[user].df}(${armorDEF[players[user].armor]}), EXP: ${players[user].exp}, NEXT: ${players[user].next}, WEAPON: ${players[user].weapon}, ARMOR: ${players[user].armor}, GOLD: ${players[user].gold}`
         talk(channel, response)
-        console.log(`Inventory:`, players.user.inventory)
+        console.log(`Inventory:`, players[user].inventory)
         return
     }
 
@@ -1474,17 +1475,17 @@ function getAction(user, target) {
     // If user paid the target gold
     const randAction = Math.floor(Math.random() * actions.length)
     if (randAction === 40) {
-        const senderGold = players.user.gold
+        const senderGold = players[user].gold
         const differenceInGold = senderGold - randGold
         console.log(`randGold: ${randGold}, senderGold: ${senderGold}, differenceInGold: ${differenceInGold}`)
         if (userGold <= 0) {
             return `is out of money. ${target} shakes their head.`
         } else if (differenceInGold < 0) {
             players[target.toLowerCase()].gold += senderGold
-            players.user.gold = 0
+            players[user].gold = 0
             return `empties their pockets. ${target} lowers the price.`
         } else {
-            players.user.gold -= randGold
+            players[user].gold -= randGold
             players[target.toLowerCase()].gold += randGold
         }
     }
@@ -1492,7 +1493,7 @@ function getAction(user, target) {
 }
 
 function stainedApronHealToggle(user) {
-    const sendingPlayer = players.user
+    const sendingPlayer = players[user]
 
     // If it's time to heal, toggle and return original state
     sendingPlayer.stainedApronHealTime = !sendingPlayer.stainedApronHealTime
@@ -1500,7 +1501,7 @@ function stainedApronHealToggle(user) {
 }
 
 function deathCheck(chatroom, user, target) {
-    const sendingPlayer = players.user
+    const sendingPlayer = players[user]
     const targetPlayer = players[target.toLowerCase()]
     const targetSaveData = playerSave[target.toLowerCase()]
     console.log(`${sendingPlayer.hp <= 0 ? redBg : greenBg} user: ${sendingPlayer.displayName} ${sendingPlayer.hp}/${getUserMaxHP(user)} HP ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} target: ${target} ${targetPlayer.hp}/${getUserMaxHP(target)} HP ${resetTxt}`)
@@ -1586,28 +1587,28 @@ function getToUser(str) {
 }
 
 function getUserMaxHP(user) {
-    const userLV = players.user.lv
+    const userLV = players[user].lv
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
     return maxHP
 }
 
 function calculateUserATK(user) {
-    const userLV = players.user.lv
+    const userLV = players[user].lv
     let attack = baseAT + (2 * userLV)
     if (userLV >= 20) { attack = 38 }
     return attack
 }
 
 function calculateUserDEF(user) {
-    const userLV = players.user.lv
+    const userLV = players[user].lv
     let defense = Math.floor((userLV - 1) * baseDF)
     if (userLV >= 20) { defense = 4 }
     return defense
 }
 
 function calculateUserNextLV(user) {
-    const userLV = players.user.lv
+    const userLV = players[user].lv
 
     let userNext = 0
     if (userLV === 1) { userNext = 10 }
@@ -1634,7 +1635,7 @@ function calculateUserNextLV(user) {
 }
 
 function calculateUserLV(user) {
-    const player = players.user
+    const player = players[user]
     let foundItemsAppend = ``
     let collectedItems = []
     while (player.next <= 0) {
@@ -1701,7 +1702,7 @@ function printLogo() {
 }
 
 function buyItem(user, str, price) {
-    const player = players.user
+    const player = players[user]
 
     const itemLvThreshold = {
         // Consumable items
@@ -1896,7 +1897,7 @@ function useItem(user, str, idx) {
         "stoic onion": 5,
         "rock candy": 1
     }
-    const player = players.user
+    const player = players[user]
     let healAmt = consumableItems[str]
     const burntPanBonus = player.weapon === `Burnt Pan` ? 4 : 0
     if (burntPanBonus > 0) { console.log(`${magentaBg} ${user} is using the Burnt Pan, heal amount +${burntPanBonus} ${resetTxt}`) }
@@ -2647,10 +2648,10 @@ function onConnectedHandler(addr, port) {
     if (firstConnection) {
         printLogo()
         console.log(`* Connected to ${addr}:${port}`)
-        // setTimeout(() => {
-        //     client.say(CHANNEL_1, `I have been rebooted :)`)
-        //     console.log(`* UndertaleBot blocks the way!`)
-        // }, 3000)
+        setTimeout(() => {
+            client.say(CHANNEL_1, `I have been rebooted :)`)
+            console.log(`* UndertaleBot blocks the way!`)
+        }, 3000)
     } else {
         console.log(`* Reconnected to ${addr}:${port}`)
         client.say(CHANNEL_1, `Reconnecting...`)

@@ -152,6 +152,7 @@ function onMessageHandler(channel, tags, msg, self) {
     const senderIsSubbed = tags.subscriber
     const senderIsAMod = tags.mod
     const senderIsVIP = tags.vip
+    const firstMsg = tags['first-msg']
 
     // Command and arguments parser
     const args = msg.split(' ')
@@ -197,6 +198,9 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
     // ** REPLY CASES **
     // *****************
+
+    // First-timer
+    if (firstMsg) { printLogo() }
 
     // JOIN
     if (command === `!join`

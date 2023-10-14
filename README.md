@@ -9,7 +9,7 @@ When the bot is active in a Twitch channel, it keeps track of everyone sending m
 ## Main commands
 `!fight @user` or `!attack @user`
 
-This command attacks the user specified (or the user who used the command, if none is specified). There is a 25% chance that you'll "miss", otherwise the ATK stat + weapon damage + a random number will be used to calculate damage, from which the DEF stat and armor bonuses are deducted. If the user kills a user, the bot also sends a message that the dead user should "stay determined..." When a player kills another user, they receive all their EXP and gold (if any), plus a base of 10 EXP. Users cannot use !fight if they are dead, nor can the command be used on a dead user or a user that isn't in the bot's memory. If users try to fight the bot, it suggests that they try fighting the dummy instead.
+This command attacks the user specified (or no one, if none specified). There is a 20% chance that you'll "miss", otherwise the ATK stat + weapon damage + a random number will be used to calculate damage, from which the DEF stat and armor bonuses are deducted. If the user kills a user, the bot also sends a message that the dead user should "stay determined..." When a player kills another user, they receive all their EXP and gold (if any), plus a base of 10 EXP. Users cannot use !fight if they are dead, nor can the command be used on a dead user or a user that isn't in the bot's memory. If users try to fight the bot, it suggests that they try fighting the Dummy instead.
 
 `!act @user`
 
@@ -17,7 +17,7 @@ This command uses flavor text from Undertale. Results will vary whether another 
 
 `!item` or `!items` or `!use`
 
-If this command is used without an item name, it tells the user which item(s) they have in their inventory. Currently, every user spawns with one Monster Candy by default. If the user types the command followed by the name of an item in their inventory, they'll use the item. Some items are weapons or armor, and others are consumable and heal the user for some amount of HP. If a weapon or piece of armor is equipped, it will affect the user's AT and/or DF stats. Equipping the Burnt Pan causes consumable items to heal for an additional 4 HP, and the Stained Apron causes the wearer to recover 1 HP every other "turn". Users cannot use items if they are dead, but they can still use !item to check what was in their inventory.
+If this command is used without any other text, it tells the user which item(s) they have in their inventory. Currently, every user spawns with one Monster Candy by default. If the user types the command followed by the name of an item in their inventory, they'll use the item. Some items are weapons or armor, and others are consumable and heal the user for some amount of HP. If a weapon or piece of armor is equipped, it will affect the user's AT and/or DF stats. Equipping the Burnt Pan causes consumable items to heal for an additional 4 HP, and the Stained Apron causes the wearer to recover 1 HP every other "turn". Users cannot use items if they are dead, but they can still use !item to check what was in their inventory.
 
 `!mercy @user` or `!spare @user`
 
@@ -59,7 +59,3 @@ This command posts a brief summary of why the bot exists and how to use it.
 `!commands`
 
 This command posts a short list of commonly-used commands to help new users get started.
-
-`Easter eggs/fun stuff`
-
-The bot will respond if you say hi to it, or say good night. The bot will also tell a player whether they are subscribed, are a moderator, or have VIP status in a given channel. All of these commands were made in early development, and will likely be removed in the future.

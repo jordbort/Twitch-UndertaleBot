@@ -540,11 +540,11 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        // Stop if target is the bot, dead, or not known
+        // Stop if target is the bot, dead, or not known, or if no target is specified
         if (toUser) {
             if (toUser.toLowerCase() in players) {
                 if (players[toUser.toLowerCase()].dead) {
-                    talk(channel, `${toUser} is already dead! :(`)
+                    talk(channel, `${players[toUser.toLowerCase()].displayName.substring(0, 1).toUpperCase() + players[toUser.toLowerCase()].displayName.substring(1)} is already dead! :(`)
                     return
                 }
             } else if (toUser.toLowerCase() === `undertalebot`) {
@@ -554,6 +554,9 @@ function onMessageHandler(channel, tags, msg, self) {
                 talk(channel, `${toUser} isn't a known player!`)
                 return
             }
+        } else {
+            talk(channel, `* ${capsSender} tried to fight themself, but nothing happened.`)
+            return
         }
 
         let response = `* ${capsSender} attacks `

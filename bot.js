@@ -73,6 +73,9 @@ client.on('connected', onConnectedHandler)
 let firstConnection = true
 client.connect()
 
+// Functions log their params
+let DEBUG_MODE = false
+
 // All active users (to avoid duplicate clients):
 const globalUsers = [BOT_USERNAME]
 
@@ -1097,6 +1100,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
 // Helper functions
 function handleJoin(channel, user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> handleJoin(channel: ${channel}, user: ${user})${resetTxt}`) }
     // Log message
     console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
@@ -1120,6 +1124,7 @@ function handleJoin(channel, user) {
 }
 
 function getSpamtonQuote(num) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> getSpamtonQuote(num: ${num})${resetTxt}`) }
     const quotes = [
         `$VALUES$`,
         `$$DEALS$`,
@@ -1279,6 +1284,7 @@ function getSpamtonQuote(num) {
 }
 
 function getThirdPersonFlavorText() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> getThirdPersonFlavorText()${resetTxt}`) }
     const actions = [
         ` prepares a magical attack.`,
         ` takes a deep breath.`,
@@ -1394,7 +1400,10 @@ function getThirdPersonFlavorText() {
     return actions[Math.floor(Math.random() * actions.length)]
 }
 
-function getAction(sendingPlayer, targetPlayer) {
+function getAction(user, target) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> getAction(user: ${user}, target: ${target})${resetTxt}`) }
+    const sendingPlayer = players[user]
+    const targetPlayer = players[target]
     const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
     const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
     const randGold = Math.ceil(Math.random() * 10) * 5
@@ -1502,7 +1511,7 @@ function getAction(sendingPlayer, targetPlayer) {
     return actions[randAction]
 }
 
-function stainedApronHealToggle(user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
     const sendingPlayer = players[user]
 
     // If it's time to heal, toggle and return original state
@@ -1511,6 +1520,7 @@ function stainedApronHealToggle(user) {
 }
 
 function deathCheck(chatroom, user, target) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> deathCheck(chatroom: ${chatroom}, user: ${user}, target: ${target})${resetTxt}`) }
     const sendingPlayer = players[user]
     const targetPlayer = players[target.toLowerCase()]
     const targetSaveData = playerSave[target.toLowerCase()]
@@ -1589,6 +1599,7 @@ function deathCheck(chatroom, user, target) {
 }
 
 function getToUser(str) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> getToUser(str: ${str})${resetTxt}`) }
     if (str.startsWith(`@`)) {
         return str.substring(1)
     } else {
@@ -1597,6 +1608,7 @@ function getToUser(str) {
 }
 
 function getUserMaxHP(user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
@@ -1604,6 +1616,7 @@ function getUserMaxHP(user) {
 }
 
 function calculateUserATK(user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserATK(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
     let attack = baseAT + (2 * userLV)
     if (userLV >= 20) { attack = 38 }
@@ -1618,6 +1631,7 @@ function calculateUserDEF(user) {
 }
 
 function calculateUserNextLV(user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserNextLV(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
 
     let userNext = 0
@@ -1645,6 +1659,7 @@ function calculateUserNextLV(user) {
 }
 
 function calculateUserLV(user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserLV(user: ${user})${resetTxt}`) }
     const player = players[user]
     let foundItemsAppend = ``
     let collectedItems = []
@@ -1680,6 +1695,7 @@ function calculateUserLV(user) {
 }
 
 function printLogo() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> printLogo()${resetTxt}`) }
     const whSq = `\x1b[47m  \x1b[0m`
     const gySq = `\x1b[100m  \x1b[0m`
     const rdSq = `\x1b[41m  \x1b[0m`
@@ -1712,6 +1728,8 @@ function printLogo() {
 }
 
 function buyItem(user, str, price) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str}, price: ${price})${resetTxt}`) }
+
     const player = players[user]
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
 
@@ -1869,6 +1887,7 @@ function buyItem(user, str, price) {
 }
 
 function useItem(user, str, idx) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
     const consumableItems = {
         "bandage": 10,
         "monster candy": 10,

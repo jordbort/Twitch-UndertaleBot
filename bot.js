@@ -205,6 +205,20 @@ function onMessageHandler(channel, tags, msg, self) {
     // First-timer
     if (firstMsg) { printLogo() }
 
+    // DEBUG_MODE
+    if (command === `!debug`
+        && channel === `#${BOT_USERNAME}`
+        && user === CHANNEL_2) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        const initialDebugState = DEBUG_MODE
+        if (args[0]?.toLowerCase() === `on`) { DEBUG_MODE = true }
+        else if (args[0]?.toLowerCase() === `off`) { DEBUG_MODE = false }
+        else { DEBUG_MODE = !DEBUG_MODE }
+        DEBUG_MODE === initialDebugState ? talk(channel, `Debug mode is currently ${DEBUG_MODE ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${DEBUG_MODE ? `on` : `off`}!`)
+    }
+
     // JOIN
     if (command === `!join`
         && channel === `#${BOT_USERNAME}`) {

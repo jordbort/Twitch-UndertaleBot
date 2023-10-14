@@ -503,7 +503,7 @@ function onMessageHandler(channel, tags, msg, self) {
             const target = players[toUser.toLowerCase()]
             if (target.armor === `Cowboy Hat`) { attackBoost = 5 }
             if (target.armor === `Temmie Armor`) { attackBoost = 10 }
-            response = `"${target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser.toLowerCase())}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
+            response = `"${toUser.toLowerCase() === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser.toLowerCase())}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
         } else if (toUser) {
             response = `${toUser} isn't registered :(`
         } else {
@@ -859,7 +859,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has ${targetPlayer.hp} HP`
+            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.hp} HP`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
@@ -876,7 +876,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has ${targetPlayer.gold} G`
+            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.gold} G`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
@@ -896,7 +896,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has ${targetPlayer.exp} EXP`
+            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.exp} EXP`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
@@ -913,7 +913,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser}'s LV will increase with ${targetPlayer.next} more EXP`
+            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}'s LV will increase with ${targetPlayer.next} more EXP`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
@@ -930,7 +930,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has the ${targetPlayer.weapon} equipped (${weaponsATK[targetPlayer.weapon]} ATK)`
+            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.weapon} equipped (${weaponsATK[targetPlayer.weapon]} ATK)`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
@@ -947,7 +947,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         if (targetPlayer) {
-            response = `${toUser} has the ${targetPlayer.armor} equipped (${armorDEF[targetPlayer.armor]} DEF)`
+            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.armor} equipped (${armorDEF[targetPlayer.armor]} DEF)`
         } else if (toUser) {
             response = `${toUser} isn't a known player!`
         } else {
@@ -1092,14 +1092,14 @@ function onMessageHandler(channel, tags, msg, self) {
         printLogo()
         return
     }
-
-    function talk(chatroom, resp) {
-        client.say(chatroom, resp)
-        console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
-    }
 }
 
 // Helper functions
+function talk(chatroom, resp) {
+    client.say(chatroom, resp)
+    console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
+}
+
 function handleJoin(channel, user) {
     if (DEBUG_MODE) { console.log(`${boldTxt}> handleJoin(channel: ${channel}, user: ${user})${resetTxt}`) }
     // Log message

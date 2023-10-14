@@ -669,17 +669,9 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let response = `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)}`
-        targetPlayer ? response += getAction(sendingPlayer, targetPlayer) : response += getThirdPersonFlavorText()
+        targetPlayer ? response += getAction(user, toUser.toLowerCase()) : response += getThirdPersonFlavorText()
 
-        // Stained Apron heal check
-        if (sendingPlayer.armor === `Stained Apron`) {
-            const stainedApronHealCheck = stainedApronHealToggle(user)
-            if (stainedApronHealCheck) {
-                response += ` ${sendingPlayer.displayName} recovered 1 HP!`
-                sendingPlayer.hp += 1
-                if (sendingPlayer.hp > getUserMaxHP(user)) { sendingPlayer.hp = getUserMaxHP(user) }
-            }
-        }
+        if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
         talk(channel, response)
         return
@@ -857,15 +849,7 @@ function onMessageHandler(channel, tags, msg, self) {
             response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`
         }
 
-        // Stained Apron heal check
-        if (sendingPlayer.armor === `Stained Apron`) {
-            const stainedApronHealCheck = stainedApronHealToggle(user)
-            if (stainedApronHealCheck) {
-                response += ` ${sendingPlayer.displayName} recovered 1 HP!`
-                sendingPlayer.hp += 1
-                if (sendingPlayer.hp > getUserMaxHP(user)) { sendingPlayer.hp = getUserMaxHP(user) }
-            }
-        }
+        if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
         talk(channel, response)
         console.log(`${cyanBg} sender: ${sendingPlayer.displayName} ${sendingPlayer.hp}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer.hp : ``}, randNum: ${randNum} ${resetTxt}`)
@@ -1542,12 +1526,21 @@ function getAction(user, target) {
     return actions[randAction]
 }
 
+function stainedApronHeal(user) {
     if (DEBUG_MODE) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
     const sendingPlayer = players[user]
-
-    // If it's time to heal, toggle and return original state
+    const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
     sendingPlayer.stainedApronHealTime = !sendingPlayer.stainedApronHealTime
-    return !sendingPlayer.stainedApronHealTime
+    if (!sendingPlayer.stainedApronHealTime) {
+        if (sendingPlayer.hp < getUserMaxHP(user)) {
+            //     return `true`
+            // } else {
+            sendingPlayer.hp += 1
+            console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
+            return ` ${capsName} recovered 1 HP!`
+        }
+    }
+    return ``
 }
 
 function deathCheck(chatroom, user, target) {

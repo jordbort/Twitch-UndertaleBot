@@ -253,6 +253,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 client.on('message', onMessageHandler)
                 client.connect()
                 talk(channel, `${newUser} has been recruited!`)
+                talk(`#${newUser}`, `* UndertaleBot blocks the way!`)
             }
         }
         return
@@ -290,6 +291,7 @@ function onMessageHandler(channel, tags, msg, self) {
             })
             client.on('message', onMessageHandler)
             client.connect()
+            squad.forEach((user) => talk(`#${user}`, `* UndertaleBot blocks the way!`))
         }
         talk(channel, response)
         return

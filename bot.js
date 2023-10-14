@@ -791,8 +791,8 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let index = -1
-        for (const idx in inventory) {
-            if (inventory[idx].toLowerCase() === usedItem) {
+        for (const [idx, item] of inventory.entries()) {
+            if (item.toLowerCase() === usedItem) {
                 index = idx
                 break
             }

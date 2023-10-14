@@ -321,7 +321,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (user === CHANNEL_2 || senderIsAMod) {
             players.dummy.hp = getUserMaxHP(`dummy`)
             players.dummy.dead = false
-            response = `Dummy is alive :)`
+            response = `The Dummy is alive :)`
             talk(channel, response)
         } else {
             response = `You can't use this command, ${sendingPlayer.displayName} ;)`
@@ -340,6 +340,7 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
+        const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
         playerSave[user] = { ...players[user] }
 
         let response = `* `
@@ -361,19 +362,19 @@ function onMessageHandler(channel, tags, msg, self) {
             `The sound of muffled rain on the cavetop... It fills ${sendingPlayer.displayName} with determination.`,
             `The waterfall here seems to flow from the ceiling of the cavern... Occasionally, a piece of trash will flow through... and fall into the bottomless abyss below. Viewing this endless cycle of worthless garbage... It fills ${sendingPlayer.displayName} with determination.`,
             `Partaking in useless garbage fills ${sendingPlayer.displayName} with determination.`,
-            `${sendingPlayer.displayName} feels a calming tranquility. ${sendingPlayer.displayName} is filled with determination.`,
-            `${sendingPlayer.displayName} feels... something. ${sendingPlayer.displayName} is filled with detemmienation.`,
-            `The wind is howling. ${sendingPlayer.displayName} is filled with determination.`,
-            `The wind has stopped. ${sendingPlayer.displayName} is filled with determination.`,
+            `${capsName} feels a calming tranquility. ${capsName} is filled with determination.`,
+            `${capsName} feels... something. ${capsName} is filled with detemmienation.`,
+            `The wind is howling. ${capsName} is filled with determination.`,
+            `The wind has stopped. ${capsName} is filled with determination.`,
             `The howling wind is now a breeze. This gives ${sendingPlayer.displayName} determination.`,
-            `Seeing such a strange laboratory in a place like this... ${sendingPlayer.displayName} is filled with determination.`,
+            `Seeing such a strange laboratory in a place like this... ${capsName} is filled with determination.`,
             `The wooshing sound of steam and cogs... it fills ${sendingPlayer.displayName} with determination.`,
-            `An ominous structure looms in the distance... ${sendingPlayer.displayName} is filled with determination.`,
+            `An ominous structure looms in the distance... ${capsName} is filled with determination.`,
             `Knowing the mouse might one day hack into the computerized safe and get the cheese... It fills ${sendingPlayer.displayName} with determination.`,
-            `The smell of cobwebs fills the air... ${sendingPlayer.displayName} is filled with determination.`,
+            `The smell of cobwebs fills the air... ${capsName} is filled with determination.`,
             `The relaxing atmosphere of this hotel... it fills ${sendingPlayer.displayName} with determination.`,
             `The air is filled with the smell of ozone... it fills ${sendingPlayer.displayName} with determination.`,
-            `Behind this door must be the elevator to the King's castle. ${sendingPlayer.displayName} is filled with determination.`
+            `Behind this door must be the elevator to the King's castle. ${capsName} is filled with determination.`
         ]
         const randSaveText = Math.floor(Math.random() * saveText.length)
         response += saveText[randSaveText]
@@ -547,7 +548,7 @@ function onMessageHandler(channel, tags, msg, self) {
                     return
                 }
             } else if (toUser.toLowerCase() === `undertalebot`) {
-                talk(channel, `You can't fight me, but you can try fighting the dummy!`)
+                talk(channel, `You can't fight me, but you can try fighting the Dummy!`)
                 return
             } else {
                 talk(channel, `${toUser} isn't a known player!`)
@@ -694,17 +695,18 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const inventory = sendingPlayer.inventory
+        const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
         console.log(`Inventory:`, inventory)
 
         let usedItem = toUser.toLowerCase() || ``
 
         if (inventory.length === 0) {
-            talk(channel, `${sendingPlayer.displayName} has no items! :(`)
+            talk(channel, `${capsName} has no items! :(`)
             return
         }
 
         if (!usedItem) {
-            talk(channel, `${sendingPlayer.displayName}'s items: ${inventory.join(', ')}`)
+            talk(channel, `${capsName}'s items: ${inventory.join(', ')}`)
             return
         }
 
@@ -784,7 +786,7 @@ function onMessageHandler(channel, tags, msg, self) {
             }
         }
         if (!isAnItem) {
-            talk(channel, `${sendingPlayer.displayName}, that isn't an item! :(`)
+            talk(channel, `${capsName}, that isn't an item! :(`)
             return
         }
 
@@ -797,7 +799,7 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         if (index < 0) {
-            talk(channel, `${sendingPlayer.displayName}, you don't have that item! :(`)
+            talk(channel, `${capsName}, you don't have that item! :(`)
             return
         }
 
@@ -1503,7 +1505,7 @@ function getAction(user, target) {
         ` told ${targetPlayer.displayName} a little joke.`,
         ` told ${targetPlayer.displayName} they didn't want to fight. But nothing happened.`,
         ` told ${targetPlayer.displayName} they just want to be friends. They remember someone... ${capsTarget}'s attacks became a little less extreme.`,
-        ` took a bite out of ${targetPlayer.displayName}. They recovered 5 HP!`,
+        ` took a bite out of ${targetPlayer.displayName}. ${capsSender} recovered 5 HP!`,
         ` tried to eat ${targetPlayer.displayName}, but they weren't weakened enough.`,
         ` tries to console ${targetPlayer.displayName}...`,
         ` wiggles their hips. ${capsTarget} wiggles back. What a meaningful conversation!`
@@ -1543,7 +1545,9 @@ function deathCheck(chatroom, user, target) {
     const sendingPlayer = players[user]
     const targetPlayer = players[target.toLowerCase()]
     const targetSaveData = playerSave[target.toLowerCase()]
-    console.log(`${sendingPlayer.hp <= 0 ? redBg : greenBg} user: ${sendingPlayer.displayName} ${sendingPlayer.hp}/${getUserMaxHP(user)} HP ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} target: ${targetPlayer.displayName} ${targetPlayer.hp}/${getUserMaxHP(target.toLowerCase())} HP ${resetTxt}`)
+    const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
+    const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
+    console.log(`${sendingPlayer.hp <= 0 ? redBg : greenBg} user: ${sendingPlayer.displayName} ${sendingPlayer.hp}/${getUserMaxHP(user)} HP ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} target: ${target === `dummy` ? `DUMMY` : targetPlayer.displayName} ${targetPlayer.hp}/${getUserMaxHP(target.toLowerCase())} HP ${resetTxt}`)
 
     const deathText = [
         `The future of monsters depends on you!`,
@@ -1558,13 +1562,13 @@ function deathCheck(chatroom, user, target) {
         // Building death response
         let response = `* `
         response += deathText[Math.floor(Math.random() * deathText.length)]
-        response += ` ${target}! Stay determined... `
+        target.toLowerCase() === `dummy` ? response += ` The Dummy was ripped to shreds... ` : response += ` ${capsTarget}! Stay determined... `
 
         // Checking if user killed a different user
         if (user !== target) {
             // Appending awarded EXP
             const awardedEXP = 10 + targetPlayer.exp
-            response += `${sendingPlayer.displayName} earned ${awardedEXP} EXP`
+            response += `${capsSender} earned ${awardedEXP} EXP`
 
             // Appending awarded gold
             const randGold = Math.ceil(Math.random() * 100)
@@ -1572,9 +1576,9 @@ function deathCheck(chatroom, user, target) {
             if (targetPlayer.gold > 0) {
                 sendingPlayer.gold += targetPlayer.gold
                 targetPlayer.gold = 0
-                response += `, got ${target}'s gold, and found ${randGold} G.`
+                response += `, got ${targetPlayer.displayName}'s gold, and found ${randGold} G.`
             } else {
-                response += ` and ${randGold} gold.`
+                response += ` and ${randGold} G.`
             }
 
             // Resetting target's EXP and Gold in SAVE data, because it was taken by another user, and would otherwise be duplicated if/when they LOAD
@@ -1590,13 +1594,13 @@ function deathCheck(chatroom, user, target) {
             sendingPlayer.exp += awardedEXP
             sendingPlayer.next -= awardedEXP
             if (sendingPlayer.next <= 0) {
-                response += ` ${sendingPlayer.displayName}'s LOVE increased.`
+                response += ` ${capsSender}'s LOVE increased.`
                 response += calculateUserLV(user)
             }
         } else {
             if (sendingPlayer.gold > 0) {
                 sendingPlayer.gold = 0
-                response += ` ${sendingPlayer.displayName} lost all their gold!`
+                response += ` ${capsSender} lost all their gold!`
             }
         }
 
@@ -1643,6 +1647,7 @@ function calculateUserATK(user) {
 }
 
 function calculateUserDEF(user) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserDEF(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
     let defense = Math.floor((userLV - 1) * baseDF)
     if (userLV >= 20) { defense = 4 }

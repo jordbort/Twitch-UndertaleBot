@@ -1529,6 +1529,16 @@ function getAction(user, target) {
         }
     }
 
+    // If user took a bite out of the target and recovered 5 HP
+    if (randAction === 76) {
+        sendingPlayer.hp += 5
+        if (sendingPlayer.hp >= getUserMaxHP(user)) {
+            sendingPlayer.hp = getUserMaxHP(user)
+            actions[randAction] = ` took a bite out of ${targetPlayer.displayName}. ${capsSender}'s HP was maxed out.`
+        }
+        console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 5 ${resetTxt}`)
+    }
+
     return actions[randAction]
 }
 

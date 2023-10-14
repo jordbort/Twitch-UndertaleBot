@@ -147,7 +147,7 @@ const armorDEF = {
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, msg, self) {
-    if (self || tags[`display-name`] === `UndertaleBot`) { return } // Ignore messages from the bot
+    if (self || tags.username === BOT_USERNAME) { return } // Ignore messages from the bot
 
     // Message context
     const user = tags.username
@@ -817,10 +817,9 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         let randNum = Math.ceil(Math.random() * 10)
-        if (targetPlayer) {
-            if (targetPlayer.hp <= 10) { randNum = Math.ceil(Math.random() * 4) }
-            if (targetPlayer.hp <= 5) { randNum = Math.ceil(Math.random() * 2) }
-        }
+        if (targetPlayer && targetPlayer.hp <= 10) { randNum = Math.ceil(Math.random() * 4) }
+        if (targetPlayer && targetPlayer.hp <= 5) { randNum = Math.ceil(Math.random() * 2) }
+
         const randGoldAmt = Math.floor(Math.random() * 101)
         let response = `* `
 
@@ -829,21 +828,15 @@ function onMessageHandler(channel, tags, msg, self) {
             // If toUser not registered
             if (!(toUser.toLowerCase() in players)) {
                 response = `${toUser} is not a registered player :(`
-                talk(channel, response)
-                return
                 // If toUser is dead
             } else if (targetPlayer.dead) {
                 response = `Sorry ${sendingPlayer.displayName}, ${players[toUser.toLowerCase()].displayName} is dead! :(`
-                talk(channel, response)
-                return
+                // If mercy is successful
             } else if (randNum === 1) {
                 response += `YOU WON! ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} was spared. ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} earned 0 EXP and ${randGoldAmt} gold.`
                 sendingPlayer.gold += randGoldAmt
                 sendingPlayer.hp = getUserMaxHP(user)
                 targetPlayer.hp = getUserMaxHP(toUser.toLowerCase())
-                talk(channel, response)
-                console.log(`${cyanBg} sender: ${sendingPlayer.displayName} ${sendingPlayer.hp}, target: ${targetPlayer.displayName || `none`} ${targetPlayer ? targetPlayer.hp : ``}, randNum: ${randNum} ${resetTxt}`)
-                return
             } else {
                 response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare ${targetPlayer.displayName}. ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}`
                 response += getThirdPersonFlavorText()
@@ -855,7 +848,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
         talk(channel, response)
-        console.log(`${cyanBg} sender: ${sendingPlayer.displayName} ${sendingPlayer.hp}, toUser: ${toUser || `none`} ${targetPlayer ? targetPlayer.hp : ``}, randNum: ${randNum} ${resetTxt}`)
+        console.log(`${cyanBg} sender: ${sendingPlayer.displayName} (${sendingPlayer.hp} HP), target: ${toUser.toLowerCase() === `dummy` ? `DUMMY` : targetPlayer?.displayName || `none`}${targetPlayer ? ` (${targetPlayer.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
         return
     }
 

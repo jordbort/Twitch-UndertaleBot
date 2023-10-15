@@ -203,7 +203,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
 
     // First-timer
-    if (firstMsg) { printLogo() }
+    if (firstMsg) { printLogo(`First-time message = ${firstMsg}`) }
 
     // DEBUG_MODE
     if (command === `!debug`
@@ -1089,7 +1089,7 @@ function onMessageHandler(channel, tags, msg, self) {
     ].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-        printLogo()
+        printLogo(`${command} used`)
         return
     }
 }
@@ -1717,8 +1717,8 @@ function calculateUserLV(user) {
     return foundItemsAppend
 }
 
-function printLogo() {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> printLogo()${resetTxt}`) }
+function printLogo(reason) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> printLogo(${reason})${resetTxt}`) }
     const whSq = `\x1b[47m  \x1b[0m`
     const gySq = `\x1b[100m  \x1b[0m`
     const rdSq = `\x1b[41m  \x1b[0m`
@@ -2700,7 +2700,7 @@ function useItem(user, str, idx) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     if (firstConnection) {
-        printLogo()
+        printLogo(`firstConnection = ${firstConnection}`)
         console.log(`* Connected to ${addr}:${port}`)
         setTimeout(() => {
             client.say(`#${CHANNEL_1}`, `I have been rebooted :)`)

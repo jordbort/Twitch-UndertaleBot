@@ -160,7 +160,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // Command and arguments parser
     const args = msg.split(' ')
     const command = args.shift().toLowerCase()
-    const toUser = args[0] ? getToUser(args[0]) : ``
+    const toUser = args[0] ? getToUser(args[0], channel) : ``
 
     // Add/manage players
     if (!(user in players)) {
@@ -203,7 +203,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
 
     // First-timer
-    if (firstMsg && channel === `#${BOT_USERNAME}`) { printLogo(`First-time message = ${firstMsg}`) }
+    if (firstMsg && channel === `#${BOT_USERNAME}`) { printLogo() }
 
     // DEBUG_MODE
     if (command === `!debug`
@@ -1086,7 +1086,7 @@ function onMessageHandler(channel, tags, msg, self) {
     ].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-        printLogo(`${command} used`)
+        printLogo()
         return
     }
 }
@@ -1617,8 +1617,8 @@ function deathCheck(chatroom, user, target) {
     }
 }
 
-function getToUser(str) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> getToUser(str: ${str})${resetTxt}`) }
+function getToUser(str, chatroom) {
+    if (DEBUG_MODE && chatroom === `#${BOT_USERNAME}`) { console.log(`${boldTxt}> getToUser(str: ${str})${resetTxt}`) }
     if (str.startsWith(`@`)) {
         return str.substring(1)
     } else {
@@ -1714,8 +1714,8 @@ function calculateUserLV(user) {
     return foundItemsAppend
 }
 
-function printLogo(reason) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> printLogo(${reason})${resetTxt}`) }
+function printLogo() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> printLogo()${resetTxt}`) }
     const whSq = `\x1b[47m  \x1b[0m`
     const gySq = `\x1b[100m  \x1b[0m`
     const rdSq = `\x1b[41m  \x1b[0m`
@@ -2697,7 +2697,7 @@ function useItem(user, str, idx) {
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
     if (firstConnection) {
-        printLogo(`firstConnection = ${firstConnection}`)
+        printLogo()
         console.log(`* Connected to ${addr}:${port}`)
         setTimeout(() => {
             client.say(`#${CHANNEL_1}`, `I have been rebooted :)`)

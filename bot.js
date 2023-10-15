@@ -203,7 +203,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
 
     // First-timer
-    if (firstMsg) { printLogo(`First-time message = ${firstMsg}`) }
+    if (firstMsg && channel === `#${BOT_USERNAME}`) { printLogo(`First-time message = ${firstMsg}`) }
 
     // DEBUG_MODE
     if (command === `!debug`
@@ -220,10 +220,7 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // JOIN
-    if (command === `!join`
-        && channel === `#${BOT_USERNAME}`) {
-        return handleJoin(channel, user)
-    }
+    if (command === `!join` && channel === `#${BOT_USERNAME}`) { return handleJoin(channel, user) }
 
     // RECRUIT
     if (command === `!recruit`

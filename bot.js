@@ -162,6 +162,9 @@ function onMessageHandler(channel, tags, msg, self) {
     const command = args.shift().toLowerCase()
     const toUser = args[0] ? getToUser(args[0], channel) : ``
 
+    // First-time message
+    if (firstMsg && channel === `#${BOT_USERNAME}`) { printLogo() }
+
     // Add/manage players
     if (!(user in players)) {
         players[user] = {
@@ -194,6 +197,8 @@ function onMessageHandler(channel, tags, msg, self) {
             stainedApronHealTime: false,
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
+        const message = getIntroText(displayName)
+        talk(`#${BOT_USERNAME}`, message)
     }
     const sendingPlayer = players[user]
     const targetPlayer = toUser.toLowerCase() !== user && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
@@ -201,9 +206,6 @@ function onMessageHandler(channel, tags, msg, self) {
     // *****************
     // ** REPLY CASES **
     // *****************
-
-    // First-timer
-    if (firstMsg && channel === `#${BOT_USERNAME}`) { printLogo() }
 
     // DEBUG_MODE
     if (command === `!debug`
@@ -407,80 +409,7 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        let response = `* `
-        const introText = [
-            `${sendingPlayer.displayName} and co. decided to pick on you!`,
-            `${sendingPlayer.displayName} appeared.`,
-            `${sendingPlayer.displayName} appeared.`,
-            `${sendingPlayer.displayName} appeared.`,
-            `${sendingPlayer.displayName} appears.`,
-            `${sendingPlayer.displayName} appears.`,
-            `${sendingPlayer.displayName} appears. Jerry came, too.`,
-            `${sendingPlayer.displayName} approached meekly!`,
-            `${sendingPlayer.displayName} assaults you!`,
-            `${sendingPlayer.displayName} attacked!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} attacks!`,
-            `${sendingPlayer.displayName} blocked the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way!`,
-            `${sendingPlayer.displayName} blocks the way.`,
-            `${sendingPlayer.displayName} bounds towards you!`,
-            `${sendingPlayer.displayName} came out of the earth!`,
-            `${sendingPlayer.displayName} clings to you!`,
-            `${sendingPlayer.displayName} confronts you, sighing. Jerry.`,
-            `${sendingPlayer.displayName} confronts you!`,
-            `${sendingPlayer.displayName} crawled up close!`,
-            `${sendingPlayer.displayName} crawled up close!`,
-            `${sendingPlayer.displayName} decided to pick on you!`,
-            `${sendingPlayer.displayName} drew near!`,
-            `${sendingPlayer.displayName} drew near!`,
-            `${sendingPlayer.displayName} drew near!`,
-            `${sendingPlayer.displayName} drew near!`,
-            `${sendingPlayer.displayName} drew near.`,
-            `${sendingPlayer.displayName} emerges from the shadows.`,
-            `${sendingPlayer.displayName} emerges from the shadows.`,
-            `${sendingPlayer.displayName} flexes in!`,
-            `${sendingPlayer.displayName} flutters forth!`,
-            `${sendingPlayer.displayName} flutters forth!`,
-            `${sendingPlayer.displayName} flutters in.`,
-            `${sendingPlayer.displayName} gets in the way! Not on purpose or anything.`,
-            `${sendingPlayer.displayName} hides in the corner but somehow encounters you anyway.`,
-            `${sendingPlayer.displayName} hissed out of the earth!`,
-            `${sendingPlayer.displayName} hopped close!`,
-            `${sendingPlayer.displayName} hopped in...?`,
-            `${sendingPlayer.displayName} hopped towards you.`,
-            `${sendingPlayer.displayName} pops out of their hat!`,
-            `${sendingPlayer.displayName} rushed in!`,
-            `${sendingPlayer.displayName} saunters up!`,
-            `${sendingPlayer.displayName} shuffles up.`,
-            `${sendingPlayer.displayName} slithered out of the earth!`,
-            `${sendingPlayer.displayName} strolls in.`,
-            `${sendingPlayer.displayName} struts into view.`,
-            `${sendingPlayer.displayName} swooped in!`,
-            `${sendingPlayer.displayName} traps you!`,
-            `${sendingPlayer.displayName} was already there, waiting for you.`,
-            `Here comes ${sendingPlayer.displayName}.`,
-            `Here comes ${sendingPlayer.displayName}. Same as usual.`,
-            `It's ${sendingPlayer.displayName}.`,
-            `It's ${sendingPlayer.displayName}.`,
-            `Special enemy ${sendingPlayer.displayName} appears here to defeat you!!`,
-            `You encountered ${sendingPlayer.displayName}.`,
-            `You tripped over ${sendingPlayer.displayName}.`
-        ]
-        const randIntroText = Math.floor(Math.random() * introText.length)
-        response += introText[randIntroText]
+        const response = getIntroText(sendingPlayer.displayName)
         talk(channel, response)
         return
     }
@@ -1289,6 +1218,85 @@ function getSpamtonQuote(num) {
     } else {
         return quotes[Math.floor(Math.random() * quotes.length)]
     }
+}
+
+function getIntroText(name) {
+    const capsName = name.substring(0, 1).toUpperCase() + name.substring(1)
+    let response = `* `
+    const introText = [
+        `${capsName} and co. decided to pick on you!`,
+        `${capsName} appeared.`,
+        `${capsName} appeared.`,
+        `${capsName} appeared.`,
+        `${capsName} appears.`,
+        `${capsName} appears.`,
+        `${capsName} appears. Jerry came, too.`,
+        `${capsName} approached meekly!`,
+        `${capsName} assaults you!`,
+        `${capsName} attacked!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} blocked the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way.`,
+        `${capsName} bounds towards you!`,
+        `${capsName} came out of the earth!`,
+        `${capsName} clings to you!`,
+        `${capsName} confronts you, sighing. Jerry.`,
+        `${capsName} confronts you!`,
+        `${capsName} crawled up close!`,
+        `${capsName} crawled up close!`,
+        `${capsName} decided to pick on you!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near.`,
+        `${capsName} emerges from the shadows.`,
+        `${capsName} emerges from the shadows.`,
+        `${capsName} flexes in!`,
+        `${capsName} flutters forth!`,
+        `${capsName} flutters forth!`,
+        `${capsName} flutters in.`,
+        `${capsName} gets in the way! Not on purpose or anything.`,
+        `${capsName} hides in the corner but somehow encounters you anyway.`,
+        `${capsName} hissed out of the earth!`,
+        `${capsName} hopped close!`,
+        `${capsName} hopped in...?`,
+        `${capsName} hopped towards you.`,
+        `${capsName} pops out of their hat!`,
+        `${capsName} rushed in!`,
+        `${capsName} saunters up!`,
+        `${capsName} shuffles up.`,
+        `${capsName} slithered out of the earth!`,
+        `${capsName} strolls in.`,
+        `${capsName} struts into view.`,
+        `${capsName} swooped in!`,
+        `${capsName} traps you!`,
+        `${capsName} was already there, waiting for you.`,
+        `Here comes ${name}.`,
+        `Here comes ${name}. Same as usual.`,
+        `It's ${name}.`,
+        `It's ${name}.`,
+        `Special enemy ${name} appears here to defeat you!!`,
+        `You encountered ${name}.`,
+        `You tripped over ${name}.`
+    ]
+    const randIntroText = Math.floor(Math.random() * introText.length)
+    response += introText[randIntroText]
+    return response
 }
 
 function getThirdPersonFlavorText() {

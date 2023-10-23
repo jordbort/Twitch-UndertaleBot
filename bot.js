@@ -1450,7 +1450,7 @@ function getAction(user, target) {
         ` cleans ${targetPlayer.displayName}'s armor. Its cooling dirt begins to wash away.`,
         ` compliments ${targetPlayer.displayName}. They understood them perfectly. ${capsTarget}'s ATTACK dropped.`,
         ` cranks up the thermostat. ${capsTarget} begins to get excited.`,
-        ` cranks up the thermostat. It's super hot! ${targetPlayer.displayName} looks satisfied.`,
+        ` cranks up the thermostat. It's super hot! ${capsTarget} looks satisfied.`,
         ` did something mysterious. ${capsTarget} recognizes they have more to learn from this world.`,
         ` does nothing. ${capsTarget} leaves to look elsewhere for praise.`,
         ` does nothing. ${capsTarget} looks desperate for attention.`,

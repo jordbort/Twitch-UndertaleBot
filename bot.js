@@ -222,7 +222,18 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // JOIN
-    if (command === `!join` && channel === `#${BOT_USERNAME}`) { return handleJoin(channel, user) }
+    if (command === `!join`
+        && channel === `#${BOT_USERNAME}`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        if (globalUsers.includes(user)) {
+            talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
+            return
+        }
+
+        return handleJoin(channel, user)
+    }
 
     // RECRUIT
     if (command === `!recruit`
@@ -1037,14 +1048,11 @@ function talk(chatroom, resp) {
 }
 
 function handleJoin(channel, user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> handleJoin(channel: ${channel}, user: ${user})${resetTxt}`) }
-    // Log message
-    console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-    if (globalUsers.includes(user)) {
-        talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
-        return
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> handleJoin(channel: ${channel}, user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: !${resetTxt}`) }
     }
+    globalUsers.push(user)
 
     const client = new tmi.client({
         identity: {

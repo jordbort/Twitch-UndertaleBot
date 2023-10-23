@@ -308,7 +308,10 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // MEMORY
-    if (command === `!memory`) {
+    if ([
+        `!memory`,
+        `!players`
+    ].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 

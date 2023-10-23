@@ -495,7 +495,7 @@ function onMessageHandler(channel, tags, msg, self) {
                 return
             }
         } else {
-            talk(channel, `* ${capsSender} tried to fight themself, but nothing happened.`)
+            talk(channel, `* ${capsSender} tried to fight themself. But nothing happened.`)
             return
         }
 

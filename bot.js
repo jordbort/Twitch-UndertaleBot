@@ -1428,7 +1428,11 @@ function getThirdPersonFlavorText() {
 }
 
 function getAction(user, target) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> getAction(user: ${user}, target: ${target})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> getAction(user: ${user}, target: ${target})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+        if (target !== target.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'target' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const sendingPlayer = players[user]
     const targetPlayer = players[target]
     const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
@@ -1549,24 +1553,30 @@ function getAction(user, target) {
 }
 
 function stainedApronHeal(user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const sendingPlayer = players[user]
     const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
     sendingPlayer.stainedApronHealTime = !sendingPlayer.stainedApronHealTime
     if (!sendingPlayer.stainedApronHealTime) {
         if (sendingPlayer.hp < getUserMaxHP(user)) {
-            //     return `true`
-            // } else {
             sendingPlayer.hp += 1
             console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
-            return ` ${capsName} recovered 1 HP!`
+            return sendingPlayer.hp === getUserMaxHP(user) ? ` ${capsName}'s HP was maxed out.` : ` ${capsName} recovered 1 HP!`
         }
     }
     return ``
 }
 
 function deathCheck(chatroom, user, target) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> deathCheck(chatroom: ${chatroom}, user: ${user}, target: ${target})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> deathCheck(chatroom: ${chatroom}, user: ${user}, target: ${target})${resetTxt}`)
+        if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+        if (target !== target.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'target' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const sendingPlayer = players[user]
     const targetPlayer = players[target.toLowerCase()]
     const targetSaveData = playerSave[target.toLowerCase()]
@@ -1656,7 +1666,10 @@ function getToUser(str, chatroom) {
 }
 
 function getUserMaxHP(user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const userLV = players[user].lv
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
@@ -1664,7 +1677,10 @@ function getUserMaxHP(user) {
 }
 
 function calculateUserATK(user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserATK(user: ${user})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> calculateUserATK(user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const userLV = players[user].lv
     let attack = baseAT + (2 * userLV)
     if (userLV >= 20) { attack = 38 }
@@ -1672,7 +1688,10 @@ function calculateUserATK(user) {
 }
 
 function calculateUserDEF(user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserDEF(user: ${user})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> calculateUserDEF(user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const userLV = players[user].lv
     let defense = Math.floor((userLV - 1) * baseDF)
     if (userLV >= 20) { defense = 4 }
@@ -1680,7 +1699,10 @@ function calculateUserDEF(user) {
 }
 
 function calculateUserNextLV(user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserNextLV(user: ${user})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> calculateUserNextLV(user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const userLV = players[user].lv
 
     let userNext = 0
@@ -1708,7 +1730,10 @@ function calculateUserNextLV(user) {
 }
 
 function calculateUserLV(user) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> calculateUserLV(user: ${user})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> calculateUserLV(user: ${user})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+    }
     const player = players[user]
     let foundItemsAppend = ``
     let collectedItems = []
@@ -1885,7 +1910,12 @@ function printMercy() {
 }
 
 function buyItem(user, str, price) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str}, price: ${price})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str}, price: ${price})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+        if (str) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
+        if (typeof price !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'price' data being sent (not of type 'number')!${resetTxt}`) }
+    }
 
     const player = players[user]
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
@@ -2044,7 +2074,12 @@ function buyItem(user, str, price) {
 }
 
 function useItem(user, str, idx) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
+    if (DEBUG_MODE) {
+        console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+        if (str) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
+        if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
+    }
     const consumableItems = {
         "bandage": 10,
         "monster candy": 10,

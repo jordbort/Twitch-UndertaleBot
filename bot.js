@@ -1067,8 +1067,8 @@ function handleJoin(channel, user) {
     client.on('message', onMessageHandler)
     client.connect()
 
-    globalUsers.push(user)
-    talk(`#${BOT_USERNAME}`, `${sendingPlayer.displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+    talk(`#${user}`, `* UndertaleBot blocks the way!`)
+    talk(`#${BOT_USERNAME}`, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
 }
 
 function getSpamtonQuote(num) {

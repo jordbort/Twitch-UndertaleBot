@@ -99,7 +99,7 @@ const players = {
 }
 
 // Initializing player SAVE data
-let playerSave = {
+const playerSave = {
     dummy: {
         lv: 1,
         hp: 20,
@@ -115,6 +115,9 @@ let playerSave = {
         inventory: []
     }
 }
+
+// Keeping track of highest-reached level to avoid duplicate item earnings
+const highestLevels = {}
 
 const weaponsATK = {
     'Stick': 0,
@@ -193,6 +196,7 @@ function onMessageHandler(channel, tags, msg, self) {
             stainedApronHealTime: false,
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
+        highestLevels[user] = 1
         const message = getIntroText(displayName)
         talk(CHANNEL_1, message)
     }
@@ -1721,39 +1725,44 @@ function calculateUserNextLV(user) {
 
 function calculateUserLV(user) {
     if (DEBUG_MODE) {
-        console.log(`${boldTxt}> calculateUserLV(user: ${user})${resetTxt}`)
         if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+        console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${players[user].lv}, Highest level: ${highestLevels[user]}${resetTxt}`)
     }
     const player = players[user]
+    const highestLevel = highestLevels[user]
+    const collectedItems = []
     let foundItemsAppend = ``
-    let collectedItems = []
+
     while (player.next <= 0) {
         player.lv += 1
-        if (player.lv === 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
-        if (player.lv === 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
-        if (player.lv === 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
-        if (player.lv === 5) { collectedItems.push(`Instant Noodles`) }
-        if (player.lv === 6) { collectedItems.push(`Hush Puppy`) }
-        if (player.lv === 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
-        if (player.lv === 8) { collectedItems.push(`Bad Memory`) }
-        if (player.lv === 9) { collectedItems.push(`Last Dream`) }
-        if (player.lv === 10) { collectedItems.push(`Real Knife`, `The Locket`) }
-        if (player.lv === 11) { collectedItems.push(`Puppydough Icecream`) }
-        if (player.lv === 12) { collectedItems.push(`Pumpkin Rings`) }
-        if (player.lv === 13) { collectedItems.push(`Croquet Roll`) }
-        if (player.lv === 14) { collectedItems.push(`Ghost Fruit`) }
-        if (player.lv === 15) { collectedItems.push(`Stoic Onion`) }
-        if (player.lv === 16) { collectedItems.push(`Rock Candy`) }
+        if (player.lv === 2 && highestLevel < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
+        if (player.lv === 3 && highestLevel < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
+        if (player.lv === 4 && highestLevel < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
+        if (player.lv === 5 && highestLevel < 5) { collectedItems.push(`Instant Noodles`) }
+        if (player.lv === 6 && highestLevel < 6) { collectedItems.push(`Hush Puppy`) }
+        if (player.lv === 7 && highestLevel < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
+        if (player.lv === 8 && highestLevel < 8) { collectedItems.push(`Bad Memory`) }
+        if (player.lv === 9 && highestLevel < 9) { collectedItems.push(`Last Dream`) }
+        if (player.lv === 10 && highestLevel < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
+        if (player.lv === 11 && highestLevel < 11) { collectedItems.push(`Puppydough Icecream`) }
+        if (player.lv === 12 && highestLevel < 12) { collectedItems.push(`Pumpkin Rings`) }
+        if (player.lv === 13 && highestLevel < 13) { collectedItems.push(`Croquet Roll`) }
+        if (player.lv === 14 && highestLevel < 14) { collectedItems.push(`Ghost Fruit`) }
+        if (player.lv === 15 && highestLevel < 15) { collectedItems.push(`Stoic Onion`) }
+        if (player.lv === 16 && highestLevel < 16) { collectedItems.push(`Rock Candy`) }
+
+        if (player.lv > highestLevel) { highestLevel = player.lv }
         player.next += calculateUserNextLV(user)
         player.at = calculateUserATK(user)
         player.df = calculateUserDEF(user)
         player.hp += 4
+        console.log(`${cyanBg} ${player.displayName} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
     }
+
     if (collectedItems.length) {
         for (const item of collectedItems) { player.inventory.push(item) }
         foundItemsAppend = ` ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} found: ` + collectedItems.join(`, `)
     }
-    console.log(`${cyanBg} ${player.displayName} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
     console.log(`Inventory:`, player.inventory)
     return foundItemsAppend
 }

@@ -431,19 +431,23 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let response
         let attackBoost = 0
+        let userInventory = null
         if (toUser && toUser.toLowerCase() in players) {
             const target = players[toUser.toLowerCase()]
+            userInventory = target.inventory
             if (target.armor === `Cowboy Hat`) { attackBoost = 5 }
             if (target.armor === `Temmie Armor`) { attackBoost = 10 }
             response = `"${toUser.toLowerCase() === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser.toLowerCase())}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
         } else if (toUser) {
             response = `${toUser} isn't registered :(`
         } else {
+            userInventory = sendingPlayer.inventory
             if (sendingPlayer.armor === `Cowboy Hat`) { attackBoost = 5 }
             if (sendingPlayer.armor === `Temmie Armor`) { attackBoost = 10 }
             response = `"${sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBoost}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`
         }
         talk(channel, response)
+        if (userInventory) { console.log(`Inventory:`, userInventory) }
         return
     }
 

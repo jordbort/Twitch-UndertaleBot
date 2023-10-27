@@ -1,6 +1,7 @@
 require(`dotenv`).config()
 const tmi = require('tmi.js')
 const BOT_USERNAME = process.env.BOT_USERNAME
+const DEV = process.env.DEV
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
 const CHANNEL_1 = process.env.CHANNEL_1
 const CHANNEL_2 = process.env.CHANNEL_2
@@ -50,16 +51,11 @@ const orangeBg = `\x1b[48;2;255;164;0m`
 
 // Define configuration options
 const opts = {
-    // options: {
-    //     debug: true
-    // },
     identity: {
         username: BOT_USERNAME,
         password: OAUTH_TOKEN
     },
-    channels: [
-        `#${BOT_USERNAME}`
-    ]
+    channels: [CHANNEL_1]
 }
 
 // Create a client with our options
@@ -163,7 +159,7 @@ function onMessageHandler(channel, tags, msg, self) {
     const toUser = args[0] ? getToUser(args[0], channel) : ``
 
     // First-time message
-    if (firstMsg && channel === `#${BOT_USERNAME}`) { printLogo() }
+    if (firstMsg && channel === CHANNEL_1) { printLogo() }
 
     // Add/manage players
     if (!(user in players)) {
@@ -198,7 +194,7 @@ function onMessageHandler(channel, tags, msg, self) {
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
         const message = getIntroText(displayName)
-        talk(`#${BOT_USERNAME}`, message)
+        talk(CHANNEL_1, message)
     }
     const sendingPlayer = players[user]
     const targetPlayer = toUser.toLowerCase() !== user && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
@@ -209,8 +205,8 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // DEBUG_MODE
     if (command === `!debug`
-        && channel === `#${BOT_USERNAME}`
-        && user === CHANNEL_2) {
+        && channel === CHANNEL_1
+        && user === DEV) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
@@ -223,7 +219,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // JOIN
     if (command === `!join`
-        && channel === `#${BOT_USERNAME}`) {
+        && channel === CHANNEL_1) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
@@ -237,8 +233,8 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // RECRUIT
     if (command === `!recruit`
-        && channel === `#${BOT_USERNAME}`
-        && user === CHANNEL_2) {
+        && channel === CHANNEL_1
+        && user === DEV) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
@@ -271,37 +267,29 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // ALL
     if (command === `!all`
-        && channel === `#${BOT_USERNAME}`
-        && user === CHANNEL_2) {
+        && channel === CHANNEL_1
+        && user === DEV) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         let response
 
-        const invalid = globalUsers.some((user) => squad.includes(user))
+        const invalid = globalUsers.some((user) => squad.includes(`#${user}`))
         if (invalid) {
             response = `Someone is already recruited :( ${globalUsers.join(', ')}`
         } else {
             response = `Squad up! :)`
-            squad.forEach((user) => globalUsers.push(user))
+            squad.forEach((user) => globalUsers.push(user.substring(1)))
             const client = new tmi.client({
                 identity: {
                     username: BOT_USERNAME,
                     password: OAUTH_TOKEN
                 },
-                channels: [
-                    `#${CHANNEL_2}`,
-                    `#${CHANNEL_3}`,
-                    `#${CHANNEL_4}`,
-                    `#${CHANNEL_5}`,
-                    `#${CHANNEL_6}`,
-                    `#${CHANNEL_7}`,
-                    `#${CHANNEL_8}`
-                ]
+                channels: squad
             })
             client.on('message', onMessageHandler)
             client.connect()
-            squad.forEach((user) => talk(`#${user}`, `* UndertaleBot blocks the way!`))
+            squad.forEach((user) => talk(user, `* UndertaleBot blocks the way!`))
         }
         talk(channel, response)
         return
@@ -331,7 +319,7 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         let response
-        if (user === CHANNEL_2 || senderIsAMod) {
+        if (user === DEV || senderIsAMod) {
             players.dummy.hp = getUserMaxHP(`dummy`)
             players.dummy.dead = false
             response = `The Dummy is alive :)`
@@ -1053,7 +1041,7 @@ function talk(chatroom, resp) {
 function handleJoin(channel, user) {
     if (DEBUG_MODE) {
         console.log(`${boldTxt}> handleJoin(channel: ${channel}, user: ${user})${resetTxt}`)
-        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: !${resetTxt}`) }
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
     }
     globalUsers.push(user)
 
@@ -1068,7 +1056,7 @@ function handleJoin(channel, user) {
     client.connect()
 
     talk(`#${user}`, `* UndertaleBot blocks the way!`)
-    talk(`#${BOT_USERNAME}`, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+    talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
 }
 
 function getSpamtonQuote(num) {
@@ -1648,7 +1636,7 @@ function deathCheck(chatroom, user, target) {
         targetPlayer.at = 0
         targetPlayer.df = 0
 
-        const msgDelay = chatroom === `#${BOT_USERNAME}` ? 1000 : 2000
+        const msgDelay = chatroom === CHANNEL_1 ? 1000 : 2000
         setTimeout(function () {
             client.say(chatroom, response)
             console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${response}${resetTxt}`)
@@ -1657,7 +1645,7 @@ function deathCheck(chatroom, user, target) {
 }
 
 function getToUser(str, chatroom) {
-    if (DEBUG_MODE && chatroom === `#${BOT_USERNAME}`) { console.log(`${boldTxt}> getToUser(str: ${str})${resetTxt}`) }
+    if (DEBUG_MODE && chatroom === CHANNEL_1) { console.log(`${boldTxt}> getToUser(str: ${str})${resetTxt}`) }
     if (str.startsWith(`@`)) {
         return str.substring(1)
     } else {
@@ -1913,7 +1901,7 @@ function buyItem(user, str, price) {
     if (DEBUG_MODE) {
         console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str}, price: ${price})${resetTxt}`)
         if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
-        if (str) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
+        if (str !== str.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
         if (typeof price !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'price' data being sent (not of type 'number')!${resetTxt}`) }
     }
 
@@ -2077,7 +2065,7 @@ function useItem(user, str, idx) {
     if (DEBUG_MODE) {
         console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
         if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
-        if (str) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
+        if (str !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
         if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
     }
     const consumableItems = {
@@ -2875,6 +2863,7 @@ function onConnectedHandler(addr, port) {
             client.say(`#${CHANNEL_1}`, `I have been rebooted :)`)
             console.log(`* UndertaleBot blocks the way!`)
         }, 3000)
+        if (!DEV) { console.log(`${redBg}${boldTxt}*** WARNING: Update local .env file!${resetTxt}`) }
     } else {
         console.log(`* Reconnected to ${addr}:${port}`)
         client.say(`#${CHANNEL_1}`, `Reconnecting...`)

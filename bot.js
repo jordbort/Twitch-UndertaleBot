@@ -1034,6 +1034,8 @@ function onMessageHandler(channel, tags, msg, self) {
 
 // Helper functions
 function talk(chatroom, resp) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
+    if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
     client.say(chatroom, resp)
     console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
 }
@@ -2065,7 +2067,7 @@ function useItem(user, str, idx) {
     if (DEBUG_MODE) {
         console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
         if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
-        if (str !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
+        if (str !== str.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'str' data being sent (not lowercase)!${resetTxt}`) }
         if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
     }
     const consumableItems = {

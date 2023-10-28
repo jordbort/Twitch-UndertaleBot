@@ -232,7 +232,10 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
-        return handleJoin(channel, user)
+        globalUsers.push(user)
+        createClient([`#${user}`])
+        talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+        return
     }
 
     // RECRUIT
@@ -247,25 +250,15 @@ function onMessageHandler(channel, tags, msg, self) {
             return
         }
 
+        const newUsers = []
         for (const str of args) {
-            const newUser = str.toLowerCase()
-            if (globalUsers.includes(newUser)) {
-                talk(channel, `${newUser} is already recruited!`)
-            } else {
-                globalUsers.push(newUser)
-                const client = new tmi.client({
-                    identity: {
-                        username: BOT_USERNAME,
-                        password: OAUTH_TOKEN
-                    },
-                    channels: [`#${newUser}`]
-                })
-                client.on('message', onMessageHandler)
-                client.connect()
-                talk(channel, `${newUser} has been recruited!`)
-                talk(`#${newUser}`, `* UndertaleBot blocks the way!`)
+            if (!globalUsers.includes(str.toLowerCase())) {
+                globalUsers.push(str.toLowerCase())
+                newUsers.push(`#${str.toLowerCase()}`)
             }
         }
+        newUsers.length === 0 ? talk(channel, `Recruited 0 users! :O`) : talk(channel, `Recruited ${newUsers.length}/${args.length} users! :)`)
+        createClient(newUsers)
         return
     }
 
@@ -276,26 +269,15 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-
-        const invalid = globalUsers.some((user) => squad.includes(`#${user}`))
-        if (invalid) {
-            response = `Someone is already recruited :( ${globalUsers.join(', ')}`
-        } else {
-            response = `Squad up! :)`
-            squad.forEach((user) => globalUsers.push(user.substring(1)))
-            const client = new tmi.client({
-                identity: {
-                    username: BOT_USERNAME,
-                    password: OAUTH_TOKEN
-                },
-                channels: squad
-            })
-            client.on('message', onMessageHandler)
-            client.connect()
-            squad.forEach((user) => talk(user, `* UndertaleBot blocks the way!`))
+        const newUsers = []
+        for (const chatroom of squad) {
+            if (!globalUsers.includes(chatroom.substring(1))) {
+                globalUsers.push(chatroom.substring(1))
+                newUsers.push(`#${chatroom.substring(1)}`)
+            }
         }
-        talk(channel, response)
+        newUsers.length === 0 ? talk(channel, `All channels are already recruited! :O`) : talk(channel, `Recruited ${newUsers.length}/${squad.length} users! :)`)
+        createClient(newUsers)
         return
     }
 
@@ -1048,25 +1030,25 @@ function talk(chatroom, resp) {
     console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
 }
 
-function handleJoin(channel, user) {
+function createClient(arr) {
     if (DEBUG_MODE) {
-        console.log(`${boldTxt}> handleJoin(channel: ${channel}, user: ${user})${resetTxt}`)
-        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
+        console.log(`${boldTxt}> createClient(arr: ${arr})${resetTxt}`)
+        if (!Array.isArray(arr)) { console.log(`${redBg}${boldTxt}*** WARNING: Arr data type is not an array!${resetTxt}`) }
+        arr.map((chatroom) => { if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) } })
+        arr.map((chatroom) => { if (chatroom !== chatroom.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (not lowercase)!${resetTxt}`) } })
     }
-    globalUsers.push(user)
 
     const client = new tmi.client({
         identity: {
             username: BOT_USERNAME,
             password: OAUTH_TOKEN
         },
-        channels: [`#${user}`]
+        channels: arr
     })
     client.on('message', onMessageHandler)
     client.connect()
 
-    talk(`#${user}`, `* UndertaleBot blocks the way!`)
-    talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+    arr.map((chatroom) => { talk(chatroom, `* UndertaleBot blocks the way!`) })
 }
 
 function getSpamtonQuote(num) {

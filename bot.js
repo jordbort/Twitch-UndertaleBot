@@ -1024,7 +1024,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
 // Helper functions
 function talk(chatroom, resp) {
-    if (DEBUG_MODE) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
+    // if (DEBUG_MODE) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
     if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
     client.say(chatroom, resp)
     console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
@@ -1212,6 +1212,7 @@ function getSpamtonQuote(num) {
 }
 
 function getIntroText(name) {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> getIntroText(name: ${name})${resetTxt}`) }
     const capsName = name.substring(0, 1).toUpperCase() + name.substring(1)
     let response = `* `
     const introText = [
@@ -1711,33 +1712,32 @@ function calculateUserNextLV(user) {
 
 function calculateUserLV(user) {
     if (DEBUG_MODE) {
-        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
         console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${players[user].lv}, Highest level: ${highestLevels[user]}${resetTxt}`)
+        if (user !== user.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'user' data being sent (not lowercase)!${resetTxt}`) }
     }
     const player = players[user]
-    const highestLevel = highestLevels[user]
     const collectedItems = []
     let foundItemsAppend = ``
 
     while (player.next <= 0) {
         player.lv += 1
-        if (player.lv === 2 && highestLevel < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
-        if (player.lv === 3 && highestLevel < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
-        if (player.lv === 4 && highestLevel < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
-        if (player.lv === 5 && highestLevel < 5) { collectedItems.push(`Instant Noodles`) }
-        if (player.lv === 6 && highestLevel < 6) { collectedItems.push(`Hush Puppy`) }
-        if (player.lv === 7 && highestLevel < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
-        if (player.lv === 8 && highestLevel < 8) { collectedItems.push(`Bad Memory`) }
-        if (player.lv === 9 && highestLevel < 9) { collectedItems.push(`Last Dream`) }
-        if (player.lv === 10 && highestLevel < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
-        if (player.lv === 11 && highestLevel < 11) { collectedItems.push(`Puppydough Icecream`) }
-        if (player.lv === 12 && highestLevel < 12) { collectedItems.push(`Pumpkin Rings`) }
-        if (player.lv === 13 && highestLevel < 13) { collectedItems.push(`Croquet Roll`) }
-        if (player.lv === 14 && highestLevel < 14) { collectedItems.push(`Ghost Fruit`) }
-        if (player.lv === 15 && highestLevel < 15) { collectedItems.push(`Stoic Onion`) }
-        if (player.lv === 16 && highestLevel < 16) { collectedItems.push(`Rock Candy`) }
+        if (player.lv === 2 && highestLevels[user] < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
+        if (player.lv === 3 && highestLevels[user] < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
+        if (player.lv === 4 && highestLevels[user] < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
+        if (player.lv === 5 && highestLevels[user] < 5) { collectedItems.push(`Instant Noodles`) }
+        if (player.lv === 6 && highestLevels[user] < 6) { collectedItems.push(`Hush Puppy`) }
+        if (player.lv === 7 && highestLevels[user] < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
+        if (player.lv === 8 && highestLevels[user] < 8) { collectedItems.push(`Bad Memory`) }
+        if (player.lv === 9 && highestLevels[user] < 9) { collectedItems.push(`Last Dream`) }
+        if (player.lv === 10 && highestLevels[user] < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
+        if (player.lv === 11 && highestLevels[user] < 11) { collectedItems.push(`Puppydough Icecream`) }
+        if (player.lv === 12 && highestLevels[user] < 12) { collectedItems.push(`Pumpkin Rings`) }
+        if (player.lv === 13 && highestLevels[user] < 13) { collectedItems.push(`Croquet Roll`) }
+        if (player.lv === 14 && highestLevels[user] < 14) { collectedItems.push(`Ghost Fruit`) }
+        if (player.lv === 15 && highestLevels[user] < 15) { collectedItems.push(`Stoic Onion`) }
+        if (player.lv === 16 && highestLevels[user] < 16) { collectedItems.push(`Rock Candy`) }
 
-        if (player.lv > highestLevel) { highestLevel = player.lv }
+        if (player.lv > highestLevels[user]) { highestLevels[user] = player.lv }
         player.next += calculateUserNextLV(user)
         player.at = calculateUserATK(user)
         player.df = calculateUserDEF(user)

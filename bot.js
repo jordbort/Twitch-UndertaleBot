@@ -544,7 +544,7 @@ function onMessageHandler(channel, tags, msg, self) {
             if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
             talk(channel, response)
-            deathCheck(channel, user, toUser)
+            deathCheck(channel, user, toUser.toLowerCase())
         } else {
             if (randNum === 0) {
                 sendingPlayer.hp -= smallDamageDealt
@@ -1559,11 +1559,11 @@ function deathCheck(chatroom, user, target) {
         if (target !== target.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'target' data being sent (not lowercase)!${resetTxt}`) }
     }
     const sendingPlayer = players[user]
-    const targetPlayer = players[target.toLowerCase()]
-    const targetSaveData = playerSave[target.toLowerCase()]
+    const targetPlayer = players[target]
+    const targetSaveData = playerSave[target]
     const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
     const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
-    console.log(`${sendingPlayer.hp <= 0 ? redBg : greenBg} user: ${sendingPlayer.displayName} ${sendingPlayer.hp}/${getUserMaxHP(user)} HP ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} target: ${target === `dummy` ? `DUMMY` : targetPlayer.displayName} ${targetPlayer.hp}/${getUserMaxHP(target.toLowerCase())} HP ${resetTxt}`)
+    console.log(`${sendingPlayer.hp <= 0 ? redBg : greenBg} user: ${sendingPlayer.displayName} ${sendingPlayer.hp}/${getUserMaxHP(user)} HP ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} target: ${target === `dummy` ? `DUMMY` : targetPlayer.displayName} ${targetPlayer.hp}/${getUserMaxHP(target)} HP ${resetTxt}`)
 
     const deathText = [
         `The future of monsters depends on you!`,
@@ -1578,7 +1578,7 @@ function deathCheck(chatroom, user, target) {
         // Building death response
         let response = `* `
         response += deathText[Math.floor(Math.random() * deathText.length)]
-        target.toLowerCase() === `dummy` ? response += ` The Dummy was ripped to shreds... ` : response += ` ${capsTarget}! Stay determined... `
+        target === `dummy` ? response += ` The Dummy was ripped to shreds... ` : response += ` ${capsTarget}! Stay determined... `
 
         // Checking if user killed a different user
         if (user !== target) {

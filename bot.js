@@ -580,7 +580,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         if (toUser) {
             if (toUser.toLowerCase() in players) {
-                if (targetPlayer.dead) {
+                if (players[toUser.toLowerCase()].dead) {
                     talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser.toLowerCase()].displayName} is dead! :(`)
                     return
                 }

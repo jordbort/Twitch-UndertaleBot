@@ -79,6 +79,8 @@ const baseHP = 16
 const baseAT = -2
 const baseDF = 0.25
 
+let lastSansFace = 4
+
 // Initializing players
 const players = {
     dummy: {
@@ -445,15 +447,22 @@ function onMessageHandler(channel, tags, msg, self) {
 
     // SANS FACE
     if (command === `!sans`) {
+        // Log message
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
         const sansExpressions = [
             sansOpenEyes,
-            sansClosedEyes,
-            sansNoEyes,
-            sansWink,
             sansLookAround,
+            sansWink,
+            sansClosedEyes,
+            sansNoEyes
         ]
-        const expression = sansExpressions[Math.floor(Math.random() * sansExpressions.length)]
-        return expression()
+        let expression = Math.floor(Math.random() * sansExpressions.length)
+        while (expression === lastSansFace) {
+            if (DEBUG_MODE) { console.log(`${boldTxt}> Re-rolling facial expression...${resetTxt}`) }
+            expression = Math.floor(Math.random() * sansExpressions.length)
+        }
+        lastSansFace = expression
+        return sansExpressions[expression]()
     }
 
     // FIGHT or ATTACK
@@ -2829,11 +2838,12 @@ function useItem(user, str, idx) {
 }
 
 function sansOpenEyes() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> sansOpenEyes()${resetTxt}`) }
     const bkSq = `\x1b[40m  \x1b[0m`
     const whSq = `\x1b[47m  \x1b[0m`
     const noSq = `  `
     //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
-    console.log(`\n` + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq) // 4
@@ -2865,15 +2875,16 @@ function sansOpenEyes() {
     console.log(noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq) // 30
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq) // 31
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 32
-    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + `\n`) // 33
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 33
 }
 
 function sansClosedEyes() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> sansClosedEyes()${resetTxt}`) }
     const bkSq = `\x1b[40m  \x1b[0m`
     const whSq = `\x1b[47m  \x1b[0m`
     const noSq = `  `
     //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
-    console.log(`\n` + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq) // 4
@@ -2905,15 +2916,16 @@ function sansClosedEyes() {
     console.log(noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq) // 30
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq) // 31
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 32
-    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) + `\n` // 33}
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 33}
 }
 
 function sansNoEyes() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> sansNoEyes()${resetTxt}`) }
     const bkSq = `\x1b[40m  \x1b[0m`
     const whSq = `\x1b[47m  \x1b[0m`
     const noSq = `  `
     //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
-    console.log(`\n` + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq) // 4
@@ -2945,15 +2957,16 @@ function sansNoEyes() {
     console.log(noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq) // 30
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq) // 31
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 32
-    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + `\n`) // 33
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 33
 }
 
 function sansWink() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> sansWink()${resetTxt}`) }
     const bkSq = `\x1b[40m  \x1b[0m`
     const whSq = `\x1b[47m  \x1b[0m`
     const noSq = `  `
     //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
-    console.log(`\n` + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq) // 4
@@ -2985,15 +2998,16 @@ function sansWink() {
     console.log(noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq) // 30
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq) // 31
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 32
-    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + `\n`) // 33
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 33
 }
 
 function sansLookAround() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> sansLookAround()${resetTxt}`) }
     const bkSq = `\x1b[40m  \x1b[0m`
     const whSq = `\x1b[47m  \x1b[0m`
     const noSq = `  `
     //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
-    console.log(`\n` + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq) // 4
@@ -3025,7 +3039,7 @@ function sansLookAround() {
     console.log(noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq) // 30
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq) // 31
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 32
-    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + `\n`) // 33
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 33
 }
 
 // Called every time the bot connects to Twitch chat

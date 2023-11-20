@@ -446,7 +446,8 @@ function onMessageHandler(channel, tags, msg, self) {
     }
 
     // SANS FACE
-    if (command === `!sans`) {
+    if (command === `!sans`
+        && channel === CHANNEL_1) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
         const sansExpressions = [
@@ -454,7 +455,8 @@ function onMessageHandler(channel, tags, msg, self) {
             sansLookAround,
             sansWink,
             sansClosedEyes,
-            sansNoEyes
+            sansNoEyes,
+            sansSmall
         ]
         let expression = Math.floor(Math.random() * sansExpressions.length)
         while (expression === lastSansFace) {
@@ -3040,6 +3042,46 @@ function sansLookAround() {
     console.log(noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq) // 31
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 32
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 33
+}
+
+function sansSmall() {
+    if (DEBUG_MODE) { console.log(`${boldTxt}> sansSmall()${resetTxt}`) }
+    const bkSq = `\x1b[40m  \x1b[0m`
+    const whSq = `\x1b[47m  \x1b[0m`
+    const blSq = `\x1b[44m  \x1b[0m`
+    const gySq = `\x1b[100m  \x1b[0m`
+    const noSq = `  `
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-
+    console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
+    console.log(noSq + noSq + noSq + noSq + noSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + noSq + noSq + noSq + noSq + noSq) // 2
+    console.log(noSq + noSq + noSq + noSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + noSq + noSq + noSq + noSq) // 3
+    console.log(noSq + noSq + noSq + noSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + noSq + noSq + noSq + noSq) // 4
+    console.log(noSq + noSq + noSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + noSq + noSq + noSq) // 5
+    console.log(noSq + noSq + noSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + noSq + noSq + noSq) // 6
+    console.log(noSq + noSq + noSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + noSq + noSq + noSq) // 7
+    console.log(noSq + noSq + noSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + noSq + noSq + noSq) // 8
+    console.log(noSq + noSq + noSq + noSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + noSq + noSq + noSq + noSq) // 9
+    console.log(noSq + noSq + noSq + bkSq + bkSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + bkSq + bkSq + noSq + noSq + noSq) // 10
+    console.log(noSq + noSq + noSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + noSq + noSq + noSq) // 11
+    console.log(noSq + noSq + noSq + bkSq + whSq + whSq + whSq + bkSq + whSq + bkSq + whSq + bkSq + whSq + bkSq + whSq + bkSq + whSq + whSq + whSq + bkSq + noSq + noSq + noSq) // 12
+    console.log(noSq + noSq + noSq + noSq + bkSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + bkSq + noSq + noSq + noSq + noSq) // 13
+    console.log(noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq) // 14
+    console.log(noSq + noSq + bkSq + blSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + blSq + bkSq + noSq + noSq) // 15
+    console.log(noSq + bkSq + bkSq + blSq + bkSq + gySq + gySq + bkSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + bkSq + gySq + gySq + bkSq + blSq + bkSq + bkSq + noSq) // 16
+    console.log(noSq + bkSq + blSq + blSq + blSq + bkSq + gySq + gySq + bkSq + bkSq + bkSq + whSq + bkSq + bkSq + bkSq + gySq + gySq + bkSq + blSq + blSq + blSq + bkSq + noSq) // 17
+    console.log(bkSq + blSq + blSq + bkSq + bkSq + blSq + bkSq + bkSq + bkSq + whSq + whSq + bkSq + whSq + whSq + bkSq + bkSq + bkSq + blSq + bkSq + bkSq + blSq + blSq + bkSq) // 18
+    console.log(bkSq + blSq + blSq + blSq + blSq + bkSq + blSq + blSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + blSq + blSq + bkSq + blSq + blSq + blSq + blSq + bkSq) // 19
+    console.log(bkSq + blSq + blSq + blSq + blSq + blSq + bkSq + blSq + bkSq + bkSq + whSq + whSq + whSq + bkSq + bkSq + blSq + bkSq + blSq + blSq + blSq + blSq + blSq + bkSq) // 20
+    console.log(noSq + bkSq + blSq + blSq + blSq + bkSq + blSq + blSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + blSq + blSq + bkSq + blSq + blSq + blSq + bkSq + noSq) // 21
+    console.log(noSq + noSq + bkSq + bkSq + blSq + bkSq + blSq + blSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + blSq + blSq + bkSq + blSq + bkSq + bkSq + noSq + noSq) // 22
+    console.log(noSq + noSq + noSq + bkSq + bkSq + bkSq + blSq + blSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + blSq + blSq + bkSq + bkSq + bkSq + noSq + noSq + noSq) // 23
+    console.log(noSq + noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq + noSq) // 24
+    console.log(noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq) // 25
+    console.log(noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq) // 26
+    console.log(noSq + noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq + noSq) // 27
+    console.log(noSq + noSq + bkSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + noSq + noSq + noSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + bkSq + noSq + noSq) // 28
+    console.log(noSq + noSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + noSq + noSq + noSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + bkSq + noSq + noSq) // 29
+    console.log(noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq) // 30
 }
 
 // Called every time the bot connects to Twitch chat

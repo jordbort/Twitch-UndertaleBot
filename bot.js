@@ -11,6 +11,7 @@ const CHANNEL_5 = process.env.CHANNEL_5
 const CHANNEL_6 = process.env.CHANNEL_6
 const CHANNEL_7 = process.env.CHANNEL_7
 const CHANNEL_8 = process.env.CHANNEL_8
+const CHANNEL_9 = process.env.CHANNEL_9
 const squad = [
     CHANNEL_2,
     CHANNEL_3,
@@ -18,7 +19,8 @@ const squad = [
     CHANNEL_5,
     CHANNEL_6,
     CHANNEL_7,
-    CHANNEL_8
+    CHANNEL_8,
+    CHANNEL_9
 ]
 
 // Terminal colors
@@ -275,7 +277,7 @@ function onMessageHandler(channel, tags, msg, self) {
         for (const chatroom of squad) {
             if (!globalUsers.includes(chatroom.substring(1))) {
                 globalUsers.push(chatroom.substring(1))
-                newUsers.push(`#${chatroom.substring(1)}`)
+                newUsers.push(chatroom)
             }
         }
         newUsers.length === 0 ? talk(channel, `All channels are already recruited! :O`) : talk(channel, `Recruited ${newUsers.length}/${squad.length} users! :)`)

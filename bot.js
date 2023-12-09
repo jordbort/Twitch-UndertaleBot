@@ -3095,7 +3095,6 @@ function onConnectedHandler(addr, port) {
             client.say(CHANNEL_1, `I have been rebooted :)`)
             console.log(`* UndertaleBot blocks the way!`)
         }, 3000)
-        if (!DEV) { console.log(`${redBg}${boldTxt}*** WARNING: Update local .env file!${resetTxt}`) }
     } else {
         console.log(`* Reconnected to ${addr}:${port}`)
         client.say(CHANNEL_1, `Reconnecting...`)

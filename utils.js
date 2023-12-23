@@ -693,15 +693,6 @@ function deathCheck(chatroom, user, target) {
     }
 }
 
-function getToUser(str, chatroom) {
-    if (settings.debug && chatroom === CHANNEL_1) { console.log(`${boldTxt}> getToUser(str: ${str})${resetTxt}`) }
-    if (str.startsWith(`@`)) {
-        return str.substring(1)
-    } else {
-        return str
-    }
-}
-
 function getUserMaxHP(user) {
     if (settings.debug) {
         console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`)
@@ -2062,7 +2053,6 @@ module.exports = {
     getAction,
     stainedApronHeal,
     deathCheck,
-    getToUser,
     getUserMaxHP,
     calculateUserATK,
     calculateUserDEF,

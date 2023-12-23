@@ -16,7 +16,6 @@ const {
     getAction,
     stainedApronHeal,
     deathCheck,
-    getToUser,
     getUserMaxHP,
     calculateUserATK,
     calculateUserDEF,
@@ -90,7 +89,7 @@ function onMessageHandler(channel, tags, msg, self) {
     // Command and arguments parser
     const args = msg.split(' ')
     const command = args.shift().toLowerCase()
-    const toUser = args[0] ? getToUser(args[0], channel) : ``
+    const toUser = args[0] ? args[0].replace(/^@/, ``) : ``
 
     // First-time message
     if (firstMsg && channel === CHANNEL_1) { printLogo() }

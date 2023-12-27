@@ -1,7 +1,7 @@
 require(`dotenv`).config()
+const BOT_USERNAME = process.env.BOT_USERNAME
 
 const {
-    BOT_USERNAME,
     CHANNEL_1,
     DEV,
     OAUTH_TOKEN,
@@ -9,7 +9,6 @@ const {
     tmi,
     client,
     talk,
-    createClient,
     getSpamtonQuote,
     getIntroText,
     getThirdPersonFlavorText,
@@ -67,14 +66,27 @@ const {
     armorDEF
 } = require(`./data`)
 
-// Register our event handlers (defined below)
-client.on('message', onMessageHandler)
-client.on('connected', onConnectedHandler)
+let lastSansFace = 4
 
-// Connect to Twitch:
+function createClient(arr) {
+    if (settings.debug) {
+        console.log(`${boldTxt}> createClient(arr: ${arr})${resetTxt}`)
+        if (!Array.isArray(arr)) { console.log(`${redBg}${boldTxt}*** WARNING: Arr data type is not an array!${resetTxt}`) }
+        arr.map((chatroom) => { if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) } })
+    }
+
+    const client = new tmi.client({
+        identity: {
+            username: BOT_USERNAME,
+            password: OAUTH_TOKEN
+        },
+        channels: arr
+    })
+    client.on('message', onMessageHandler)
 client.connect()
 
-let lastSansFace = 4
+    arr.map((chatroom) => { talk(chatroom, `* UndertaleBot blocks the way!`) })
+}
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, message, self) {
@@ -992,3 +1004,10 @@ function onConnectedHandler(addr, port) {
     }
     settings.firstConnection = false
 }
+
+// Register our event handlers (defined below)
+client.on('message', onMessageHandler)
+client.on('connected', onConnectedHandler)
+
+// Connect to Twitch:
+client.connect()

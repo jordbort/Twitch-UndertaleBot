@@ -1,4 +1,4 @@
-const { BOT_USERNAME } = require(`./utils`)
+const BOT_USERNAME = process.env.BOT_USERNAME
 
 // All active users (to avoid duplicate clients):
 const globalUsers = [BOT_USERNAME]

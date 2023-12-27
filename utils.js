@@ -86,27 +86,6 @@ function talk(chatroom, resp) {
     console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
 }
 
-function createClient(arr) {
-    if (settings.debug) {
-        console.log(`${boldTxt}> createClient(arr: ${arr})${resetTxt}`)
-        if (!Array.isArray(arr)) { console.log(`${redBg}${boldTxt}*** WARNING: Arr data type is not an array!${resetTxt}`) }
-        arr.map((chatroom) => { if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) } })
-        arr.map((chatroom) => { if (chatroom !== chatroom.toLowerCase()) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (not lowercase)!${resetTxt}`) } })
-    }
-
-    const client = new tmi.client({
-        identity: {
-            username: BOT_USERNAME,
-            password: OAUTH_TOKEN
-        },
-        channels: arr
-    })
-    client.on('message', onMessageHandler)
-    client.connect()
-
-    arr.map((chatroom) => { talk(chatroom, `* UndertaleBot blocks the way!`) })
-}
-
 function getSpamtonQuote(num) {
     if (settings.debug) { console.log(`${boldTxt}> getSpamtonQuote(num: ${num})${resetTxt}`) }
     const quotes = [
@@ -2018,7 +1997,6 @@ module.exports = {
     tmi,
     client,
     talk,
-    createClient,
     getSpamtonQuote,
     getIntroText,
     getThirdPersonFlavorText,

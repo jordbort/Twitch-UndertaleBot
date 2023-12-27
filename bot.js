@@ -77,7 +77,7 @@ client.connect()
 let lastSansFace = 4
 
 // Called every time a message comes in
-function onMessageHandler(channel, tags, msg, self) {
+function onMessageHandler(channel, tags, message, self) {
     if (self || tags.username === BOT_USERNAME) { return } // Ignore messages from the bot
 
     // Message context
@@ -87,9 +87,7 @@ function onMessageHandler(channel, tags, msg, self) {
     const firstMsg = tags['first-msg']
 
     // Command and arguments parser
-    const args = msg.split(' ')
-    const command = args.shift().toLowerCase()
-    const toUser = args[0] ? args[0].replace(/^@/, ``) : ``
+    const msg = message.toLowerCase()
 
     // First-time message
     if (firstMsg && channel === CHANNEL_1) { printLogo() }
@@ -131,7 +129,7 @@ function onMessageHandler(channel, tags, msg, self) {
         talk(CHANNEL_1, message)
     }
     const sendingPlayer = players[user]
-    const targetPlayer = toUser.toLowerCase() !== user && toUser.toLowerCase() in players ? players[toUser.toLowerCase()] : null
+    const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
 
     // *****************
     // ** REPLY CASES **
@@ -145,8 +143,8 @@ function onMessageHandler(channel, tags, msg, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const initialDebugState = settings.debug
-        if (args[0]?.toLowerCase() === `on`) { settings.debug = true }
-        else if (args[0]?.toLowerCase() === `off`) { settings.debug = false }
+        if (toUser === `on`) { settings.debug = true }
+        else if (toUser === `off`) { settings.debug = false }
         else { settings.debug = !settings.debug }
         settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
     }
@@ -182,9 +180,9 @@ function onMessageHandler(channel, tags, msg, self) {
 
         const newUsers = []
         for (const str of args) {
-            if (!globalUsers.includes(str.toLowerCase())) {
-                globalUsers.push(str.toLowerCase())
-                newUsers.push(`#${str.toLowerCase()}`)
+            if (!globalUsers.includes(str)) {
+                globalUsers.push(str)
+                newUsers.push(`#${str}`)
             }
         }
         newUsers.length === 0 ? talk(channel, `Recruited 0 users! :O`) : talk(channel, `Recruited ${newUsers.length}/${args.length} users! :)`)
@@ -344,14 +342,14 @@ function onMessageHandler(channel, tags, msg, self) {
         let response
         let attackBoost = 0
         let userInventory = null
-        if (toUser && toUser.toLowerCase() in players) {
-            const target = players[toUser.toLowerCase()]
+        if (toUser in players) {
+            const target = players[toUser]
             userInventory = target.inventory
             if (target.armor === `Cowboy Hat`) { attackBoost = 5 }
             if (target.armor === `Temmie Armor`) { attackBoost = 10 }
-            response = `"${toUser.toLowerCase() === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser.toLowerCase())}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
+            response = `"${toUser === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser)}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
         } else if (toUser) {
-            response = `${toUser} isn't registered :(`
+            response = `${toUser} isn't a registered player! :(`
         } else {
             userInventory = sendingPlayer.inventory
             if (sendingPlayer.armor === `Cowboy Hat`) { attackBoost = 5 }
@@ -368,7 +366,7 @@ function onMessageHandler(channel, tags, msg, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const response = getSpamtonQuote(args[0])
+        const response = getSpamtonQuote(toUser)
         talk(channel, response)
         return
     }
@@ -412,12 +410,12 @@ function onMessageHandler(channel, tags, msg, self) {
 
         // Stop if target is the bot, dead, or not known, or if no target is specified
         if (toUser) {
-            if (toUser.toLowerCase() in players) {
-                if (players[toUser.toLowerCase()].dead) {
-                    talk(channel, `${players[toUser.toLowerCase()].displayName.substring(0, 1).toUpperCase() + players[toUser.toLowerCase()].displayName.substring(1)} is already dead! :(`)
+            if (toUser in players) {
+                if (players[toUser].dead) {
+                    talk(channel, `${players[toUser].displayName.substring(0, 1).toUpperCase() + players[toUser].displayName.substring(1)} is already dead! :(`)
                     return
                 }
-            } else if (toUser.toLowerCase() === `undertalebot`) {
+            } else if (toUser === `undertalebot`) {
                 talk(channel, `You can't fight me, but you can try fighting the Dummy!`)
                 return
             } else {
@@ -481,22 +479,22 @@ function onMessageHandler(channel, tags, msg, self) {
         if (targetPlayer) {
             if (randNum === 0) {
                 targetPlayer.hp -= smallDamageDealt
-                console.log(`${grayBg} smallDamage: ${smallDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${smallDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser.toLowerCase() === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${smallDamageDealt} ${resetTxt}`)
+                console.log(`${grayBg} smallDamage: ${smallDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${smallDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${smallDamageDealt} ${resetTxt}`)
             } else if (randNum === 1) {
                 targetPlayer.hp -= mediumDamageDealt
-                console.log(`${grayBg} mediumDamage: ${mediumDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${mediumDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser.toLowerCase() === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${mediumDamageDealt} ${resetTxt}`)
+                console.log(`${grayBg} mediumDamage: ${mediumDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${mediumDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${mediumDamageDealt} ${resetTxt}`)
             } else if (randNum === 2) {
                 targetPlayer.hp -= largeDamageDealt
-                console.log(`${grayBg} largeDamage: ${largeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${largeDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser.toLowerCase() === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${largeDamageDealt} ${resetTxt}`)
+                console.log(`${grayBg} largeDamage: ${largeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${largeDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${largeDamageDealt} ${resetTxt}`)
             } else if (randNum === 3) {
                 targetPlayer.hp -= extraLargeDamageDealt
-                console.log(`${grayBg} extraLargeDamage: ${extraLargeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${extraLargeDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser.toLowerCase() === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${extraLargeDamageDealt} ${resetTxt}`)
+                console.log(`${grayBg} extraLargeDamage: ${extraLargeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${extraLargeDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${extraLargeDamageDealt} ${resetTxt}`)
             }
 
             if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
             talk(channel, response)
-            deathCheck(channel, user, toUser.toLowerCase())
+            deathCheck(channel, user, toUser)
         } else {
             if (randNum === 0) {
                 sendingPlayer.hp -= smallDamageDealt
@@ -531,9 +529,9 @@ function onMessageHandler(channel, tags, msg, self) {
         }
 
         if (toUser) {
-            if (toUser.toLowerCase() in players) {
-                if (players[toUser.toLowerCase()].dead) {
-                    talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser.toLowerCase()].displayName} is dead! :(`)
+            if (toUser in players) {
+                if (players[toUser].dead) {
+                    talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
                     return
                 }
             } else {
@@ -544,7 +542,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         printAct()
         let response = `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)}`
-        targetPlayer ? response += getAction(user, toUser.toLowerCase()) : response += getThirdPersonFlavorText()
+        targetPlayer ? response += getAction(user, toUser) : response += getThirdPersonFlavorText()
 
         if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
@@ -565,7 +563,7 @@ function onMessageHandler(channel, tags, msg, self) {
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
         console.log(`Inventory:`, inventory)
 
-        let usedItem = toUser.toLowerCase() || ``
+        let usedItem = toUser || ``
 
         if (inventory.length === 0) {
             talk(channel, `${capsName} has no items! :(`)
@@ -646,7 +644,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let isAnItem = false
         for (const item of allItems) {
-            if (msg.toLowerCase().includes(item)) {
+            if (msg.includes(item)) {
                 isAnItem = true
                 usedItem = item
                 break
@@ -697,23 +695,27 @@ function onMessageHandler(channel, tags, msg, self) {
         let response = `* `
 
         // Check if toUser is the sender
-        if (toUser && toUser.toLowerCase() !== user) {
+        if (toUser && toUser !== user) {
             // If toUser not registered
-            if (!(toUser.toLowerCase() in players)) {
+            if (!(toUser in players)) {
                 response = `${toUser} is not a registered player :(`
                 talk(channel, response)
                 return
                 // If toUser is dead
             } else if (targetPlayer.dead) {
-                response = `Sorry ${sendingPlayer.displayName}, ${players[toUser.toLowerCase()].displayName} is dead! :(`
+                response = `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`
                 talk(channel, response)
+                return
+                // If toUser is UndertaleBot
+            } else if (toUser === `undertalebot`) {
+                talk(channel, `You can't spare me, but you can try sparing the Dummy!`)
                 return
                 // If mercy is successful
             } else if (randNum === 1) {
                 response += `YOU WON! ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} was spared. ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} earned 0 EXP and ${randGoldAmt} gold.`
                 sendingPlayer.gold += randGoldAmt
                 sendingPlayer.hp = getUserMaxHP(user)
-                targetPlayer.hp = getUserMaxHP(toUser.toLowerCase())
+                targetPlayer.hp = getUserMaxHP(toUser)
             } else {
                 response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare ${targetPlayer.displayName}. ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}`
                 response += getThirdPersonFlavorText()
@@ -728,7 +730,7 @@ function onMessageHandler(channel, tags, msg, self) {
         if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
         talk(channel, response)
-        console.log(`${cyanBg} sender: ${sendingPlayer.displayName} (${sendingPlayer.hp} HP), target: ${toUser.toLowerCase() === `dummy` ? `DUMMY` : targetPlayer?.displayName || `none`}${targetPlayer ? ` (${targetPlayer.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
+        console.log(`${cyanBg} sender: ${sendingPlayer.displayName} (${sendingPlayer.hp} HP), target: ${toUser === `dummy` ? `DUMMY` : targetPlayer?.displayName || `none`}${targetPlayer ? ` (${targetPlayer.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
         return
     }
 
@@ -917,7 +919,7 @@ function onMessageHandler(channel, tags, msg, self) {
 
         let isAnItem = false
         for (const item of purchasableItems) {
-            if (msg.toLowerCase().includes(item)) {
+            if (msg.includes(item)) {
                 isAnItem = true
                 queryItem = item
                 break

@@ -246,6 +246,45 @@ function getSpamtonQuote(num) {
     }
 }
 
+function getSaveText(displayName) {
+    if (settings.debug) { console.log(`${boldTxt}> getSaveText(displayName: ${displayName})${resetTxt}`) }
+    const capsName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
+    const saveText = [
+        `The shadow of the ruins looms above, filling ${displayName} with determination.`,
+        `Playfully crinkling through the leaves fills ${displayName} with determination.`,
+        `Knowing the mouse might one day leave its hole and get the cheese... It fills ${displayName} with determination.`,
+        `Seeing such a cute, tidy house in the RUINS gives ${displayName} determination.`,
+        `The cold atmosphere of a new land... it fills ${displayName} with determination.`,
+        `The convenience of that lamp still fill    s ${displayName} with determination.`,
+        `Knowing the mouse might one day find a way to heat up the spaghetti... It fills ${displayName} with determination.`,
+        `Snow can always be broken down and rebuilt into something more useful. This simple fact fills ${displayName} with determination.`,
+        `Knowing that dog will never give up trying to make the perfect snowdog... It fills ${displayName} with determination.`,
+        `The sight of such a friendly town fills ${displayName} with determination.`,
+        `The sound of rushing water fills ${displayName} with determination.`,
+        `A feeling of dread hangs over ${displayName}... But ${displayName} stays determined.`,
+        `Knowing the mouse might one day extract the cheese from the mystical crystal... It fills ${displayName} with determination.`,
+        `The serene sound of a distant music box... It fills ${displayName} with determination.`,
+        `The sound of muffled rain on the cavetop... It fills ${displayName} with determination.`,
+        `The waterfall here seems to flow from the ceiling of the cavern... Occasionally, a piece of trash will flow through... and fall into the bottomless abyss below. Viewing this endless cycle of worthless garbage... It fills ${displayName} with determination.`,
+        `Partaking in useless garbage fills ${displayName} with determination.`,
+        `${capsName} feels a calming tranquility. ${capsName} is filled with determination.`,
+        `${capsName} feels... something. ${capsName} is filled with detemmienation.`,
+        `The wind is howling. ${capsName} is filled with determination.`,
+        `The wind has stopped. ${capsName} is filled with determination.`,
+        `The howling wind is now a breeze. This gives ${displayName} determination.`,
+        `Seeing such a strange laboratory in a place like this... ${capsName} is filled with determination.`,
+        `The wooshing sound of steam and cogs... it fills ${displayName} with determination.`,
+        `An ominous structure looms in the distance... ${capsName} is filled with determination.`,
+        `Knowing the mouse might one day hack into the computerized safe and get the cheese... It fills ${displayName} with determination.`,
+        `The smell of cobwebs fills the air... ${capsName} is filled with determination.`,
+        `The relaxing atmosphere of this hotel... it fills ${displayName} with determination.`,
+        `The air is filled with the smell of ozone... it fills ${displayName} with determination.`,
+        `Behind this door must be the elevator to the King's castle. ${capsName} is filled with determination.`
+    ]
+    const randSaveText = saveText[Math.floor(Math.random() * saveText.length)]
+    return `* ${randSaveText}`
+}
+
 function getIntroText(name) {
     if (settings.debug) { console.log(`${boldTxt}> getIntroText(name: ${name})${resetTxt}`) }
     const capsName = name.substring(0, 1).toUpperCase() + name.substring(1)
@@ -1998,6 +2037,7 @@ module.exports = {
     client,
     talk,
     getSpamtonQuote,
+    getSaveText,
     getIntroText,
     getThirdPersonFlavorText,
     getAction,

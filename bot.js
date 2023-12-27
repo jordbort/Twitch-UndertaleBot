@@ -10,6 +10,7 @@ const {
     client,
     talk,
     getSpamtonQuote,
+    getSaveText,
     getIntroText,
     getThirdPersonFlavorText,
     getAction,
@@ -270,44 +271,9 @@ function onMessageHandler(channel, tags, message, self) {
             return
         }
 
-        const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
         playerSave[user] = { ...players[user] }
 
-        let response = `* `
-        const saveText = [
-            `The shadow of the ruins looms above, filling ${sendingPlayer.displayName} with determination.`,
-            `Playfully crinkling through the leaves fills ${sendingPlayer.displayName} with determination.`,
-            `Knowing the mouse might one day leave its hole and get the cheese... It fills ${sendingPlayer.displayName} with determination.`,
-            `Seeing such a cute, tidy house in the RUINS gives ${sendingPlayer.displayName} determination.`,
-            `The cold atmosphere of a new land... it fills ${sendingPlayer.displayName} with determination.`,
-            `The convenience of that lamp still fills ${sendingPlayer.displayName} with determination.`,
-            `Knowing the mouse might one day find a way to heat up the spaghetti... It fills ${sendingPlayer.displayName} with determination.`,
-            `Snow can always be broken down and rebuilt into something more useful. This simple fact fills ${sendingPlayer.displayName} with determination.`,
-            `Knowing that dog will never give up trying to make the perfect snowdog... It fills ${sendingPlayer.displayName} with determination.`,
-            `The sight of such a friendly town fills ${sendingPlayer.displayName} with determination.`,
-            `The sound of rushing water fills ${sendingPlayer.displayName} with determination.`,
-            `A feeling of dread hangs over ${sendingPlayer.displayName}... But ${sendingPlayer.displayName} stays determined.`,
-            `Knowing the mouse might one day extract the cheese from the mystical crystal... It fills ${sendingPlayer.displayName} with determination.`,
-            `The serene sound of a distant music box... It fills ${sendingPlayer.displayName} with determination.`,
-            `The sound of muffled rain on the cavetop... It fills ${sendingPlayer.displayName} with determination.`,
-            `The waterfall here seems to flow from the ceiling of the cavern... Occasionally, a piece of trash will flow through... and fall into the bottomless abyss below. Viewing this endless cycle of worthless garbage... It fills ${sendingPlayer.displayName} with determination.`,
-            `Partaking in useless garbage fills ${sendingPlayer.displayName} with determination.`,
-            `${capsName} feels a calming tranquility. ${capsName} is filled with determination.`,
-            `${capsName} feels... something. ${capsName} is filled with detemmienation.`,
-            `The wind is howling. ${capsName} is filled with determination.`,
-            `The wind has stopped. ${capsName} is filled with determination.`,
-            `The howling wind is now a breeze. This gives ${sendingPlayer.displayName} determination.`,
-            `Seeing such a strange laboratory in a place like this... ${capsName} is filled with determination.`,
-            `The wooshing sound of steam and cogs... it fills ${sendingPlayer.displayName} with determination.`,
-            `An ominous structure looms in the distance... ${capsName} is filled with determination.`,
-            `Knowing the mouse might one day hack into the computerized safe and get the cheese... It fills ${sendingPlayer.displayName} with determination.`,
-            `The smell of cobwebs fills the air... ${capsName} is filled with determination.`,
-            `The relaxing atmosphere of this hotel... it fills ${sendingPlayer.displayName} with determination.`,
-            `The air is filled with the smell of ozone... it fills ${sendingPlayer.displayName} with determination.`,
-            `Behind this door must be the elevator to the King's castle. ${capsName} is filled with determination.`
-        ]
-        const randSaveText = Math.floor(Math.random() * saveText.length)
-        response += saveText[randSaveText]
+        const response = getSaveText(displayName)
         talk(channel, response)
         return
     }
@@ -320,7 +286,7 @@ function onMessageHandler(channel, tags, message, self) {
         players[user] = { ...playerSave[user] }
         players[user].inventory = playerSave[user].inventory
 
-        let response = `"${sendingPlayer.displayName}" `
+        let response = `Reloading: "${sendingPlayer.displayName}" `
         let attackBoost = 0
         if (players[user].armor === `Cowboy Hat`) { attackBoost = 5 }
         if (players[user].armor === `Temmie Armor`) { attackBoost = 10 }

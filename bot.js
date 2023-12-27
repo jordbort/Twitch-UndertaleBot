@@ -82,8 +82,8 @@ function createClient(arr) {
         },
         channels: arr
     })
-    client.on('message', onMessageHandler)
-client.connect()
+    client.on(`message`, onMessageHandler)
+    client.connect()
 
     arr.map((chatroom) => { talk(chatroom, `* UndertaleBot blocks the way!`) })
 }
@@ -96,10 +96,13 @@ function onMessageHandler(channel, tags, message, self) {
     const user = tags.username
     const displayName = tags[`display-name`]
     const senderIsAMod = tags.mod
-    const firstMsg = tags['first-msg']
+    const firstMsg = tags[`first-msg`]
 
     // Command and arguments parser
     const msg = message.toLowerCase()
+    const args = msg.split(` `)
+    const command = args.shift()
+    const toUser = args[0] ? args[0].replace(/^@/, ``) : null
 
     // First-time message
     if (firstMsg && channel === CHANNEL_1) { printLogo() }
@@ -186,7 +189,7 @@ function onMessageHandler(channel, tags, message, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (!args.length) {
-            talk(channel, `All users: ${globalUsers.join(', ')}`)
+            talk(channel, `All users: ${globalUsers.join(`, `)}`)
             return
         }
 
@@ -583,7 +586,7 @@ function onMessageHandler(channel, tags, message, self) {
         }
 
         if (!usedItem) {
-            talk(channel, `${capsName}'s items: ${inventory.join(', ')}`)
+            talk(channel, `${capsName}'s items: ${inventory.join(`, `)}`)
             return
         }
 
@@ -593,43 +596,43 @@ function onMessageHandler(channel, tags, message, self) {
         }
 
         const allItems = [
-            "bandage",
-            "monster candy",
-            "spider donut",
-            "spider cider",
-            "butterscotch pie",
-            "snail pie",
-            "snowman piece",
-            "nice cream",
-            "bisicle",
-            "unisicle",
-            "cinnamon bunny",
-            "astronaut food",
-            "crab apple",
-            "sea tea",
-            "abandoned quiche",
-            "temmie flakes",
-            "dog salad",
-            "instant noodles",
-            "hot dog",
-            "hot cat",
-            "junk food",
-            "hush puppy",
-            "starfait",
-            "glamburger",
-            "legendary hero",
-            "steak in the shape of mettaton's face",
-            "popato chisps",
-            "bad memory",
-            "last dream",
+            `bandage`,
+            `monster candy`,
+            `spider donut`,
+            `spider cider`,
+            `butterscotch pie`,
+            `snail pie`,
+            `snowman piece`,
+            `nice cream`,
+            `bisicle`,
+            `unisicle`,
+            `cinnamon bunny`,
+            `astronaut food`,
+            `crab apple`,
+            `sea tea`,
+            `abandoned quiche`,
+            `temmie flakes`,
+            `dog salad`,
+            `instant noodles`,
+            `hot dog`,
+            `hot cat`,
+            `junk food`,
+            `hush puppy`,
+            `starfait`,
+            `glamburger`,
+            `legendary hero`,
+            `steak in the shape of mettaton's face`,
+            `popato chisps`,
+            `bad memory`,
+            `last dream`,
 
             // Unused items
-            "puppydough icecream",
-            "pumpkin rings",
-            "croquet roll",
-            "ghost fruit",
-            "stoic onion",
-            "rock candy",
+            `puppydough icecream`,
+            `pumpkin rings`,
+            `croquet roll`,
+            `ghost fruit`,
+            `stoic onion`,
+            `rock candy`,
 
             // Weapons
             `stick`,
@@ -1006,8 +1009,8 @@ function onConnectedHandler(addr, port) {
 }
 
 // Register our event handlers (defined below)
-client.on('message', onMessageHandler)
-client.on('connected', onConnectedHandler)
+client.on(`message`, onMessageHandler)
+client.on(`connected`, onConnectedHandler)
 
 // Connect to Twitch:
 client.connect()

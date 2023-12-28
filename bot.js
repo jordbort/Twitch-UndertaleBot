@@ -67,7 +67,8 @@ const {
     playerSave,
     highestLevels,
     weaponsATK,
-    armorDEF
+    armorDEF,
+    consumableItems
 } = require(`./data`)
 
 let lastSansFace = 4
@@ -437,11 +438,12 @@ function onMessageHandler(channel, tags, message, self) {
         return
     }
 
-    // ITEM or ITEMS or USE
+    // ITEM or ITEMS or USE or EQUIP (for non-consumable items)
     if ([
         `!item`,
         `!items`,
-        `!use`
+        `!use`,
+        `!equip`
     ].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
@@ -471,8 +473,10 @@ function onMessageHandler(channel, tags, message, self) {
             talk(channel, `${capsName}, that isn't an item! :(`)
             return
         }
-        const index = inventory.indexOf(usedItem)
 
+        if (command === `!equip` && usedItem in consumableItems) { return }
+
+        const index = inventory.indexOf(usedItem)
         if (index < 0) {
             talk(channel, `${capsName}, you don't have that item! :(`)
             return

@@ -15,6 +15,7 @@ const {
     getThirdPersonFlavorText,
     getAction,
     handleFight,
+    handleAct,
     stainedApronHeal,
     deathCheck,
     getUserMaxHP,
@@ -431,14 +432,7 @@ function onMessageHandler(channel, tags, message, self) {
                 return
             }
         }
-
-        printAct()
-        let response = `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)}`
-        targetPlayer ? response += getAction(user, toUser) : response += getThirdPersonFlavorText()
-
-        if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
-
-        talk(channel, response)
+        handleAct(channel, user, toUser)
         return
     }
 

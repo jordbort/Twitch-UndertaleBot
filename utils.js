@@ -698,6 +698,18 @@ function handleFight(channel, user, toUser) {
     }
 }
 
+function handleAct(channel, user, toUser) {
+    if (settings.debug) { console.log(`${boldTxt}> handleAct(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
+    const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
+    printAct()
+    let response = `* ${players[user].displayName.substring(0, 1).toUpperCase() + players[user].displayName.substring(1)}`
+    targetPlayer ? response += getAction(user, toUser) : response += getThirdPersonFlavorText()
+
+    if (players[user].armor === `Stained Apron`) { response += stainedApronHeal(user) }
+
+    talk(channel, response)
+}
+
 function stainedApronHeal(user) {
     if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
     const sendingPlayer = players[user]
@@ -2137,6 +2149,7 @@ module.exports = {
     getThirdPersonFlavorText,
     getAction,
     handleFight,
+    handleAct,
     stainedApronHeal,
     deathCheck,
     getUserMaxHP,

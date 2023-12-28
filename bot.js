@@ -16,6 +16,7 @@ const {
     getAction,
     handleFight,
     handleAct,
+    itemLookup,
     stainedApronHeal,
     deathCheck,
     getUserMaxHP,
@@ -445,19 +446,17 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const inventory = sendingPlayer.inventory
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-        console.log(`Inventory:`, inventory)
+        console.log(`Inventory:`, sendingPlayer.inventory)
 
-        let usedItem = toUser || ``
-
-        if (inventory.length === 0) {
-            talk(channel, `${capsName} has no items! :(`)
+        if (!toUser) {
+            talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`)
             return
         }
 
-        if (!usedItem) {
-            talk(channel, `${capsName}'s items: ${inventory.join(`, `)}`)
+        const inventory = sendingPlayer.inventory.map(item => item.toLowerCase())
+        if (inventory.length === 0) {
+            talk(channel, `${capsName} has no items! :(`)
             return
         }
 
@@ -466,95 +465,19 @@ function onMessageHandler(channel, tags, message, self) {
             return
         }
 
-        const allItems = [
-            `bandage`,
-            `monster candy`,
-            `spider donut`,
-            `spider cider`,
-            `butterscotch pie`,
-            `snail pie`,
-            `snowman piece`,
-            `nice cream`,
-            `bisicle`,
-            `unisicle`,
-            `cinnamon bunny`,
-            `astronaut food`,
-            `crab apple`,
-            `sea tea`,
-            `abandoned quiche`,
-            `temmie flakes`,
-            `dog salad`,
-            `instant noodles`,
-            `hot dog`,
-            `hot cat`,
-            `junk food`,
-            `hush puppy`,
-            `starfait`,
-            `glamburger`,
-            `legendary hero`,
-            `steak in the shape of mettaton's face`,
-            `popato chisps`,
-            `bad memory`,
-            `last dream`,
+        const usedItem = itemLookup(channel, capsName, args.join(` `))
 
-            // Unused items
-            `puppydough icecream`,
-            `pumpkin rings`,
-            `croquet roll`,
-            `ghost fruit`,
-            `stoic onion`,
-            `rock candy`,
-
-            // Weapons
-            `stick`,
-            `toy knife`,
-            `tough glove`,
-            `ballet shoes`,
-            `torn notebook`,
-            `burnt pan`,
-            `empty gun`,
-            `worn dagger`,
-            `real knife`,
-
-            // Armor
-            `faded ribbon`,
-            `manly bandanna`,
-            `old tutu`,
-            `cloudy glasses`,
-            `temmie armor`,
-            `stained apron`,
-            `cowboy hat`,
-            `heart locket`,
-            `the locket`
-        ]
-
-        let isAnItem = false
-        for (const item of allItems) {
-            if (msg.includes(item)) {
-                isAnItem = true
-                usedItem = item
-                break
-            }
-        }
-        if (!isAnItem) {
+        if (!usedItem) {
             talk(channel, `${capsName}, that isn't an item! :(`)
             return
         }
-
-        let index = -1
-        for (const [idx, item] of inventory.entries()) {
-            if (item.toLowerCase() === usedItem) {
-                index = idx
-                break
-            }
-        }
+        const index = inventory.indexOf(usedItem)
 
         if (index < 0) {
             talk(channel, `${capsName}, you don't have that item! :(`)
             return
         }
 
-        printItem()
         const response = useItem(user, usedItem, index)
         talk(channel, response)
         return

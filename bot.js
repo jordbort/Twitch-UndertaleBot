@@ -14,6 +14,7 @@ const {
     getIntroText,
     getThirdPersonFlavorText,
     getAction,
+    handleFight,
     stainedApronHeal,
     deathCheck,
     getUserMaxHP,
@@ -382,8 +383,6 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-
         if (sendingPlayer.dead) {
             talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
             return
@@ -404,98 +403,10 @@ function onMessageHandler(channel, tags, message, self) {
                 return
             }
         } else {
-            talk(channel, `* ${capsSender} tried to fight themself. But nothing happened.`)
+            talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to fight themself. But nothing happened.`)
             return
         }
-
-        printFight()
-        let response = `* ${capsSender} attacks `
-        targetPlayer ? response += `${targetPlayer.displayName}, ` : response += `themself, `
-
-        const smallDamage = Math.ceil(Math.random() * 4)
-        const mediumDamage = Math.ceil(Math.random() * 5) + 1
-        const largeDamage = Math.ceil(Math.random() * 6) + 2
-        const extraLargeDamage = Math.ceil(Math.random() * 7) + 3
-        const weaponDamage = weaponsATK[sendingPlayer.weapon]
-        const armorDeduction = targetPlayer ? armorDEF[targetPlayer.armor] : armorDEF[sendingPlayer.armor]
-        const defenseBonus = targetPlayer ? targetPlayer.df : sendingPlayer.df
-        let attackBonus = sendingPlayer.at
-
-        // Attack bonus for Cowboy Hat and Temmie Armor
-        if (sendingPlayer.armor === `Cowboy Hat`) {
-            console.log(`${magentaBg} ${sendingPlayer.displayName} is wearing the Cowboy Hat, +5 ATK ${resetTxt}`)
-            attackBonus += 5
-        } else if (sendingPlayer.armor === `Temmie Armor`) {
-            console.log(`${magentaBg} ${sendingPlayer.displayName} is wearing the Temmie Armor, +10 ATK ${resetTxt}`)
-            attackBonus += 10
-        }
-
-        let smallDamageDealt = (smallDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
-        let mediumDamageDealt = (mediumDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
-        let largeDamageDealt = (largeDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
-        let extraLargeDamageDealt = (extraLargeDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus
-        if (smallDamageDealt < 0) { smallDamageDealt = 0 }
-        if (mediumDamageDealt < 0) { mediumDamageDealt = 0 }
-        if (largeDamageDealt < 0) { largeDamageDealt = 0 }
-        if (extraLargeDamageDealt < 0) { extraLargeDamageDealt = 0 }
-
-        outcome = [
-            `and deals ${smallDamageDealt} damage!`,
-            `and deals ${mediumDamageDealt} damage!`,
-            `and deals ${largeDamageDealt} damage!`,
-            `and deals ${extraLargeDamageDealt} damage!`,
-            `but misses!`
-        ]
-        const randNum = Math.floor(Math.random() * outcome.length)
-        response += outcome[randNum]
-
-        if (randNum === 1) {
-            if (mediumDamage >= 6) { response += ` Critical hit!` }
-        } else if (randNum === 2) {
-            if (largeDamage >= 6) { response += ` Critical hit!` }
-        } else if (randNum === 3) {
-            if (extraLargeDamage >= 6) { extraLargeDamage === 10 ? response += ` Ouch!` : response += ` Critical hit!` }
-        }
-
-        if (targetPlayer) {
-            if (randNum === 0) {
-                targetPlayer.hp -= smallDamageDealt
-                console.log(`${grayBg} smallDamage: ${smallDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${smallDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${smallDamageDealt} ${resetTxt}`)
-            } else if (randNum === 1) {
-                targetPlayer.hp -= mediumDamageDealt
-                console.log(`${grayBg} mediumDamage: ${mediumDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${mediumDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${mediumDamageDealt} ${resetTxt}`)
-            } else if (randNum === 2) {
-                targetPlayer.hp -= largeDamageDealt
-                console.log(`${grayBg} largeDamage: ${largeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${largeDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${largeDamageDealt} ${resetTxt}`)
-            } else if (randNum === 3) {
-                targetPlayer.hp -= extraLargeDamageDealt
-                console.log(`${grayBg} extraLargeDamage: ${extraLargeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${extraLargeDamage + weaponDamage + attackBonus} ${resetTxt} ${targetPlayer.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : targetPlayer.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${extraLargeDamageDealt} ${resetTxt}`)
-            }
-
-            if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
-
-            talk(channel, response)
-            deathCheck(channel, user, toUser)
-        } else {
-            if (randNum === 0) {
-                sendingPlayer.hp -= smallDamageDealt
-                console.log(`${grayBg} smallDamage: ${smallDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${smallDamage + weaponDamage + attackBonus} ${resetTxt} ${magentaBg} DEF: ${defenseBonus} armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${smallDamageDealt} ${resetTxt}`)
-            } else if (randNum === 1) {
-                sendingPlayer.hp -= mediumDamageDealt
-                console.log(`${grayBg} mediumDamage: ${mediumDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${mediumDamage + weaponDamage + attackBonus} ${resetTxt} ${magentaBg} DEF: ${defenseBonus} armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${mediumDamageDealt} ${resetTxt}`)
-            } else if (randNum === 2) {
-                sendingPlayer.hp -= largeDamageDealt
-                console.log(`${grayBg} largeDamage: ${largeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${largeDamage + weaponDamage + attackBonus} ${resetTxt} ${magentaBg} DEF: ${defenseBonus} armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${largeDamageDealt} ${resetTxt}`)
-            } else if (randNum === 3) {
-                sendingPlayer.hp -= extraLargeDamageDealt
-                console.log(`${grayBg} extraLargeDamage: ${extraLargeDamage} ${resetTxt} ${sendingPlayer.hp <= 0 ? redBg : greenBg} ${sendingPlayer.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${extraLargeDamage + weaponDamage + attackBonus} ${resetTxt} ${magentaBg} DEF: ${defenseBonus} armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${extraLargeDamageDealt} ${resetTxt}`)
-            }
-
-            if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
-
-            talk(channel, response)
-            deathCheck(channel, user, user)
-        }
+        handleFight(channel, user, toUser)
         return
     }
 

@@ -528,6 +528,17 @@ function onMessageHandler(channel, tags, message, self) {
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
+        if (!toUser) {
+            let response = `${sendingPlayer.displayName} can buy: `
+            if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
+            if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
+            if (sendingPlayer.lv >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
+            if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?, Hot Cat` }
+            if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
+            if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
+            return talk(channel, response)
+        }
+
         // Item prices
         const itemPrices = {
             // Consumable items
@@ -560,59 +571,11 @@ function onMessageHandler(channel, tags, message, self) {
             "cowboy hat": 350
         }
 
-        let queryItem = ``
+        const purchasedItem = args.join(` `) in itemPrices ? args.join(` `) : null
 
-        const purchasableItems = [
-            "spider donut",
-            "spider cider",
-            "nice cream",
-            "bisicle",
-            "cinnamon bunny",
-            "crab apple",
-            "sea tea",
-            "temmie flakes",
-            "hot dog",
-            "hot cat",
-            "junk food",
-            "starfait",
-            "glamburger",
-            "legendary hero",
-            "steak in the shape of mettaton's face",
-            "popato chisps",
-
-            // Weapons
-            `tough glove`,
-            `torn notebook`,
-            `empty gun`,
-
-            // Armor
-            `manly bandanna`,
-            `cloudy glasses`,
-            `temmie armor`,
-            `cowboy hat`
-        ]
-
-        let isAnItem = false
-        for (const item of purchasableItems) {
-            if (msg.includes(item)) {
-                isAnItem = true
-                queryItem = item
-                break
-            }
-        }
-        if (queryItem && !isAnItem) { return talk(channel, `${sendingPlayer.displayName}, that item doesn't exist! :(`) }
-
-        let response = `${sendingPlayer.displayName} can buy: `
-        if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
-        if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
-        if (sendingPlayer.lv >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
-        if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?, Hot Cat` }
-        if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
-        if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
-
-        if (queryItem) { response = buyItem(user, queryItem, itemPrices[queryItem]) }
-
-        return talk(channel, response)
+        return purchasedItem
+            ? talk(channel, buyItem(user, purchasedItem, itemPrices[purchasedItem]))
+            : talk(channel, `Sorry ${sendingPlayer.displayName}, that item doesn't exist! :(`)
     }
 
     // COMMANDS

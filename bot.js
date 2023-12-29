@@ -176,15 +176,11 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (globalUsers.includes(user)) {
-            talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
-            return
-        }
+        if (globalUsers.includes(user)) { return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`) }
 
         globalUsers.push(user)
         createClient([`#${user}`])
-        talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
-        return
+        return talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
     }
 
     // RECRUIT
@@ -194,10 +190,7 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (!args.length) {
-            talk(channel, `All users: ${globalUsers.join(`, `)}`)
-            return
-        }
+        if (!args.length) { return talk(channel, `All users: ${globalUsers.join(`, `)}`) }
 
         const newUsers = []
         for (const str of args) {
@@ -207,8 +200,7 @@ function onMessageHandler(channel, tags, message, self) {
             }
         }
         newUsers.length === 0 ? talk(channel, `Recruited 0 users! :O`) : talk(channel, `Recruited ${newUsers.length}/${args.length} users! :)`)
-        createClient(newUsers)
-        return
+        return createClient(newUsers)
     }
 
     // ALL
@@ -226,8 +218,7 @@ function onMessageHandler(channel, tags, message, self) {
             }
         }
         newUsers.length === 0 ? talk(channel, `All channels are already recruited! :O`) : talk(channel, `Recruited ${newUsers.length}/${squad.length} users! :)`)
-        createClient(newUsers)
-        return
+        return createClient(newUsers)
     }
 
     // MEMORY
@@ -244,8 +235,7 @@ function onMessageHandler(channel, tags, message, self) {
             console.log(`${logColor} ${players[player].displayName} LV: ${players[player].lv}, HP: ${players[player].hp}/${getUserMaxHP(player)}, AT: ${players[player].at}, DF: ${players[player].df}, EXP: ${players[player].exp}, NEXT: ${players[player].next}, Weapon: ${players[player].weapon}, Armor: ${players[player].armor}, Gold: ${players[player].gold} ${resetTxt}`)
             allPlayers.push(players[player].displayName)
         }
-        talk(channel, `Players: ${allPlayers.join(`, `)}`)
-        return
+        return talk(channel, `Players: ${allPlayers.join(`, `)}`)
     }
 
     // REVIVE (for testing, mods can also use)
@@ -253,17 +243,12 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
         if (user === DEV || senderIsAMod) {
             players.dummy.hp = getUserMaxHP(`dummy`)
             players.dummy.dead = false
-            response = `The Dummy is alive :)`
-            talk(channel, response)
-        } else {
-            response = `You can't use this command, ${sendingPlayer.displayName} ;)`
-            talk(channel, response)
+            return talk(channel, `The Dummy is alive :)`)
         }
-        return
+        else { return talk(channel, `You can't use this command, ${sendingPlayer.displayName} ;)`) }
     }
 
     // SAVE
@@ -271,16 +256,12 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         playerSave[user] = { ...players[user] }
 
         const response = getSaveText(displayName)
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // LOAD
@@ -306,14 +287,10 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         const response = getIntroText(sendingPlayer.displayName)
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // STAT(S)
@@ -334,9 +311,9 @@ function onMessageHandler(channel, tags, message, self) {
             if (target.armor === `Cowboy Hat`) { attackBoost = 5 }
             if (target.armor === `Temmie Armor`) { attackBoost = 10 }
             response = `"${toUser === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser)}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
-        } else if (toUser) {
-            response = `${toUser} isn't a registered player! :(`
-        } else {
+        }
+        else if (toUser) { response = `${toUser} isn't a registered player! :(` }
+        else {
             userInventory = sendingPlayer.inventory
             if (sendingPlayer.armor === `Cowboy Hat`) { attackBoost = 5 }
             if (sendingPlayer.armor === `Temmie Armor`) { attackBoost = 10 }
@@ -353,8 +330,7 @@ function onMessageHandler(channel, tags, message, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const response = getSpamtonQuote(toUser)
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // SANS FACE
@@ -387,31 +363,18 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         // Stop if target is the bot, dead, or not known, or if no target is specified
         if (toUser) {
             if (toUser in players) {
-                if (players[toUser].dead) {
-                    talk(channel, `${players[toUser].displayName.substring(0, 1).toUpperCase() + players[toUser].displayName.substring(1)} is already dead! :(`)
-                    return
-                }
-            } else if (toUser === `undertalebot`) {
-                talk(channel, `You can't fight me, but you can try fighting the Dummy!`)
-                return
-            } else {
-                talk(channel, `${toUser} isn't a known player!`)
-                return
+                if (players[toUser].dead) { return talk(channel, `${players[toUser].displayName.substring(0, 1).toUpperCase() + players[toUser].displayName.substring(1)} is already dead! :(`) }
             }
-        } else {
-            talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to fight themself. But nothing happened.`)
-            return
+            else if (toUser === `undertalebot`) { return talk(channel, `You can't fight me, but you can try fighting the Dummy!`) }
+            else { return talk(channel, `${toUser} isn't a known player!`) }
         }
-        handleFight(channel, user, toUser)
-        return
+        else { return talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to fight themself. But nothing happened.`) }
+        return handleFight(channel, user, toUser)
     }
 
     // ACT
@@ -419,24 +382,17 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         if (toUser) {
             if (toUser in players) {
                 if (players[toUser].dead) {
-                    talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
-                    return
+                    return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
                 }
-            } else {
-                talk(channel, `${toUser} is not a registered player :(`)
-                return
             }
+            else { return talk(channel, `${toUser} is not a registered player :(`) }
         }
-        handleAct(channel, user, toUser)
-        return
+        return handleAct(channel, user, toUser)
     }
 
     // ITEM or ITEMS or USE or EQUIP (for non-consumable items)
@@ -452,40 +408,29 @@ function onMessageHandler(channel, tags, message, self) {
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
         console.log(`Inventory:`, sendingPlayer.inventory)
 
-        if (!toUser) {
-            talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`)
-            return
-        }
+        // Show items if none mentioned
+        if (!toUser) { return talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`) }
 
         const inventory = sendingPlayer.inventory.map(item => item.toLowerCase())
-        if (inventory.length === 0) {
-            talk(channel, `${capsName} has no items! :(`)
-            return
-        }
+        if (inventory.length === 0) { return talk(channel, `${capsName} has no items! :(`) }
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        // Can't use if dead
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
+        // Item validation
         const usedItem = itemLookup(channel, capsName, args.join(` `))
 
-        if (!usedItem) {
-            talk(channel, `${capsName}, that isn't an item! :(`)
-            return
-        }
+        if (!usedItem) { return talk(channel, `${capsName}, that isn't an item! :(`) }
 
+        // Can't use !equip if not a weapon or armor
         if (command === `!equip` && usedItem in consumableItems) { return }
 
+        // Check possession
         const index = inventory.indexOf(usedItem)
-        if (index < 0) {
-            talk(channel, `${capsName}, you don't have that item! :(`)
-            return
-        }
+        if (index < 0) { return talk(channel, `${capsName}, you don't have that item! :(`) }
 
         const response = useItem(user, usedItem, index)
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // MERCY or SPARE
@@ -496,35 +441,17 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         // Check if toUser is the sender
         if (toUser && toUser !== user) {
-            // If toUser is UndertaleBot
-            if (toUser === `undertalebot`) {
-                talk(channel, `You can't spare me, but you can try sparing the Dummy!`)
-                return
-            }
-            // If toUser not registered
-            if (!(toUser in players)) {
-                talk(channel, `${toUser} is not a known player :(`)
-                return
-            }
-            // If toUser is dead
-            if (targetPlayer.dead) {
-                talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
-                return
-            }
-        } else {
-            talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`)
-            return
+            if (toUser === `undertalebot`) { return talk(channel, `You can't spare me, but you can try sparing the Dummy!`) }
+            if (!(toUser in players)) { return talk(channel, `${toUser} is not a known player :(`) }
+            if (targetPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`) }
         }
+        else { return talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`) }
 
-        handleMercy(channel, user, toUser)
-        return
+        return handleMercy(channel, user, toUser)
     }
 
     // HP
@@ -532,16 +459,9 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-        if (targetPlayer) {
-            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.hp} HP`
-        } else if (toUser) {
-            response = `${toUser} isn't a known player!`
-        } else {
-            response = `${sendingPlayer.displayName} has ${sendingPlayer.hp} HP`
-        }
-        talk(channel, response)
-        return
+        if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.hp} HP`) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return talk(channel, `${sendingPlayer.displayName} has ${sendingPlayer.hp} HP`) }
     }
 
     // GOLD
@@ -549,16 +469,9 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-        if (targetPlayer) {
-            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.gold} G`
-        } else if (toUser) {
-            response = `${toUser} isn't a known player!`
-        } else {
-            response = `${sendingPlayer.displayName} has ${sendingPlayer.gold} G`
-        }
-        talk(channel, response)
-        return
+        if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.gold} G`) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return talk(channel, `${sendingPlayer.displayName} has ${sendingPlayer.gold} G`) }
     }
 
     // EXP or EXPERIENCE
@@ -569,16 +482,9 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-        if (targetPlayer) {
-            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.exp} EXP`
-        } else if (toUser) {
-            response = `${toUser} isn't a known player!`
-        } else {
-            response = `${sendingPlayer.displayName} has ${sendingPlayer.exp} EXP`
-        }
-        talk(channel, response)
-        return
+        if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.exp} EXP`) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return talk(channel, `${sendingPlayer.displayName} has ${sendingPlayer.exp} EXP`) }
     }
 
     // NEXT
@@ -586,16 +492,9 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-        if (targetPlayer) {
-            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}'s LV will increase with ${targetPlayer.next} more EXP`
-        } else if (toUser) {
-            response = `${toUser} isn't a known player!`
-        } else {
-            response = `${sendingPlayer.displayName}'s LV will increase with ${sendingPlayer.next} more EXP`
-        }
-        talk(channel, response)
-        return
+        if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}'s LV will increase with ${targetPlayer.next} more EXP`) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return talk(channel, `${sendingPlayer.displayName}'s LV will increase with ${sendingPlayer.next} more EXP`) }
     }
 
     // WEAPON
@@ -603,16 +502,9 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-        if (targetPlayer) {
-            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.weapon} equipped (${weaponsATK[targetPlayer.weapon]} ATK)`
-        } else if (toUser) {
-            response = `${toUser} isn't a known player!`
-        } else {
-            response = `${sendingPlayer.displayName} has the ${sendingPlayer.weapon} equipped (${weaponsATK[sendingPlayer.weapon]} ATK)`
-        }
-        talk(channel, response)
-        return
+        if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.weapon} equipped (${weaponsATK[targetPlayer.weapon]} ATK)`) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return talk(channel, `${sendingPlayer.displayName} has the ${sendingPlayer.weapon} equipped (${weaponsATK[sendingPlayer.weapon]} ATK)`) }
     }
 
     // ARMOR
@@ -620,16 +512,9 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
-        if (targetPlayer) {
-            response = `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.armor} equipped (${armorDEF[targetPlayer.armor]} DEF)`
-        } else if (toUser) {
-            response = `${toUser} isn't a known player!`
-        } else {
-            response = `${sendingPlayer.displayName} has the ${sendingPlayer.armor} equipped (${armorDEF[sendingPlayer.armor]} DEF)`
-        }
-        talk(channel, response)
-        return
+        if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.armor} equipped (${armorDEF[targetPlayer.armor]} DEF)`) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return talk(channel, `${sendingPlayer.displayName} has the ${sendingPlayer.armor} equipped (${armorDEF[sendingPlayer.armor]} DEF)`) }
     }
 
     // BUY or SHOP or GET
@@ -641,10 +526,7 @@ function onMessageHandler(channel, tags, message, self) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        if (sendingPlayer.dead) {
-            talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
-            return
-        }
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         // Item prices
         const itemPrices = {
@@ -718,10 +600,7 @@ function onMessageHandler(channel, tags, message, self) {
                 break
             }
         }
-        if (queryItem && !isAnItem) {
-            talk(channel, `${sendingPlayer.displayName}, that item doesn't exist! :(`)
-            return
-        }
+        if (queryItem && !isAnItem) { return talk(channel, `${sendingPlayer.displayName}, that item doesn't exist! :(`) }
 
         let response = `${sendingPlayer.displayName} can buy: `
         if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
@@ -733,8 +612,7 @@ function onMessageHandler(channel, tags, message, self) {
 
         if (queryItem) { response = buyItem(user, queryItem, itemPrices[queryItem]) }
 
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // COMMANDS
@@ -743,8 +621,7 @@ function onMessageHandler(channel, tags, message, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // HELP
@@ -753,8 +630,7 @@ function onMessageHandler(channel, tags, message, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const response = `${sendingPlayer.displayName}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
-        talk(channel, response)
-        return
+        return talk(channel, response)
     }
 
     // UNDERTALE or LOGO
@@ -764,8 +640,7 @@ function onMessageHandler(channel, tags, message, self) {
     ].includes(command)) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-        printLogo()
-        return
+        return printLogo()
     }
 }
 

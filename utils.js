@@ -710,6 +710,37 @@ function handleAct(channel, user, toUser) {
     talk(channel, response)
 }
 
+function handleMercy(channel, user, toUser) {
+    if (settings.debug) { console.log(`${boldTxt}> handleMercy(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
+    printMercy()
+    const sendingPlayer = players[user]
+    const targetPlayer = players[toUser]
+    const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
+    const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
+    const randNum = targetPlayer.hp <= 5
+        ? Math.floor(Math.random() * 2)
+        : targetPlayer.hp <= 10
+            ? Math.floor(Math.random() * 4)
+            : Math.floor(Math.random() * 10)
+
+    const randGoldAmt = Math.floor(Math.random() * 101)
+    let response = `* `
+
+    if (randNum === 0) {
+        response += `YOU WON! ${capsTarget} was spared. ${capsSender} earned 0 EXP and ${randGoldAmt} gold.`
+        sendingPlayer.gold += randGoldAmt
+        sendingPlayer.hp = getUserMaxHP(user)
+        targetPlayer.hp = getUserMaxHP(toUser)
+    } else {
+        response += `${capsSender} tried to spare ${targetPlayer.displayName}. ${capsTarget}`
+        response += getThirdPersonFlavorText()
+    }
+    if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
+
+    talk(channel, response)
+    console.log(`${cyanBg} sender: ${sendingPlayer.displayName} (${sendingPlayer.hp} HP), target: ${toUser === `dummy` ? `DUMMY` : targetPlayer?.displayName || `none`}${targetPlayer ? ` (${targetPlayer.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
+}
+
 function stainedApronHeal(user) {
     if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
     const sendingPlayer = players[user]
@@ -2219,7 +2250,7 @@ module.exports = {
     getAction,
     handleFight,
     handleAct,
-    itemLookup,
+    handleMercy,
     stainedApronHeal,
     deathCheck,
     getUserMaxHP,
@@ -2233,6 +2264,7 @@ module.exports = {
     printItem,
     printMercy,
     buyItem,
+    itemLookup,
     useItem,
     sansOpenEyes,
     sansClosedEyes,

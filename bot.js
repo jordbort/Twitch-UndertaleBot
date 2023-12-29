@@ -16,7 +16,7 @@ const {
     getAction,
     handleFight,
     handleAct,
-    itemLookup,
+    handleMercy,
     stainedApronHeal,
     deathCheck,
     getUserMaxHP,
@@ -30,6 +30,7 @@ const {
     printItem,
     printMercy,
     buyItem,
+    itemLookup,
     useItem,
     sansOpenEyes,
     sansClosedEyes,
@@ -500,50 +501,29 @@ function onMessageHandler(channel, tags, message, self) {
             return
         }
 
-        let randNum = Math.ceil(Math.random() * 10)
-        if (targetPlayer && targetPlayer.hp <= 10) { randNum = Math.ceil(Math.random() * 4) }
-        if (targetPlayer && targetPlayer.hp <= 5) { randNum = Math.ceil(Math.random() * 2) }
-
-        const randGoldAmt = Math.floor(Math.random() * 101)
-        let response = `* `
-
         // Check if toUser is the sender
         if (toUser && toUser !== user) {
-            // If toUser not registered
-            if (!(toUser in players)) {
-                response = `${toUser} is not a registered player :(`
-                talk(channel, response)
-                return
-                // If toUser is dead
-            } else if (targetPlayer.dead) {
-                response = `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`
-                talk(channel, response)
-                return
-                // If toUser is UndertaleBot
-            } else if (toUser === `undertalebot`) {
+            // If toUser is UndertaleBot
+            if (toUser === `undertalebot`) {
                 talk(channel, `You can't spare me, but you can try sparing the Dummy!`)
                 return
-                // If mercy is successful
-            } else if (randNum === 1) {
-                response += `YOU WON! ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} was spared. ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} earned 0 EXP and ${randGoldAmt} gold.`
-                sendingPlayer.gold += randGoldAmt
-                sendingPlayer.hp = getUserMaxHP(user)
-                targetPlayer.hp = getUserMaxHP(toUser)
-            } else {
-                response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare ${targetPlayer.displayName}. ${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}`
-                response += getThirdPersonFlavorText()
+            }
+            // If toUser not registered
+            if (!(toUser in players)) {
+                talk(channel, `${toUser} is not a known player :(`)
+                return
+            }
+            // If toUser is dead
+            if (targetPlayer.dead) {
+                talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
+                return
             }
         } else {
-            response += `${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`
-            talk(channel, response)
+            talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`)
             return
         }
 
-        printMercy()
-        if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
-
-        talk(channel, response)
-        console.log(`${cyanBg} sender: ${sendingPlayer.displayName} (${sendingPlayer.hp} HP), target: ${toUser === `dummy` ? `DUMMY` : targetPlayer?.displayName || `none`}${targetPlayer ? ` (${targetPlayer.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
+        handleMercy(channel, user, toUser)
         return
     }
 

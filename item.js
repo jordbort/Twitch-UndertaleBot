@@ -2,7 +2,7 @@ const { getUserMaxHP } = require(`./utils`)
 
 const { resetTxt, boldTxt, redBg, magentaBg, cyanBg, grayBg, settings } = require(`./config`)
 
-const { players, consumableItems } = require(`./data`)
+const { players, consumableItems, itemLvThreshold } = require(`./data`)
 
 function printItem() {
     if (settings.debug) { console.log(`${boldTxt}> printItem()${resetTxt}`) }

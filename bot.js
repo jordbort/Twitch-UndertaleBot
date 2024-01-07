@@ -47,6 +47,13 @@ const { handleMercy } = require(`./mercy`)
 
 const { getSansFace } = require(`./sansFaces`)
 
+process.on('uncaughtException', (err) => {
+    const errorPosition = err.stack.split(`\n`)[1].split(`/`)[0].substring(4) + err.stack.split(`\n`)[1].split(`/`)[err.stack.split(`\n`)[1].split(`/`).length - 1]
+    talk(`#${BOT_USERNAME}`, `*CRASH* >( Uncaught Exception: ${err.message} ${errorPosition}`)
+    console.log(err)
+    process.exit(1)
+})
+
 function createClient(arr) {
     if (settings.debug) {
         console.log(`${boldTxt}> createClient(arr: ${arr})${resetTxt}`)

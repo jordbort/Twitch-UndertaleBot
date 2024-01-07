@@ -12,32 +12,8 @@ const {
     getSpamtonQuote,
     getSaveText,
     getIntroText,
-    getThirdPersonFlavorText,
-    getAction,
-    handleFight,
-    handleAct,
-    handleMercy,
-    stainedApronHeal,
-    deathCheck,
     getUserMaxHP,
-    calculateUserATK,
-    calculateUserDEF,
-    calculateUserNextLV,
-    calculateUserLV,
-    printLogo,
-    printFight,
-    printAct,
-    printItem,
-    printMercy,
-    buyItem,
-    itemLookup,
-    useItem,
-    sansOpenEyes,
-    sansClosedEyes,
-    sansNoEyes,
-    sansWink,
-    sansLookAround,
-    sansSmall
+    printLogo
 } = require(`./utils`)
 
 const {
@@ -46,19 +22,8 @@ const {
     inverted,
     redTxt,
     greenTxt,
-    yellowTxt,
-    blueTxt,
-    magentaTxt,
-    cyanTxt,
-    orangeTxt,
     redBg,
     greenBg,
-    yellowBg,
-    blueBg,
-    magentaBg,
-    cyanBg,
-    grayBg,
-    orangeBg,
     settings
 } = require(`./config`)
 
@@ -72,7 +37,15 @@ const {
     consumableItems
 } = require(`./data`)
 
-let lastSansFace = 4
+const { handleFight } = require(`./fight`)
+
+const { handleAct } = require(`./act`)
+
+const { buyItem, itemLookup, useItem } = require(`./item`)
+
+const { handleMercy } = require(`./mercy`)
+
+const { getSansFace } = require(`./sansFaces`)
 
 function createClient(arr) {
     if (settings.debug) {
@@ -338,21 +311,8 @@ function onMessageHandler(channel, tags, message, self) {
         && channel === CHANNEL_1) {
         // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-        const sansExpressions = [
-            sansOpenEyes,
-            sansLookAround,
-            sansWink,
-            sansClosedEyes,
-            sansNoEyes,
-            sansSmall
-        ]
-        let expression = Math.floor(Math.random() * sansExpressions.length)
-        while (expression === lastSansFace) {
-            if (settings.debug) { console.log(`${boldTxt}> Re-rolling facial expression...${resetTxt}`) }
-            expression = Math.floor(Math.random() * sansExpressions.length)
-        }
-        lastSansFace = expression
-        return sansExpressions[expression]()
+
+        return getSansFace()
     }
 
     // FIGHT or ATTACK

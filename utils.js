@@ -22,44 +22,24 @@ const squad = [
     CHANNEL_9
 ]
 
-const {
-    globalUsers,
-    players,
-    playerSave,
-    highestLevels,
-    baseHP,
-    baseAT,
-    baseDF,
-    weaponsATK,
-    armorDEF,
-    itemLvThreshold,
-    consumableItems
-} = require(`./data`)
+const { players, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
 
 const {
     resetTxt,
     boldTxt,
-    underlined,
-    inverted,
-    blackTxt,
     redTxt,
     greenTxt,
     yellowTxt,
     blueTxt,
     magentaTxt,
     cyanTxt,
-    whiteTxt,
-    grayTxt,
     orangeTxt,
-    blackBg,
     redBg,
     greenBg,
     yellowBg,
     blueBg,
     magentaBg,
     cyanBg,
-    whiteBg,
-    grayBg,
     orangeBg,
     settings
 } = require(`./config`)

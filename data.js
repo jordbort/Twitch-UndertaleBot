@@ -143,6 +143,37 @@ const consumableItems = {
     "rock candy": 1
 }
 
+const itemPrices = {
+    // Consumable items
+    "spider donut": 7,
+    "spider cider": 18,
+    "nice cream": 15, // 25G later
+    "bisicle": 15, // 30, 45, 70G later
+    "cinnamon bunny": 25,
+    "crab apple": 25,
+    "sea tea": 18,
+    "temmie flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
+    "hot dog": 30,
+    "hot cat": 30,
+    "junk food": 25,
+    "starfait": 60,
+    "glamburger": 120,
+    "legendary hero": 300,
+    "steak in the shape of mettaton's face": 500,
+    "popato chisps": 25,
+
+    // Weapons
+    "tough glove": 50,
+    "torn notebook": 55,
+    "empty gun": 350,
+
+    // Armor
+    "manly bandanna": 50,
+    "cloudy glasses": 35,
+    "temmie armor": 750,
+    "cowboy hat": 350
+}
+
 module.exports = {
     globalUsers,
     players,
@@ -154,5 +185,6 @@ module.exports = {
     weaponsATK,
     armorDEF,
     itemLvThreshold,
-    consumableItems
+    consumableItems,
+    itemPrices
 }

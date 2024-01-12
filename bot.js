@@ -34,7 +34,8 @@ const {
     highestLevels,
     weaponsATK,
     armorDEF,
-    consumableItems
+    consumableItems,
+    itemPrices
 } = require(`./data`)
 
 const { handleFight } = require(`./fight`)
@@ -375,8 +376,8 @@ function onMessageHandler(channel, tags, message, self) {
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
         console.log(`Inventory:`, sendingPlayer.inventory)
 
-        // Show items if none mentioned
-        if (!toUser) { return talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`) }
+        // Show items if none selected
+        if (args.length === 0) { return talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`) }
 
         const inventory = sendingPlayer.inventory.map(item => item.toLowerCase())
         if (inventory.length === 0) { return talk(channel, `${capsName} has no items! :(`) }
@@ -385,7 +386,7 @@ function onMessageHandler(channel, tags, message, self) {
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         // Item validation
-        const usedItem = itemLookup(channel, capsName, args.join(` `))
+        const usedItem = itemLookup(args.join(` `))
 
         if (!usedItem) { return talk(channel, `${capsName}, that isn't an item! :(`) }
 
@@ -495,7 +496,7 @@ function onMessageHandler(channel, tags, message, self) {
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
-        if (!toUser) {
+        if (args.length === 0) {
             let response = `${sendingPlayer.displayName} can buy: `
             if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
             if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
@@ -504,38 +505,6 @@ function onMessageHandler(channel, tags, message, self) {
             if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
             if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
             return talk(channel, response)
-        }
-
-        // Item prices
-        const itemPrices = {
-            // Consumable items
-            "spider donut": 7,
-            "spider cider": 18,
-            "nice cream": 15, // 25G later
-            "bisicle": 15, // 30, 45, 70G later
-            "cinnamon bunny": 25,
-            "crab apple": 25,
-            "sea tea": 18,
-            "temmie flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
-            "hot dog": 30,
-            "hot cat": 30,
-            "junk food": 25,
-            "starfait": 60,
-            "glamburger": 120,
-            "legendary hero": 300,
-            "steak in the shape of mettaton's face": 500,
-            "popato chisps": 25,
-
-            // Weapons
-            "tough glove": 50,
-            "torn notebook": 55,
-            "empty gun": 350,
-
-            // Armor
-            "manly bandanna": 50,
-            "cloudy glasses": 35,
-            "temmie armor": 750,
-            "cowboy hat": 350
         }
 
         const purchasedItem = args.join(` `) in itemPrices ? args.join(` `) : null

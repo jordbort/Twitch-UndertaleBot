@@ -153,8 +153,8 @@ function buyItem(user, str, price) {
     return `If you are reading this, ${player.displayName}, I messed up somehow.`
 }
 
-function itemLookup(channel, capsName, str) {
-    if (settings.debug) { console.log(`${boldTxt}> itemLookup(channel: ${channel}, capsName: ${capsName}, str: ${str})${resetTxt}`) }
+function itemLookup(str) {
+    if (settings.debug) { console.log(`${boldTxt}> itemLookup(str: ${str})${resetTxt}`) }
     const allItems = [
         // Consumable items
         `bandage`,

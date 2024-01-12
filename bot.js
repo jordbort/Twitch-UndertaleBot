@@ -132,6 +132,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
     const sendingPlayer = players[user]
     const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
+    const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
 
     // *****************
     // ** REPLY CASES **
@@ -335,6 +336,7 @@ function onMessageHandler(channel, tags, message, self) {
 
         // Stop if target is the bot, dead, or not known, or if no target is specified
         if (toUser) {
+            if (lastStanding) { return talk(channel, `But nobody came.`) }
             if (toUser in players) {
                 if (players[toUser].dead) { return talk(channel, `${players[toUser].displayName.substring(0, 1).toUpperCase() + players[toUser].displayName.substring(1)} is already dead! :(`) }
             }
@@ -353,6 +355,7 @@ function onMessageHandler(channel, tags, message, self) {
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         if (toUser) {
+            if (lastStanding) { return talk(channel, `But nobody came.`) }
             if (toUser in players) {
                 if (players[toUser].dead) {
                     return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
@@ -413,6 +416,7 @@ function onMessageHandler(channel, tags, message, self) {
 
         // Check if toUser is the sender
         if (toUser && toUser !== user) {
+            if (lastStanding) { return talk(channel, `But nobody came.`) }
             if (toUser === `undertalebot`) { return talk(channel, `You can't spare me, but you can try sparing the Dummy!`) }
             if (!(toUser in players)) { return talk(channel, `${toUser} is not a known player :(`) }
             if (targetPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`) }

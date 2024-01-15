@@ -6,6 +6,11 @@ This is under development! It is a Twitch chatbot that simulates encounters in t
 ## How it works
 When the bot is active in a Twitch channel, it keeps track of everyone sending messages in the chat. Upon speaking, each chat member is created with base stats. A dummy is also always initialized by the bot. Users can use commands to interact with the bot and other chat members, particularly in the style of the battle system from Undertale. Users can fight each other to deplete their HP. If a user "kills" another user, they can earn EXP and increase their LV, and if a user "dies", they lose the ability to use commands. Any user (dead or alive) can use the `!load` command to revert to their last SAVE.
 
+## Technologies used
+- <a href="https://javascript.com/" target="_blank">JavaScript</a>
+- <a href="https://nodejs.org/" target="_blank">Node.js</a>
+- <a href="https://tmijs.com" target="_blank">tmi.js</a>
+
 ## Main commands
 `!fight @user` or `!attack @user`
 

@@ -1,30 +1,11 @@
-const BOT_USERNAME = process.env.BOT_USERNAME
-const DEV = process.env.DEV
-const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const CHANNEL_1 = process.env.CHANNEL_1
-const CHANNEL_2 = process.env.CHANNEL_2
-const CHANNEL_3 = process.env.CHANNEL_3
-const CHANNEL_4 = process.env.CHANNEL_4
-const CHANNEL_5 = process.env.CHANNEL_5
-const CHANNEL_6 = process.env.CHANNEL_6
-const CHANNEL_7 = process.env.CHANNEL_7
-const CHANNEL_8 = process.env.CHANNEL_8
-const CHANNEL_9 = process.env.CHANNEL_9
 
-const squad = [
-    CHANNEL_2,
-    CHANNEL_3,
-    CHANNEL_4,
-    CHANNEL_5,
-    CHANNEL_6,
-    CHANNEL_7,
-    CHANNEL_8,
-    CHANNEL_9
-]
 
 const { players, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
 
 const {
+    BOT_USERNAME,
+    OAUTH_TOKEN,
+    CHANNEL_1,
     resetTxt,
     boldTxt,
     redTxt,

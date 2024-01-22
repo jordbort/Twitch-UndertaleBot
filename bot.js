@@ -54,7 +54,7 @@ function onMessageHandler(channel, tags, message, self) {
     const firstMsg = tags[`first-msg`]
 
     // Command and arguments parser
-    const msg = message.toLowerCase()
+    const msg = message.replace(/ +/g, ` `).toLowerCase()
     const args = msg.split(` `)
     const command = args.shift()
     const toUser = args[0] ? args[0].replace(/^@/, ``) : null

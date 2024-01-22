@@ -1,42 +1,10 @@
 require(`dotenv`).config()
-const BOT_USERNAME = process.env.BOT_USERNAME
 
-const {
-    CHANNEL_1,
-    DEV,
-    OAUTH_TOKEN,
-    squad,
-    tmi,
-    client,
-    talk,
-    getSpamtonQuote,
-    getSaveText,
-    getIntroText,
-    getUserMaxHP,
-    printLogo
-} = require(`./utils`)
+const { tmi, client, talk, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice } = require(`./utils`)
 
-const {
-    resetTxt,
-    boldTxt,
-    inverted,
-    redTxt,
-    greenTxt,
-    redBg,
-    greenBg,
-    settings
-} = require(`./config`)
+const { BOT_USERNAME, OAUTH_TOKEN, DEV, CHANNEL_1, squad, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
-const {
-    globalUsers,
-    players,
-    playerSave,
-    highestLevels,
-    weaponsATK,
-    armorDEF,
-    consumableItems,
-    itemPrices
-} = require(`./data`)
+const { globalUsers, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
 
 const { handleFight } = require(`./fight`)
 

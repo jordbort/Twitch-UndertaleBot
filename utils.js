@@ -433,6 +433,36 @@ function calculateUserLV(user) {
     return foundItemsAppend
 }
 
+function calculateTemmieArmorPrice(user) {
+    const deaths = players[user].timesKilled
+    const priceTable = {
+        0: 9999,
+        1: 9000,
+        2: 8000,
+        3: 7000,
+        4: 6000,
+        5: 5000,
+        6: 4500,
+        7: 4000,
+        8: 3500,
+        9: 3000,
+        10: 2800,
+        11: 2600,
+        12: 2400,
+        13: 2200,
+        14: 2000,
+        15: 1800,
+        16: 1600,
+        17: 1400,
+        18: 1250,
+        19: 1100
+    }
+    if (deaths >= 30) { return 500 }
+    else if (deaths >= 25) { return 750 }
+    else if (deaths >= 20) { return 1000 }
+    else { return priceTable[deaths] }
+}
+
 function printLogo() {
     if (settings.debug) { console.log(`${boldTxt}> printLogo()${resetTxt}`) }
     const whSq = `\x1b[47m  \x1b[0m`
@@ -467,11 +497,6 @@ function printLogo() {
 }
 
 module.exports = {
-    BOT_USERNAME,
-    CHANNEL_1,
-    DEV,
-    OAUTH_TOKEN,
-    squad,
     tmi,
     client,
     talk,
@@ -484,5 +509,6 @@ module.exports = {
     calculateUserDEF,
     calculateUserNextLV,
     calculateUserLV,
+    calculateTemmieArmorPrice,
     printLogo
 }

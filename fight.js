@@ -185,6 +185,7 @@ function deathCheck(chatroom, user, target) {
         }
 
         // Resetting target user's stats
+        targetPlayer.timesKilled++
         targetPlayer.dead = true
         targetPlayer.hp = 0
         targetPlayer.lv = 1

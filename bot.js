@@ -69,6 +69,7 @@ function onMessageHandler(channel, tags, message, self) {
             lv: 1,
             hp: 20,
             dead: false,
+            timesKilled: 0,
             at: 0,
             df: 0,
             exp: 0,
@@ -84,6 +85,7 @@ function onMessageHandler(channel, tags, message, self) {
             lv: 1,
             hp: 20,
             dead: false,
+            timesKilled: 0,
             at: 0,
             df: 0,
             exp: 0,
@@ -482,7 +484,7 @@ function onMessageHandler(channel, tags, message, self) {
         const purchasedItem = args.join(` `) in itemPrices ? args.join(` `) : null
 
         return purchasedItem
-            ? talk(channel, buyItem(user, purchasedItem, itemPrices[purchasedItem]))
+            ? talk(channel, buyItem(user, purchasedItem, purchasedItem === `temmie armor` ? calculateTemmieArmorPrice(user) : itemPrices[purchasedItem]))
             : talk(channel, `Sorry ${sendingPlayer.displayName}, that item doesn't exist! :(`)
     }
 

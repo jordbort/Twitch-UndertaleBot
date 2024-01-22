@@ -10,6 +10,7 @@ const players = {
         lv: 1,
         hp: 20,
         dead: false,
+        timesKilled: 0,
         at: 0,
         df: 0,
         exp: 0,
@@ -28,6 +29,7 @@ const playerSave = {
         lv: 1,
         hp: 20,
         dead: false,
+        timesKilled: 0,
         at: 0,
         df: 0,
         exp: 0,
@@ -170,7 +172,6 @@ const itemPrices = {
     // Armor
     "manly bandanna": 50,
     "cloudy glasses": 35,
-    "temmie armor": 750,
     "cowboy hat": 350
 }
 

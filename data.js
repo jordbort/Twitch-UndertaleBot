@@ -156,7 +156,6 @@ const itemPrices = {
     "sea tea": 18,
     "temmie flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
     "hot dog": 30,
-    "hot cat": 30,
     "junk food": 25,
     "starfait": 60,
     "glamburger": 120,

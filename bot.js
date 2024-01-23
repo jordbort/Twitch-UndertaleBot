@@ -475,7 +475,7 @@ function onMessageHandler(channel, tags, message, self) {
             if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
             if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
             if (sendingPlayer.lv >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
-            if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?, Hot Cat` }
+            if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?` }
             if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
             if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
             return talk(channel, response)

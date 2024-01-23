@@ -33,122 +33,228 @@ function buyItem(user, str, price) {
 
     if (player.lv < itemLvThreshold[str]) { return `${player.displayName}, that item isn't available to you yet! :(` }
 
-    if (player.gold < price) { return `${player.displayName}, that item costs ${price}G, you have ${player.gold}G! :(` }
-
     if (str === `spider donut`) {
-        player.gold -= price
-        player.inventory.push(`Spider Donut`)
-        return `* ${capsName} bought the Spider Donut!`
+        if (player.gold < price) {
+            return `* ${capsName} didn't have enough gold.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Spider Donut`)
+            return `* Some spiders crawled down and gave ${player.displayName} a donut.`
+        }
     }
     if (str === `spider cider`) {
-        player.gold -= price
-        player.inventory.push(`Spider Cider`)
-        return `* ${capsName} bought the Spider Cider!`
+        if (player.gold < price) {
+            return `* ${capsName} didn't have enough gold.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Spider Cider`)
+            return `* Some spiders crawled down and gave ${player.displayName} a jug.`
+        }
     }
     if (str === `nice cream`) {
-        player.gold -= price
-        player.inventory.push(`Nice Cream`)
-        return `* ${capsName} bought the Nice Cream!`
+        if (player.gold < price) {
+            return `* Huh? You don't have enough money... I wish I could make Nice Cream for free...`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Nice Cream`)
+            return `* Here you go! Have a super-duper day! (${capsName} got the Nice Cream.)`
+        }
     }
     if (str === `bisicle`) {
-        player.gold -= price
-        player.inventory.push(`Bisicle`)
-        return `* ${capsName} bought the Bisicle!`
+        if (player.gold < price) {
+            return `* That's not enough money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Bisicle`)
+            return `* Thanks for your purchase.`
+        }
     }
     if (str === `cinnamon bunny`) {
-        player.gold -= price
-        player.inventory.push(`Cinnamon Bunny`)
-        return `* ${capsName} bought the Cinnamon Bunny!`
+        if (player.gold < price) {
+            return `* That's not enough money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Cinnamon Bunny`)
+            return `* Thanks for your purchase.`
+        }
     }
     if (str === `tough glove`) {
-        player.gold -= price
-        player.inventory.push(`Tough Glove`)
-        return `* ${capsName} bought the Tough Glove!`
+        if (player.gold < price) {
+            return `* That's not enough money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Tough Glove`)
+            return `* Thanks for your purchase.`
+        }
     }
     if (str === `manly bandanna`) {
-        player.gold -= price
-        player.inventory.push(`Manly Bandanna`)
-        return `* ${capsName} bought the Manly Bandanna!`
+        if (player.gold < price) {
+            return `* That's not enough money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Manly Bandanna`)
+            return `* Thanks for your purchase.`
+        }
     }
     if (str === `crab apple`) {
-        player.gold -= price
-        player.inventory.push(`Crab Apple`)
-        return `* ${capsName} bought the Crab Apple!`
+        if (player.gold < price) {
+            return `* You're a bit short on cash.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Crab Apple`)
+            return `* Thanks! Wa ha ha.`
+        }
     }
     if (str === `sea tea`) {
-        player.gold -= price
-        player.inventory.push(`Sea Tea`)
-        return `* ${capsName} bought the Sea Tea!`
-    }
-    if (str === `temmie flakes`) {
-        player.gold -= price
-        player.inventory.push(`Temmie Flakes`)
-        return `* ${capsName} bought the Temmie Flakes!`
+        if (player.gold < price) {
+            return `* You're a bit short on cash.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Sea Tea`)
+            return `* Thanks! Wa ha ha.`
+        }
     }
     if (str === `torn notebook`) {
-        player.gold -= price
-        player.inventory.push(`Torn Notebook`)
-        return `* ${capsName} bought the Torn Notebook!`
+        if (player.gold < price) {
+            return `* You're a bit short on cash.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Torn Notebook`)
+            return `* Thanks! Wa ha ha.`
+        }
     }
     if (str === `cloudy glasses`) {
-        player.gold -= price
-        player.inventory.push(`Cloudy Glasses`)
-        return `* ${capsName} bought the Cloudy Glasses!`
+        if (player.gold < price) {
+            return `* You're a bit short on cash.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Cloudy Glasses`)
+            return `* Thanks! Wa ha ha.`
+        }
+    }
+    if (str === `temmie flakes`) {
+        if (player.gold < price) {
+            return `* you don hav da muns,`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Temmie Flakes`)
+            return `* thanks PURCHASE!`
+        }
     }
     if (str === `temmie armor`) {
-        player.gold -= price
-        player.inventory.push(`Temmie Armor`)
-        return `* ${capsName} bought the Temmie Armor!`
+        if (player.gold < price) {
+            return `* you don hav da muns,`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Temmie Armor`)
+            return `* thanks PURCHASE!`
+        }
     }
     if (str === `hot dog`) {
+        if (player.gold < price) {
+            return `* whoops, you don't have enough cash. you should get a job. i've heard being a sentry pays well.`
+        } else {
+        }
         player.gold -= price
-        player.inventory.push(`Hot Dog...?`)
-        return `* ${capsName} bought the Hot Dog...?!`
-    }
-    if (str === `hot cat`) {
-        player.gold -= price
-        player.inventory.push(`Hot Cat`)
-        return `* ${capsName} bought the Hot Cat!`
+        if (player.inventory.includes(`Hot Dog...?`)) {
+            player.inventory.push(`Hot Cat`)
+            return `* another h'dog? here you go... whoops, i'm actually out of hot dogs. here, you can have a hot cat instead.`
+        } else {
+            player.inventory.push(`Hot Dog...?`)
+            return `* thanks, kid. here's your 'dog. yeah. 'dog. apostrophe-dog. it's short for hot-dog.`
+        }
     }
     if (str === `junk food`) {
+        if (player.gold < price) {
+            return `* You need WAY more money.`
+        } else {
+        }
         player.gold -= price
         player.inventory.push(`Junk Food`)
-        return `* ${capsName} bought the Junk Food!`
-    }
-    if (str === `starfait`) {
-        player.gold -= price
-        player.inventory.push(`Starfait`)
-        return `* ${capsName} bought the Starfait!`
-    }
-    if (str === `glamburger`) {
-        player.gold -= price
-        player.inventory.push(`Glamburger`)
-        return `* ${capsName} bought the Glamburger!`
-    }
-    if (str === `legendary hero`) {
-        player.gold -= price
-        player.inventory.push(`Legendary Hero`)
-        return `* ${capsName} bought the Legendary Hero!`
-    }
-    if (str === `steak in the shape of mettaton's face`) {
-        player.gold -= price
-        player.inventory.push(`Steak in the Shape of Mettaton's Face`)
-        return `* ${capsName} bought the Steak in the Shape of Mettaton's Face!`
+        return `* Bratty! We're gonna be rich!`
     }
     if (str === `empty gun`) {
-        player.gold -= price
-        player.inventory.push(`Empty Gun`)
-        return `* ${capsName} bought the Empty Gun!`
+        if (player.gold < price) {
+            return `* You need WAY more money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Empty Gun`)
+            return `* Bratty! We're gonna be rich!`
+        }
     }
     if (str === `cowboy hat`) {
-        player.gold -= price
-        player.inventory.push(`Cowboy Hat`)
-        return `* ${capsName} bought the Cowboy Hat!`
+        if (player.gold < price) {
+            return `* You need WAY more money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Cowboy Hat`)
+            return `* Bratty! We're gonna be rich!`
+        }
+    }
+    if (str === `starfait`) {
+        if (player.gold < price) {
+            return `* That's not the right amount of money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Starfait`)
+            const dialogue = [
+                `Thanksy! Have a FABU-FUL day!!!`,
+                `Here you go, little weirdo.`,
+                `Here you go, little buddy.`
+            ]
+            return `* ${dialogue[Math.floor(Math.random() * dialogue.length)]}`
+        }
+    }
+    if (str === `glamburger`) {
+        if (player.gold < price) {
+            return `* That's not the right amount of money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Glamburger`)
+            const dialogue = [
+                `Thanksy! Have a FABU-FUL day!!!`,
+                `Here you go, little weirdo.`,
+                `Here you go, little buddy.`
+            ]
+            return `* ${dialogue[Math.floor(Math.random() * dialogue.length)]}`
+        }
+    }
+    if (str === `legendary hero`) {
+        if (player.gold < price) {
+            return `* That's not the right amount of money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Legendary Hero`)
+            const dialogue = [
+                `Thanksy! Have a FABU-FUL day!!!`,
+                `Here you go, little weirdo.`,
+                `Here you go, little buddy.`
+            ]
+            return `* ${dialogue[Math.floor(Math.random() * dialogue.length)]}`
+        }
+    }
+    if (str === `steak in the shape of mettaton's face`) {
+        if (player.gold < price) {
+            return `* That's not the right amount of money.`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Steak in the Shape of Mettaton's Face`)
+            const dialogue = [
+                `Thanksy! Have a FABU-FUL day!!!`,
+                `Here you go, little weirdo.`,
+                `Here you go, little buddy.`
+            ]
+            return `* ${dialogue[Math.floor(Math.random() * dialogue.length)]}`
+        }
     }
     if (str === `popato chisps`) {
-        player.gold -= price
-        player.inventory.push(`Popato Chisps`)
-        return `* ${capsName} bought the Popato Chisps!`
+        if (player.gold < price) {
+            return `* (${capsName} didn't have enough gold.)`
+        } else {
+            player.gold -= price
+            player.inventory.push(`Popato Chisps`)
+            return `* (The vending machine dispensed some chisps.)`
+        }
     }
     return `If you are reading this, ${player.displayName}, I messed up somehow.`
 }

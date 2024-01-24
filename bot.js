@@ -1,6 +1,6 @@
 require(`dotenv`).config()
 
-const { tmi, client, talk, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice } = require(`./utils`)
+const { tmi, client, talk, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs } = require(`./utils`)
 
 const { BOT_USERNAME, OAUTH_TOKEN, DEV, CHANNEL_1, squad, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
@@ -100,6 +100,9 @@ function onMessageHandler(channel, tags, message, self) {
         const message = getIntroText(displayName)
         talk(CHANNEL_1, message)
     }
+
+    makeLogs()
+
     const sendingPlayer = players[user]
     const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
     const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1

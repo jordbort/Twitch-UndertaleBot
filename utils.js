@@ -1,6 +1,6 @@
+const fs = require(`fs`)
 
-
-const { players, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
+const { globalUsers, players, playerSave, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
 
 const {
     BOT_USERNAME,
@@ -463,6 +463,58 @@ function calculateTemmieArmorPrice(user) {
     else { return priceTable[deaths] }
 }
 
+function makeLogs() {
+    let data = `+---------------+\n`
+    data += `| UNDERTALE BOT |\n`
+    data += `+---------------+\n\n`
+
+    data += `globalUsers: ['${globalUsers.join(`', '`)}']\n\n`
+
+    data += `players: {\n`
+    for (const key of Object.keys(players)) {
+        data += `\t${key}: {\n`
+        for (const props of Object.keys(players[key])) {
+            if (Array.isArray(players[key][props])) {
+                if (players[key][props].length === 0) {
+                    data += `\t\t${props}: [],\n`
+                } else {
+                    data += `\t\t${props}: ['${players[key][props].join(`', '`)}'],\n`
+                }
+            } else if (typeof players[key][props] === `string`) {
+                data += `\t\t${props}: '${players[key][props]}',\n`
+            } else {
+                data += `\t\t${props}: ${players[key][props]},\n`
+            }
+        }
+        data += `\t},\n`
+    }
+    data += `}\n\n`
+
+    data += `playerSave: {\n`
+    for (const key of Object.keys(playerSave)) {
+        data += `\t${key}: {\n`
+        for (const props of Object.keys(playerSave[key])) {
+            if (Array.isArray(playerSave[key][props])) {
+                if (playerSave[key][props].length === 0) {
+                    data += `\t\t${props}: [],\n`
+                } else {
+                    data += `\t\t${props}: ['${playerSave[key][props].join(`', '`)}'],\n`
+                }
+            } else if (typeof playerSave[key][props] === `string`) {
+                data += `\t\t${props}: '${playerSave[key][props]}',\n`
+            } else {
+                data += `\t\t${props}: ${playerSave[key][props]},\n`
+            }
+        }
+        data += `\t},\n`
+    }
+    data += `}`
+
+    fs.writeFile(`logs.txt`, data, (err) => {
+        if (err) { console.log(`Error writing logs:`, err) }
+    })
+}
+
 function printLogo() {
     if (settings.debug) { console.log(`${boldTxt}> printLogo()${resetTxt}`) }
     const whSq = `\x1b[47m  \x1b[0m`
@@ -510,5 +562,6 @@ module.exports = {
     calculateUserNextLV,
     calculateUserLV,
     calculateTemmieArmorPrice,
+    makeLogs,
     printLogo
 }

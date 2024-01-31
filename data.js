@@ -124,7 +124,7 @@ const consumableItems = {
     "temmie flakes": 2,
     "dog salad": 2,
     "instant noodles": 4,
-    "hot dog": 20,
+    "hot dog...?": 20,
     "hot cat": 21,
     "junk food": 17,
     "hush puppy": 65,

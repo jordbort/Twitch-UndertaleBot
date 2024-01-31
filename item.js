@@ -150,7 +150,7 @@ function buyItem(user, str, price) {
             return `* thanks PURCHASE!`
         }
     }
-    if (str === `hot dog`) {
+    if (/^hot dog[ .?]*$/.test(str)) {
         if (player.gold < price) {
             return `* whoops, you don't have enough cash. you should get a job. i've heard being a sentry pays well.`
         } else {
@@ -281,7 +281,6 @@ function itemLookup(str) {
         `temmie flakes`,
         `dog salad`,
         `instant noodles`,
-        `hot dog`,
         `hot cat`,
         `junk food`,
         `hush puppy`,
@@ -323,7 +322,11 @@ function itemLookup(str) {
         `heart locket`,
         `the locket`
     ]
-    return allItems.includes(str) ? str : null
+    return /^hot dog[ .?]*$/.test(str)
+        ? `hot dog...?`
+        : allItems.includes(str)
+            ? str
+            : null
 }
 
 function useItem(user, str, idx) {
@@ -648,7 +651,7 @@ function useItem(user, str, idx) {
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, instantNoodlesHealAmt: ${instantNoodlesHealAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         return itemText
     }
-    if (str === `hot dog`) {
+    if (str === `hot dog...?`) {
         player.inventory.splice(idx, 1)
         healAmt += burntPanBonus
         player.hp += healAmt

@@ -267,7 +267,7 @@ function onMessageHandler(channel, tags, message, self) {
             if (target.armor === `Temmie Armor`) { attackBoost = 10 }
             response = `"${toUser === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser)}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
         }
-        else if (toUser) { response = `${toUser} isn't a registered player! :(` }
+        else if (toUser) { response = `${toUser} isn't a known player!` }
         else {
             userInventory = sendingPlayer.inventory
             if (sendingPlayer.armor === `Cowboy Hat`) { attackBoost = 5 }
@@ -313,7 +313,7 @@ function onMessageHandler(channel, tags, message, self) {
             if (toUser in players) {
                 if (players[toUser].dead) { return talk(channel, `${players[toUser].displayName.substring(0, 1).toUpperCase() + players[toUser].displayName.substring(1)} is already dead! :(`) }
             }
-            else if (toUser === `undertalebot`) { return talk(channel, `You can't fight me, but you can try fighting the Dummy!`) }
+            else if (toUser === `undertalebot`) { return talk(channel, `You can't FIGHT me, but you can try FIGHTing the Dummy!`) }
             else { return talk(channel, `${toUser} isn't a known player!`) }
         }
         else { return talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to fight themself. But nothing happened.`) }
@@ -330,10 +330,9 @@ function onMessageHandler(channel, tags, message, self) {
         if (toUser) {
             if (lastStanding) { return talk(channel, `* But nobody came.`) }
             if (toUser in players) {
-                if (players[toUser].dead) {
-                    return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`)
-                }
+                if (players[toUser].dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`) }
             }
+            else if (toUser === `undertalebot`) { return talk(channel, `You can't ACT on me, but you can try ACTing the Dummy!`) }
             else { return talk(channel, `${toUser} is not a registered player :(`) }
         }
         return handleAct(channel, user, toUser)
@@ -390,8 +389,8 @@ function onMessageHandler(channel, tags, message, self) {
         // Check if toUser is the sender
         if (toUser && toUser !== user) {
             if (lastStanding) { return talk(channel, `* But nobody came.`) }
-            if (toUser === `undertalebot`) { return talk(channel, `You can't spare me, but you can try sparing the Dummy!`) }
-            if (!(toUser in players)) { return talk(channel, `${toUser} is not a known player :(`) }
+            if (toUser === `undertalebot`) { return talk(channel, `You can't MERCY me, but you can try MERCYing the Dummy!`) }
+            if (!(toUser in players)) { return talk(channel, `${toUser} is not a known player!`) }
             if (targetPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`) }
         }
         else { return talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`) }

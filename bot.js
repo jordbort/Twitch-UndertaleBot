@@ -1,6 +1,6 @@
 require(`dotenv`).config()
 
-const { tmi, client, talk, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs } = require(`./utils`)
+const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, announceCrash } = require(`./utils`)
 
 const { BOT_USERNAME, OAUTH_TOKEN, DEV, CHANNEL_1, squad, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
@@ -130,33 +130,16 @@ function onMessageHandler(channel, tags, message, self) {
             // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            if (!args.length) { return talk(channel, `All users: ${globalUsers.join(`, `)}`) }
+            // List all users in globalUsers
+            if (!toUser) { return talk(channel, `All users: ${Object.keys(globalUsers).join(`, `)}`) }
 
-            const newUsers = []
-            for (const str of args) {
-                if (!globalUsers.includes(str)) {
-                    globalUsers.push(str)
-                    newUsers.push(`#${str}`)
-                }
-            }
-            newUsers.length === 0 ? talk(channel, `Recruited 0 users! :O`) : talk(channel, `Recruited ${newUsers.length}/${args.length} users! :)`)
-            return createClient(newUsers)
-        }
+            // Confirm not in globalUsers
+            if (toUser in globalUsers) { return talk(channel, `Already present in ${toUser}'s channel!`) }
 
-        // ALL
-        if (command === `!all`) {
-            // Log message
-            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+            // Confirm valid Twitch username format
+            if (!toUser.match(/[a-zA-Z0-9]{4,25}/)) { return talk(channel, `Invalid Twitch username format!`) }
 
-            const newUsers = []
-            for (const chatroom of squad) {
-                if (!globalUsers.includes(chatroom.substring(1))) {
-                    globalUsers.push(chatroom.substring(1))
-                    newUsers.push(chatroom)
-                }
-            }
-            newUsers.length === 0 ? talk(channel, `All channels are already recruited! :O`) : talk(channel, `Recruited ${newUsers.length}/${squad.length} users! :)`)
-            return createClient(newUsers)
+            return createClient(toUser, onMessageHandler)
         }
 
         // REVIVE (for testing, mods can also use)
@@ -205,11 +188,25 @@ function onMessageHandler(channel, tags, message, self) {
     // ** REPLY CASES **
     // *****************
 
-    // JOIN
-    if (command === `!join`
-        && channel === CHANNEL_1) {
-        // Log message
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+        // JOIN
+        if (command === `!join`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            if (user in globalUsers) {
+                if (globalUsers[user].active) {
+                    return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
+                } else {
+                    globalUsers[user].active = true
+                    globalUsers[user].timesJoined++
+                    talk(channel, `${sendingPlayer.displayName}, I have returned to your channel! Use !part in this channel if you would like me to leave!`)
+                    return talk(`#${user}`, `* UndertaleBot blocks the way!`)
+                }
+            }
+
+            createClient(user, onMessageHandler)
+            return talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! Use !part in this channel if you would like me to leave!`)
+        }
 
         if (globalUsers.includes(user)) { return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`) }
 
@@ -548,26 +545,4 @@ function onMessageHandler(channel, tags, message, self) {
     }
 }
 
-// Called every time the bot connects to Twitch chat
-function onConnectedHandler(addr, port) {
-    if (settings.firstConnection) {
-        printLogo()
-        console.log(`* Connected to ${addr}:${port}`)
-        setTimeout(() => {
-            client.say(CHANNEL_1, `I have been rebooted :)`)
-            console.log(`* UndertaleBot blocks the way!`)
-        }, 3000)
-    } else {
-        console.log(`* Reconnected to ${addr}:${port}`)
-        client.say(CHANNEL_1, `Reconnecting...`)
-        setTimeout(() => client.say(CHANNEL_1, `Reconnected!`), 3000)
-    }
-    settings.firstConnection = false
-}
-
-// Register our event handlers (defined below)
-client.on(`message`, onMessageHandler)
-client.on(`connected`, onConnectedHandler)
-
-// Connect to Twitch:
-client.connect()
+createClient(BOT_USERNAME, onMessageHandler)

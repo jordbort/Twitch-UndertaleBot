@@ -43,8 +43,45 @@ const client = new tmi.client(opts)
 function talk(chatroom, resp) {
     // if (settings.debug) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
     if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
-    client.say(chatroom, resp)
-    console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
+function createClient(user, onMessageHandler) {
+    if (settings.debug) { console.log(`${boldTxt}> createClient(user: ${user})${resetTxt}`) }
+
+    const newClient = new tmi.client({
+        identity: {
+            username: BOT_USERNAME,
+            password: OAUTH_TOKEN
+        },
+        channels: [`#${user}`]
+    })
+
+    globalUsers[user] = {
+        active: true,
+        timesJoined: 1,
+        timesParted: 0,
+        client: newClient
+    }
+    const client = globalUsers[user].client
+
+    client.on(`message`, onMessageHandler)
+    if (user === BOT_USERNAME) {
+        client.on(`connected`, (addr, port) => {
+            if (settings.firstConnection) {
+                printLogo()
+                console.log(`* Connected to ${addr}:${port} on ${new Date()}`)
+                setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 500)
+            } else {
+                console.log(`* Reconnected to ${addr}:${port}`)
+                talk(`#${user}`, `Reconnected!`)
+            }
+            settings.firstConnection = false
+        })
+    } else {
+        client.on(`connected`, () => {
+            console.log(`* Joined ${user}'s channel.`)
+            setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 500)
+        })
+    }
+    client.connect()
 }
 
 function getSpamtonQuote(num) {
@@ -552,6 +589,7 @@ module.exports = {
     tmi,
     client,
     talk,
+    createClient,
     getSpamtonQuote,
     getSaveText,
     getIntroText,

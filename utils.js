@@ -505,7 +505,21 @@ function makeLogs() {
     data += `| UNDERTALE BOT |\n`
     data += `+---------------+\n\n`
 
-    data += `globalUsers: ['${globalUsers.join(`', '`)}']\n\n`
+    data += `globalUsers: {\n`
+    for (user of Object.keys(globalUsers)) {
+        data += `\t${user}: {\n`
+        for (key of Object.keys(globalUsers[user])) {
+            if (typeof globalUsers[user][key] !== `object`) { data += `\t\t${key}: ${globalUsers[user][key]},\n` }
+        }
+        data += `\t},\n`
+    }
+    data += `}\n\n`
+
+    data += `highestLevels: {\n`
+    for (key of Object.keys(highestLevels)) {
+        data += `\t${key}: ${highestLevels[key]},\n`
+    }
+    data += `}\n\n`
 
     data += `players: {\n`
     for (const key of Object.keys(players)) {

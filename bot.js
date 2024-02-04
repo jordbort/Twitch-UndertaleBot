@@ -107,23 +107,103 @@ function onMessageHandler(channel, tags, message, self) {
     const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
     const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
 
+    // ******************
+    // ** DEV COMMANDS **
+    // ******************
+
+    if (user === DEV
+        && channel === CHANNEL_1) {
+        // TOGGLE DEBUG MODE
+        if (command === `!debug`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            const initialDebugState = settings.debug
+            if (toUser === `on`) { settings.debug = true }
+            else if (toUser === `off`) { settings.debug = false }
+            else { settings.debug = !settings.debug }
+            settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
+        }
+
+        // RECRUIT
+        if (command === `!recruit`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            if (!args.length) { return talk(channel, `All users: ${globalUsers.join(`, `)}`) }
+
+            const newUsers = []
+            for (const str of args) {
+                if (!globalUsers.includes(str)) {
+                    globalUsers.push(str)
+                    newUsers.push(`#${str}`)
+                }
+            }
+            newUsers.length === 0 ? talk(channel, `Recruited 0 users! :O`) : talk(channel, `Recruited ${newUsers.length}/${args.length} users! :)`)
+            return createClient(newUsers)
+        }
+
+        // ALL
+        if (command === `!all`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            const newUsers = []
+            for (const chatroom of squad) {
+                if (!globalUsers.includes(chatroom.substring(1))) {
+                    globalUsers.push(chatroom.substring(1))
+                    newUsers.push(chatroom)
+                }
+            }
+            newUsers.length === 0 ? talk(channel, `All channels are already recruited! :O`) : talk(channel, `Recruited ${newUsers.length}/${squad.length} users! :)`)
+            return createClient(newUsers)
+        }
+
+        // REVIVE (for testing, mods can also use)
+        if (command === `!revive`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            players.dummy.hp = getUserMaxHP(`dummy`)
+            players.dummy.dead = false
+            return talk(channel, `The Dummy is alive :)`)
+        }
+
+        // RESET
+        if (command === `!reset`) {
+            for (const player in players) {
+                players[player].lv = 1
+                players[player].hp = 20
+                players[player].dead = false
+                players[player].timesKilled = 0
+                players[player].at = 0
+                players[player].df = 0
+                players[player].exp = 0
+                players[player].next = 10
+                players[player].weapon = `Stick`
+                players[player].armor = `Bandage`
+                players[player].gold = 0
+                players[player].stainedApronHealTime = false
+                if (player !== `dummy`) {
+                    players[player].inventory = [`Monster Candy`, `Butterscotch Pie`]
+                }
+            }
+        }
+
+        // TRUE RESET
+        if (command === `!truereset`) {
+            for (const player in players) {
+                if (player !== `dummy`) {
+                    delete players[player]
+                    delete playerSave[player]
+                }
+            }
+        }
+    }
+
     // *****************
     // ** REPLY CASES **
     // *****************
-
-    // TOGGLE DEBUG MODE
-    if (command === `!debug`
-        && channel === CHANNEL_1
-        && user === DEV) {
-        // Log message
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        const initialDebugState = settings.debug
-        if (toUser === `on`) { settings.debug = true }
-        else if (toUser === `off`) { settings.debug = false }
-        else { settings.debug = !settings.debug }
-        settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
-    }
 
     // JOIN
     if (command === `!join`
@@ -136,44 +216,6 @@ function onMessageHandler(channel, tags, message, self) {
         globalUsers.push(user)
         createClient([`#${user}`])
         return talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
-    }
-
-    // RECRUIT
-    if (command === `!recruit`
-        && channel === CHANNEL_1
-        && user === DEV) {
-        // Log message
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        if (!args.length) { return talk(channel, `All users: ${globalUsers.join(`, `)}`) }
-
-        const newUsers = []
-        for (const str of args) {
-            if (!globalUsers.includes(str)) {
-                globalUsers.push(str)
-                newUsers.push(`#${str}`)
-            }
-        }
-        newUsers.length === 0 ? talk(channel, `Recruited 0 users! :O`) : talk(channel, `Recruited ${newUsers.length}/${args.length} users! :)`)
-        return createClient(newUsers)
-    }
-
-    // ALL
-    if (command === `!all`
-        && channel === CHANNEL_1
-        && user === DEV) {
-        // Log message
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        const newUsers = []
-        for (const chatroom of squad) {
-            if (!globalUsers.includes(chatroom.substring(1))) {
-                globalUsers.push(chatroom.substring(1))
-                newUsers.push(chatroom)
-            }
-        }
-        newUsers.length === 0 ? talk(channel, `All channels are already recruited! :O`) : talk(channel, `Recruited ${newUsers.length}/${squad.length} users! :)`)
-        return createClient(newUsers)
     }
 
     // MEMORY
@@ -191,19 +233,6 @@ function onMessageHandler(channel, tags, message, self) {
             allPlayers.push(players[player].displayName)
         }
         return talk(channel, `Players: ${allPlayers.join(`, `)}`)
-    }
-
-    // REVIVE (for testing, mods can also use)
-    if (command === `!revive`) {
-        // Log message
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        if (user === DEV || senderIsAMod) {
-            players.dummy.hp = getUserMaxHP(`dummy`)
-            players.dummy.dead = false
-            return talk(channel, `The Dummy is alive :)`)
-        }
-        else { return talk(channel, `You can't use this command, ${sendingPlayer.displayName} ;)`) }
     }
 
     // SAVE

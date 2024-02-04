@@ -62,7 +62,7 @@ function createClient(user, onMessageHandler) {
             if (settings.firstConnection) {
                 printLogo()
                 console.log(`* Connected to ${addr}:${port} on ${new Date()}`)
-                setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 500)
+                setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 1000)
             } else {
                 console.log(`* Reconnected to ${addr}:${port}`)
                 talk(`#${user}`, `Reconnected!`)
@@ -72,7 +72,7 @@ function createClient(user, onMessageHandler) {
     } else {
         client.on(`connected`, () => {
             console.log(`* Joined ${user}'s channel.`)
-            setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 500)
+            setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 1000)
         })
     }
     client.connect()

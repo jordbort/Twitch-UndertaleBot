@@ -1,6 +1,6 @@
-const { CHANNEL_1, client, talk, stainedApronHeal, getUserMaxHP, calculateUserLV } = require(`./utils`)
+const { CHANNEL_1, talk, stainedApronHeal, getUserMaxHP, calculateUserLV } = require(`./utils`)
 
-const { resetTxt, boldTxt, yellowTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg, settings } = require(`./config`)
+const { resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg, settings } = require(`./config`)
 
 const { players, playerSave, weaponsATK, armorDEF } = require(`./data`)
 

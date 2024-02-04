@@ -2,7 +2,7 @@ require(`dotenv`).config()
 
 const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, announceCrash } = require(`./utils`)
 
-const { BOT_USERNAME, OAUTH_TOKEN, DEV, CHANNEL_1, squad, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
+const { BOT_USERNAME, DEV, CHANNEL_1, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
 const { globalUsers, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
 
@@ -319,15 +319,6 @@ function onMessageHandler(channel, tags, message, self) {
         return talk(channel, response)
     }
 
-    // SANS FACE
-    if (command === `!sans`
-        && channel === CHANNEL_1) {
-        // Log message
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        return getSansFace()
-    }
-
     // FIGHT or ATTACK
     if ([
         `!fight`,
@@ -363,7 +354,7 @@ function onMessageHandler(channel, tags, message, self) {
             if (toUser in players) {
                 if (players[toUser].dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, ${players[toUser].displayName} is dead! :(`) }
             }
-            else if (toUser === `undertalebot`) { return talk(channel, `You can't ACT on me, but you can try ACTing the Dummy!`) }
+            else if (toUser === `undertalebot`) { return talk(channel, `You can't ACT with me, but you can try ACTing the Dummy!`) }
             else { return talk(channel, `${toUser} is not a registered player :(`) }
         }
         return handleAct(channel, user, toUser)

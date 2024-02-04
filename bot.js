@@ -45,12 +45,11 @@ function createClient(arr) {
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, message, self) {
-    if (self || tags.username === BOT_USERNAME) { return } // Ignore messages from the bot
+    if (!globalUsers[channel.substring(1)].active) { return }
 
     // Message context
     const user = tags.username
     const displayName = tags[`display-name`]
-    const senderIsAMod = tags.mod
     const firstMsg = tags[`first-msg`]
 
     // Command and arguments parser
@@ -63,7 +62,7 @@ function onMessageHandler(channel, tags, message, self) {
     if (firstMsg && channel === CHANNEL_1) { printLogo() }
 
     // Add/manage players
-    if (!(user in players)) {
+    if (!(user in players) && !self) {
         players[user] = {
             displayName: displayName,
             lv: 1,
@@ -102,6 +101,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
 
     makeLogs()
+    if (self) { return } // Ignore messages from the bot
 
     const sendingPlayer = players[user]
     const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
@@ -167,10 +167,12 @@ function onMessageHandler(channel, tags, message, self) {
                 players[player].armor = `Bandage`
                 players[player].gold = 0
                 players[player].stainedApronHealTime = false
+                highestLevels[player] = 1
                 if (player !== `dummy`) {
                     players[player].inventory = [`Monster Candy`, `Butterscotch Pie`]
                 }
             }
+            talk(channel, `/me When humans fall down here, strangely... I often feel like I already know them. Strange, is it not?`)
         }
 
         // TRUE RESET
@@ -179,8 +181,10 @@ function onMessageHandler(channel, tags, message, self) {
                 if (player !== `dummy`) {
                     delete players[player]
                     delete playerSave[player]
+                    delete highestLevels[player]
                 }
             }
+            talk(channel, `/me If you DO end up erasing everything... You have to erase my memories, too.`)
         }
     }
 

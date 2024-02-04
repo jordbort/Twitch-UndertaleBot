@@ -1,6 +1,6 @@
-const { CHANNEL_1, talk, stainedApronHeal, getUserMaxHP, calculateUserLV } = require(`./utils`)
+const { talk, stainedApronHeal, getUserMaxHP, calculateUserLV } = require(`./utils`)
 
-const { resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg, settings } = require(`./config`)
+const { BOT_CHANNEL, resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg, settings } = require(`./config`)
 
 const { players, playerSave, weaponsATK, armorDEF } = require(`./data`)
 
@@ -194,7 +194,7 @@ function deathCheck(chatroom, user, target) {
         targetPlayer.at = 0
         targetPlayer.df = 0
 
-        const msgDelay = chatroom === CHANNEL_1 ? 1000 : 2000
+        const msgDelay = chatroom === BOT_CHANNEL ? 1000 : 2000
         setTimeout(() => talk(chatroom, response), msgDelay)
     }
 }

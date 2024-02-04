@@ -2,7 +2,7 @@ require(`dotenv`).config()
 
 const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, announceCrash } = require(`./utils`)
 
-const { BOT_USERNAME, DEV, CHANNEL_1, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
+const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
 const { globalUsers, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
 
@@ -38,7 +38,7 @@ function onMessageHandler(channel, tags, message, self) {
     const toUser = args[0] ? args[0].replace(/^@/, ``) : null
 
     // First-time message
-    if (firstMsg && channel === CHANNEL_1) { printLogo() }
+    if (firstMsg && channel === BOT_CHANNEL) { printLogo() }
 
     // Add/manage players
     if (!(user in players) && !self) {
@@ -76,7 +76,7 @@ function onMessageHandler(channel, tags, message, self) {
         }
         highestLevels[user] = 1
         const message = getIntroText(displayName)
-        talk(CHANNEL_1, message)
+        talk(BOT_CHANNEL, message)
     }
 
     makeLogs()
@@ -91,7 +91,7 @@ function onMessageHandler(channel, tags, message, self) {
     // ******************
 
     if (user === DEV
-        && channel === CHANNEL_1) {
+        && channel === BOT_CHANNEL) {
         // TOGGLE DEBUG MODE
         if (command === `!debug`) {
             // Log message
@@ -172,7 +172,7 @@ function onMessageHandler(channel, tags, message, self) {
     // *****************
 
     // CHANNEL-SPECIFIC COMMANDS
-    if (channel === CHANNEL_1) {
+    if (channel === BOT_CHANNEL) {
         // JOIN
         if (command === `!join`) {
             // Log message
@@ -190,7 +190,7 @@ function onMessageHandler(channel, tags, message, self) {
             }
 
             createClient(user, onMessageHandler)
-            return talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! Use !part in this channel if you would like me to leave!`)
+            return talk(BOT_CHANNEL, `${players[user].displayName}, I am now active in your Twitch channel! Use !part in this channel if you would like me to leave!`)
         }
 
         // PART
@@ -202,7 +202,7 @@ function onMessageHandler(channel, tags, message, self) {
                 if (globalUsers[user].active) {
                     globalUsers[user].active = false
                     globalUsers[user].timesParted++
-                    return talk(CHANNEL_1, `${players[user].displayName}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
+                    return talk(BOT_CHANNEL, `${players[user].displayName}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
                 } else {
                     return talk(channel, `${sendingPlayer.displayName}, I am not currently active in your Twitch channel! :O`)
                 }

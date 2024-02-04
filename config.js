@@ -1,8 +1,8 @@
 // Bot and channel information
 const BOT_USERNAME = process.env.BOT_USERNAME
+const BOT_CHANNEL = `#${BOT_USERNAME}`
 const DEV = process.env.DEV
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const CHANNEL_1 = process.env.CHANNEL_1
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -42,9 +42,9 @@ const settings = {
 
 module.exports = {
     BOT_USERNAME,
+    BOT_CHANNEL,
     DEV,
     OAUTH_TOKEN,
-    CHANNEL_1,
     resetTxt,
     boldTxt,
     underlined,

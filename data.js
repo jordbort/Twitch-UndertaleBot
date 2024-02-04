@@ -1,7 +1,5 @@
-const BOT_USERNAME = process.env.BOT_USERNAME
-
-// All active users (to avoid duplicate clients):
-const globalUsers = [BOT_USERNAME]
+// All users' active status, number of times joined/parted, and channel clients:
+const globalUsers = {}
 
 // Initializing players
 const players = {
@@ -43,7 +41,7 @@ const playerSave = {
 }
 
 // Keeping track of highest-reached level to avoid duplicate item earnings
-const highestLevels = {}
+const highestLevels = { dummy: 1 }
 
 const baseHP = 16
 const baseAT = -2

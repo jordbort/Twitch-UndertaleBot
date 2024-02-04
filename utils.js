@@ -5,7 +5,6 @@ const { globalUsers, players, playerSave, highestLevels, baseHP, baseAT, baseDF 
 const {
     BOT_USERNAME,
     OAUTH_TOKEN,
-    CHANNEL_1,
     resetTxt,
     boldTxt,
     redTxt,
@@ -27,22 +26,17 @@ const {
 
 const tmi = require('tmi.js')
 
-// Define configuration options
-const opts = {
-    identity: {
-        username: BOT_USERNAME,
-        password: OAUTH_TOKEN
-    },
-    channels: [CHANNEL_1]
-}
-
-// Create a client with our options
-const client = new tmi.client(opts)
-
 // Helper functions
 function talk(chatroom, resp) {
     // if (settings.debug) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
     if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
+    const channel = globalUsers[chatroom.substring(1)]
+    if (channel.active) {
+        channel.client.say(chatroom, resp)
+        console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
+    }
+}
+
 function createClient(user, onMessageHandler) {
     if (settings.debug) { console.log(`${boldTxt}> createClient(user: ${user})${resetTxt}`) }
 
@@ -600,8 +594,6 @@ function printLogo() {
 }
 
 module.exports = {
-    tmi,
-    client,
     talk,
     createClient,
     getSpamtonQuote,

@@ -94,7 +94,6 @@ function onMessageHandler(channel, tags, message, self) {
         && channel === BOT_CHANNEL) {
         // TOGGLE DEBUG MODE
         if (command === `!debug`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             const initialDebugState = settings.debug
@@ -106,7 +105,6 @@ function onMessageHandler(channel, tags, message, self) {
 
         // CHANGE LOGO SIZE
         if (command === `!smalllogo`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             settings.fullSizeLogo = false
@@ -115,7 +113,6 @@ function onMessageHandler(channel, tags, message, self) {
         }
 
         if (command === `!biglogo`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             settings.fullSizeLogo = true
@@ -125,7 +122,6 @@ function onMessageHandler(channel, tags, message, self) {
 
         // RECRUIT
         if (command === `!recruit`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             // List all users in globalUsers
@@ -142,7 +138,6 @@ function onMessageHandler(channel, tags, message, self) {
 
         // Bring the Dummy back to life
         if (command === `!revive`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             players.dummy.hp = getUserMaxHP(`dummy`)
@@ -194,7 +189,6 @@ function onMessageHandler(channel, tags, message, self) {
     if (channel === BOT_CHANNEL) {
         // JOIN
         if (command === `!join`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             if (user in globalUsers) {
@@ -214,7 +208,6 @@ function onMessageHandler(channel, tags, message, self) {
 
         // PART
         if (command === `!part`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             if (user in globalUsers) {
@@ -232,7 +225,6 @@ function onMessageHandler(channel, tags, message, self) {
 
         // SANS FACE
         if (command === `!sans`) {
-            // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             return getSansFace()
@@ -244,7 +236,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!memory`,
         `!players`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const allPlayers = []
@@ -258,7 +249,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // SAVE
     if (command === `!save`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -271,7 +261,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // LOAD
     if (command === `!load`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         players[user] = { ...playerSave[user] }
@@ -289,7 +278,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // INTRO
     if (command === `!intro`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -304,7 +292,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!stat`,
         `!status`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         let response
@@ -331,7 +318,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // SPAMTON QUOTE
     if (command === `!spamton`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const response = getSpamtonQuote(toUser)
@@ -343,7 +329,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!fight`,
         `!attack`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -363,7 +348,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // ACT
     if (command === `!act`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -386,7 +370,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!use`,
         `!equip`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
@@ -422,7 +405,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!mercy`,
         `!spare`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -441,7 +423,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // HP
     if (command === `!hp`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.hp} HP`) }
@@ -451,7 +432,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // GOLD
     if (command === `!gold`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.gold} G`) }
@@ -464,7 +444,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!exp`,
         `!experience`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.exp} EXP`) }
@@ -474,7 +453,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // NEXT
     if (command === `!next`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)}'s LV will increase with ${targetPlayer.next} more EXP`) }
@@ -484,7 +462,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // WEAPON
     if (command === `!weapon`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.weapon} equipped (${weaponsATK[targetPlayer.weapon]} ATK)`) }
@@ -494,7 +471,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // ARMOR
     if (command === `!armor`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.armor} equipped (${armorDEF[targetPlayer.armor]} DEF)`) }
@@ -508,7 +484,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!get`,
         `!shop`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -533,7 +508,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // COMMANDS
     if (command === `!commands`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
@@ -542,7 +516,6 @@ function onMessageHandler(channel, tags, message, self) {
 
     // HELP
     if (command === `!help`) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const response = `${sendingPlayer.displayName}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
@@ -554,7 +527,6 @@ function onMessageHandler(channel, tags, message, self) {
         `!undertale`,
         `!logo`
     ].includes(command)) {
-        // Log message
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
         return printLogo()
     }

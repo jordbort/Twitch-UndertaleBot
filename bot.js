@@ -142,14 +142,14 @@ function onMessageHandler(channel, tags, message, self) {
             return createClient(toUser, onMessageHandler)
         }
 
-        // REVIVE (for testing, mods can also use)
+        // Bring the Dummy back to life
         if (command === `!revive`) {
             // Log message
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
             players.dummy.hp = getUserMaxHP(`dummy`)
             players.dummy.dead = false
-            return talk(channel, `The Dummy is alive :)`)
+            return talk(channel, `The Dummy has been revived!`)
         }
 
         // RESET

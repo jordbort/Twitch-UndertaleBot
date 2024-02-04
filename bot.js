@@ -16,32 +16,11 @@ const { handleMercy } = require(`./mercy`)
 
 const { getSansFace } = require(`./sansFaces`)
 
-process.on('uncaughtException', (err) => {
-    const errorPosition = err.stack.split(`\n`)[1].split(`/`)[0].substring(4) + err.stack.split(`\n`)[1].split(`/`)[err.stack.split(`\n`)[1].split(`/`).length - 1]
-    talk(`#${BOT_USERNAME}`, `*CRASH* >( Uncaught Exception: ${err.message} ${errorPosition}`)
-    console.log(err)
+process.on('uncaughtException', async (err) => {
+    await announceCrash()
+    console.error(err)
     process.exit(1)
 })
-
-function createClient(arr) {
-    if (settings.debug) {
-        console.log(`${boldTxt}> createClient(arr: ${arr})${resetTxt}`)
-        if (!Array.isArray(arr)) { console.log(`${redBg}${boldTxt}*** WARNING: Arr data type is not an array!${resetTxt}`) }
-        arr.map((chatroom) => { if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) } })
-    }
-
-    const client = new tmi.client({
-        identity: {
-            username: BOT_USERNAME,
-            password: OAUTH_TOKEN
-        },
-        channels: arr
-    })
-    client.on(`message`, onMessageHandler)
-    client.connect()
-
-    arr.map((chatroom) => { talk(chatroom, `* UndertaleBot blocks the way!`) })
-}
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, message, self) {

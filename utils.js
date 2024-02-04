@@ -593,6 +593,13 @@ function printLogo() {
     console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file${resetTxt}`)
 }
 
+async function announceCrash() {
+    if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
+    return Object.keys(globalUsers).forEach((user) => {
+        globalUsers[user].active && talk(`#${user}`, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
+    })
+}
+
 module.exports = {
     talk,
     createClient,
@@ -607,5 +614,6 @@ module.exports = {
     calculateUserLV,
     calculateTemmieArmorPrice,
     makeLogs,
-    printLogo
+    printLogo,
+    announceCrash
 }

@@ -104,6 +104,25 @@ function onMessageHandler(channel, tags, message, self) {
             settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
         }
 
+        // CHANGE LOGO SIZE
+        if (command === `!smalllogo`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            settings.fullSizeLogo = false
+            printLogo()
+            return talk(channel, `The small logo will be used`)
+        }
+
+        if (command === `!biglogo`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            settings.fullSizeLogo = true
+            printLogo()
+            return talk(channel, `The full-size logo will be used`)
+        }
+
         // RECRUIT
         if (command === `!recruit`) {
             // Log message

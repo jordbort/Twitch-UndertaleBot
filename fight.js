@@ -195,10 +195,7 @@ function deathCheck(chatroom, user, target) {
         targetPlayer.df = 0
 
         const msgDelay = chatroom === CHANNEL_1 ? 1000 : 2000
-        setTimeout(() => {
-            client.say(chatroom, response)
-            console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${yellowTxt}UndertaleBot: ${response}${resetTxt}`)
-        }, msgDelay)
+        setTimeout(() => talk(chatroom, response), msgDelay)
     }
 }
 

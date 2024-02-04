@@ -192,6 +192,8 @@ function onMessageHandler(channel, tags, message, self) {
     // ** REPLY CASES **
     // *****************
 
+    // CHANNEL-SPECIFIC COMMANDS
+    if (channel === CHANNEL_1) {
         // JOIN
         if (command === `!join`) {
             // Log message
@@ -212,11 +214,31 @@ function onMessageHandler(channel, tags, message, self) {
             return talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! Use !part in this channel if you would like me to leave!`)
         }
 
-        if (globalUsers.includes(user)) { return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`) }
+        // PART
+        if (command === `!part`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        globalUsers.push(user)
-        createClient([`#${user}`])
-        return talk(CHANNEL_1, `${players[user].displayName}, I am now active in your Twitch channel! This will only last until I am rebooted, which is frequent since I'm under development, so don't expect me to stay for long! While I'm streaming, you can always come back and use !join if I disappear from your chat. ;)`)
+            if (user in globalUsers) {
+                if (globalUsers[user].active) {
+                    globalUsers[user].active = false
+                    globalUsers[user].timesParted++
+                    return talk(CHANNEL_1, `${players[user].displayName}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
+                } else {
+                    return talk(channel, `${sendingPlayer.displayName}, I am not currently active in your Twitch channel! :O`)
+                }
+            } else {
+                return talk(channel, `${sendingPlayer.displayName}, I wasn't already in your Twitch channel! :O`)
+            }
+        }
+
+        // SANS FACE
+        if (command === `!sans`) {
+            // Log message
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            return getSansFace()
+        }
     }
 
     // MEMORY

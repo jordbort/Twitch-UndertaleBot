@@ -553,7 +553,7 @@ function makeLogs() {
         }
         data += `\t},\n`
     }
-    data += `}`
+    data += `}\n`
 
     fs.writeFile(`logs.txt`, data, (err) => {
         if (err) { console.log(`Error writing logs:`, err) }

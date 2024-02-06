@@ -4,7 +4,7 @@ const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserM
 
 const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
-const { joinedChannels, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, joinedChannels, itemPrices } = require(`./data`)
+const { joinedChannels, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
 
 const { handleFight } = require(`./fight`)
 

@@ -572,7 +572,7 @@ function printLogo() {
     const bs = `\x1b[40m \x1b[0m`
 
     // Colored text
-    console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
+    console.log(`${boldTxt + orangeTxt}Bravery.${resetTxt} ${boldTxt + yellowTxt}Justice.${resetTxt} ${boldTxt + blueTxt}Integrity.${resetTxt} ${boldTxt + greenTxt}Kindness.${resetTxt} ${boldTxt + magentaTxt}Perseverance.${resetTxt} ${boldTxt + cyanTxt}Patience.${resetTxt}`)
 
     if (settings.landscapeView) {
         // UNDERTALE logo (full-size)
@@ -599,13 +599,13 @@ function printLogo() {
     }
 
     // List of basic commands
-    console.log(`${redBg} !fight ${resetTxt}`, `${redTxt}- Choose another chat member to attack${resetTxt}`)
-    console.log(`${orangeBg} !act ${resetTxt}`, `${orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
-    console.log(`${yellowBg} !item ${resetTxt}`, `${yellowTxt} - Check for (or use) items in your inventory${resetTxt}`)
-    console.log(`${blueBg} !mercy ${resetTxt}`, `${blueTxt}- Choose another chat member to spare${resetTxt}`)
-    console.log(`${greenBg} !buy ${resetTxt}`, `${greenTxt}  - Spend gold on items, or check what is possible to buy${resetTxt}`)
-    console.log(`${magentaBg} !save ${resetTxt}`, `${magentaTxt} - Use determination to save your current state${resetTxt}`)
-    console.log(`${cyanBg} !load ${resetTxt}`, `${cyanTxt} - Reload your previous save file${resetTxt}`)
+    console.log(`${redBg} !fight ${resetTxt}`, `${boldTxt + redTxt}- Choose another chat member to attack${resetTxt}`)
+    console.log(`${orangeBg} !act ${resetTxt}`, `${boldTxt + orangeTxt}  - Do an action by yourself or with another chat member${resetTxt}`)
+    console.log(`${yellowBg} !item ${resetTxt}`, `${boldTxt + yellowTxt} - Check for (or use) items in your inventory${resetTxt}`)
+    console.log(`${blueBg} !mercy ${resetTxt}`, `${boldTxt + blueTxt}- Choose another chat member to spare${resetTxt}`)
+    console.log(`${greenBg} !buy ${resetTxt}`, `${boldTxt + greenTxt}  - Spend gold on items, or check what is possible to buy${resetTxt}`)
+    console.log(`${magentaBg} !save ${resetTxt}`, `${boldTxt + magentaTxt} - Use determination to save your current state${resetTxt}`)
+    console.log(`${cyanBg} !load ${resetTxt}`, `${boldTxt + cyanTxt} - Reload your previous save file${resetTxt}`)
 }
 
 async function announceCrash() {

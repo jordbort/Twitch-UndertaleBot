@@ -193,7 +193,7 @@ function onMessageHandler(channel, tags, message, self) {
 
             if (user in globalUsers) {
                 if (globalUsers[user].active) {
-                    return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Try using a command like !stats in your chat if you're not sure! :O`)
+                    return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Use !part if you would like me to leave!`)
                 } else {
                     globalUsers[user].active = true
                     globalUsers[user].timesJoined++
@@ -216,10 +216,10 @@ function onMessageHandler(channel, tags, message, self) {
                     globalUsers[user].timesParted++
                     return talk(BOT_CHANNEL, `${players[user].displayName}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
                 } else {
-                    return talk(channel, `${sendingPlayer.displayName}, I am not currently active in your Twitch channel! :O`)
+                    return talk(channel, `${sendingPlayer.displayName}, I am not currently active in your Twitch channel! Use !join if you would like me to come back!`)
                 }
             } else {
-                return talk(channel, `${sendingPlayer.displayName}, I wasn't already in your Twitch channel! :O`)
+                return talk(channel, `${sendingPlayer.displayName}, I am not active in your Twitch channel! Use !join if you would like to add me to it!`)
             }
         }
 
@@ -518,7 +518,7 @@ function onMessageHandler(channel, tags, message, self) {
     if (command === `!help`) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const response = `${sendingPlayer.displayName}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check your stats with !stats, !hp, and !gold. You can view all known players by using !memory. While this bot is online, you can use !join in its channel to make it monitor your channel's chat too!`
+        const response = `${sendingPlayer.displayName}: This bot simulates playing Undertale! You can interact with others (try !commands to learn more), and check the stats of yourself or other users with !stats, !hp, !exp, !gold, etc. You can also view all known players by using !memory.`
         return talk(channel, response)
     }
 

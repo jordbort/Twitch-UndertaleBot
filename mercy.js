@@ -37,12 +37,12 @@ function handleMercy(channel, user, toUser) {
             ? Math.floor(Math.random() * 4)
             : Math.floor(Math.random() * 10)
 
-    const randGoldAmt = Math.floor(Math.random() * 101)
+    const randGold = (Math.floor(Math.random() * 21) + 20) * 5
     let response = `* `
 
     if (randNum === 0) {
-        response += `YOU WON! ${capsTarget} was spared. ${capsSender} earned 0 EXP and ${randGoldAmt} gold.`
-        sendingPlayer.gold += randGoldAmt
+        response += `YOU WON! ${capsTarget} was spared. ${capsSender} earned 0 EXP and ${randGold} gold.`
+        sendingPlayer.gold += randGold
         sendingPlayer.hp = getUserMaxHP(user)
         targetPlayer.hp = getUserMaxHP(toUser)
     } else {

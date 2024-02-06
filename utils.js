@@ -1,6 +1,6 @@
 const fs = require(`fs`)
 
-const { joinedChannels, players, playerSave, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
+const { joinedChannels, players, playerSave, highestLevels, baseHP, baseAT, baseDF, weaponsATK, armorDEF } = require(`./data`)
 
 const {
     BOT_USERNAME,
@@ -608,6 +608,51 @@ function printLogo() {
     console.log(`${cyanBg} !load ${resetTxt}`, `${boldTxt + cyanTxt} - Reload your previous save file${resetTxt}`)
 }
 
+function showPlayers(channel) {
+    const columnGroups = settings.landscapeView ? 4 : 2
+    let columnWidth = Math.max(...Object.keys(players).map((name) => name.length))
+    if (columnWidth > 23) { columnWidth = 23 }
+
+    const table = []
+    table.push(Array(columnGroups).fill(`username${Array(columnWidth - 8).fill(` `).join(``)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))
+    table.push(Array(columnGroups).fill(`--------${Array(columnWidth - 8).fill(` `).join(``)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`))
+
+    const allPlayers = []
+    function makeFullRow(columnWidth, i, j) {
+        const row = []
+        const username = Object.keys(players)[i + j]
+        if (username) {
+            const player = players[username]
+            const logColor = player.dead ? redBg : greenBg
+            if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
+                allPlayers.push(player.displayName)
+                const spaces = player.displayName.length > 23 ? (columnWidth - player.displayName.length) + 2 : columnWidth - player.displayName.length
+                row.push(`${logColor}${player.displayName.length > 23 ? player.displayName.substring(0, 23) : player.displayName + Array(spaces).fill(` `).join(``)}${resetTxt}`)
+            } else {
+                allPlayers.push(username)
+                const spaces = username.length > 23 ? (columnWidth - username.length) + 2 : columnWidth - username.length
+                row.push(`${logColor}${username.length > 23 ? username.substring(0, 23) : username + Array(spaces).fill(` `).join(``)}${resetTxt}`)
+            }
+            let attackBoost = 0
+            if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
+            if (player.armor === `Temmie Armor`) { attackBoost = 10 }
+            row.push(player.lv, `${player.hp}/${getUserMaxHP(username)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`)
+        }
+        return row.join(`\t`)
+    }
+
+    for (const [i] of Object.keys(players).entries()) {
+        if (i % columnGroups === 0) {
+            const fullRow = []
+            for (let j = 0; j < columnGroups; j++) { fullRow.push(makeFullRow(columnWidth, i, j)) }
+            table.push(fullRow.join(`\t`))
+        }
+    }
+
+    table.forEach((row) => console.log(row))
+    talk(channel, `Players: ${allPlayers.join(`, `)}`)
+}
+
 async function announceCrash() {
     if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
     return Object.keys(joinedChannels).forEach((user) => {
@@ -630,5 +675,6 @@ module.exports = {
     calculateTemmieArmorPrice,
     makeLogs,
     printLogo,
+    showPlayers,
     announceCrash
 }

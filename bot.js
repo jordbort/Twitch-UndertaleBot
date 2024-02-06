@@ -1,6 +1,6 @@
 require(`dotenv`).config()
 
-const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, announceCrash } = require(`./utils`)
+const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, showPlayers, announceCrash } = require(`./utils`)
 
 const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
@@ -258,50 +258,7 @@ function onMessageHandler(channel, tags, message, self) {
     ].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const allPlayers = []
-        const table = []
-        const longestName = Math.max(...Object.keys(players).map((name) => name.length))
-        for (const [i, key] of Object.keys(players).entries()) {
-            const player = players[key]
-            const row = []
-            if (i % 2 === 0) {
-                const logColor = player.dead ? redBg : greenBg
-                if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
-                    allPlayers.push(player.displayName)
-                    const spaces = longestName - player.displayName.length
-                    row.push(logColor + player.displayName + Array(spaces).fill(` `).join(``) + resetTxt)
-                } else {
-                    allPlayers.push(key)
-                    const spaces = longestName - key.length
-                    row.push(logColor + key + Array(spaces).fill(` `).join(``) + resetTxt)
-                }
-                let attackBoost = 0
-                if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
-                if (player.armor === `Temmie Armor`) { attackBoost = 10 }
-                row.push(player.lv, `${player.hp}/${getUserMaxHP(key)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`)
-                const nextPlayer = Object.keys(players)[i + 1]
-                if (nextPlayer) {
-                    const logColor = players[nextPlayer].dead ? redBg : greenBg
-                    if (players[nextPlayer].displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
-                        allPlayers.push(players[nextPlayer].displayName)
-                        const spaces = longestName - players[nextPlayer].displayName.length
-                        row.push(logColor + players[nextPlayer].displayName + Array(spaces).fill(` `).join(``) + resetTxt)
-                    } else {
-                        allPlayers.push(nextPlayer)
-                        const spaces = longestName - nextPlayer.length
-                        row.push(logColor + nextPlayer + Array(spaces).fill(` `).join(``) + resetTxt)
-                    }
-                    let attackBoost = 0
-                    if (players[nextPlayer].armor === `Cowboy Hat`) { attackBoost = 5 }
-                    if (players[nextPlayer].armor === `Temmie Armor`) { attackBoost = 10 }
-                    row.push(players[nextPlayer].lv, `${players[nextPlayer].hp}/${getUserMaxHP(nextPlayer)}`, `${players[nextPlayer].at}(${weaponsATK[players[nextPlayer].weapon] + attackBoost})`, `${players[nextPlayer].df}(${armorDEF[players[nextPlayer].armor] + attackBoost})`)
-                }
-                table.push(row)
-            }
-        }
-        console.log(`username${Array(longestName - 8).fill(` `).join(``)}\t` + `lv\t` + `hp\t` + `at\t` + `df\t` + `username${Array(longestName - 8).fill(` `).join(``)}\t` + `lv\t` + `hp\t` + `at\t` + `df\n` + `--------${Array(longestName - 8).fill(` `).join(``)}\t` + `--\t` + `--\t` + `--\t` + `--\t` + `--------${Array(longestName - 8).fill(` `).join(``)}\t` + `--\t` + `--\t` + `--\t` + `--`)
-        table.forEach((row) => console.log(row.join(`\t`)))
-        return talk(channel, `Players: ${allPlayers.join(`, `)}`)
+        return showPlayers(channel)
     }
 
     // SAVE

@@ -608,6 +608,25 @@ function printLogo() {
     console.log(`${cyanBg} !load ${resetTxt}`, `${boldTxt + cyanTxt} - Reload your previous save file${resetTxt}`)
 }
 
+function showStats(channel, user) {
+    const player = players[user]
+    const columnWidth = player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName.length : user.length
+    const logColor = player.dead ? redBg : greenBg
+
+    const table = []
+    table.push([`username${Array(columnWidth > 8 ? columnWidth - 8 : 0).fill(` `).join(``)}`, `lv`, `hp`, `at`, `df`, `exp`, `next`, `gold`].join(`\t`))
+    table.push([`--------${Array(columnWidth > 8 ? columnWidth - 8 : 0).fill(` `).join(``)}`, `--`, `--`, `--`, `--`, `---`, `----`, `----`].join(`\t`))
+
+    let attackBoost = 0
+    if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
+    if (player.armor === `Temmie Armor`) { attackBoost = 10 }
+    table.push([`${logColor}${user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? `${player.displayName}` : `${user}`}${columnWidth < 8 ? Array(8 - columnWidth).fill(` `).join(``) : ``}${resetTxt}`, player.lv, `${player.hp}/${getUserMaxHP(user)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`, player.exp, player.next, player.gold].join(`\t`))
+
+    table.forEach((row) => console.log(row))
+    console.log(`Inventory:`, player.inventory)
+    talk(channel, `"${user === `dummy` ? `DUMMY` : player.displayName}" LV: ${player.lv}, HP: ${player.hp}/${getUserMaxHP(user)}, AT: ${player.at}(${weaponsATK[player.weapon] + attackBoost}), DF: ${player.df}(${armorDEF[player.armor]}), EXP: ${player.exp}, NEXT: ${player.next}, WEAPON: ${player.weapon}, ARMOR: ${player.armor}, GOLD: ${player.gold}`)
+}
+
 function showPlayers(channel) {
     let columnGroups = settings.landscapeView ? 4 : 2
     if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
@@ -677,6 +696,7 @@ module.exports = {
     calculateTemmieArmorPrice,
     makeLogs,
     printLogo,
+    showStats,
     showPlayers,
     announceCrash
 }

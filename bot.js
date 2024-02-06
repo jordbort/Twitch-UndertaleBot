@@ -1,6 +1,6 @@
 require(`dotenv`).config()
 
-const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, showPlayers, announceCrash } = require(`./utils`)
+const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
 
 const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
@@ -311,23 +311,9 @@ function onMessageHandler(channel, tags, message, self) {
         let response
         let attackBoost = 0
         let userInventory = null
-        if (toUser in players) {
-            const target = players[toUser]
-            userInventory = target.inventory
-            if (target.armor === `Cowboy Hat`) { attackBoost = 5 }
-            if (target.armor === `Temmie Armor`) { attackBoost = 10 }
-            response = `"${toUser === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser)}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBoost}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`
-        }
-        else if (toUser) { response = `${toUser} isn't a known player!` }
-        else {
-            userInventory = sendingPlayer.inventory
-            if (sendingPlayer.armor === `Cowboy Hat`) { attackBoost = 5 }
-            if (sendingPlayer.armor === `Temmie Armor`) { attackBoost = 10 }
-            response = `"${sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBoost}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`
-        }
-        talk(channel, response)
-        if (userInventory) { console.log(`Inventory:`, userInventory) }
-        return
+        if (toUser in players) { return showStats(channel, toUser) }
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else { return showStats(channel, user) }
     }
 
     // SPAMTON QUOTE

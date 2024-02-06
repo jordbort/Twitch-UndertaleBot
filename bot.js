@@ -103,21 +103,20 @@ function onMessageHandler(channel, tags, message, self) {
             settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
         }
 
-        // CHANGE LOGO SIZE
-        if (command === `!smalllogo`) {
+        // CHANGE ORIENTATION
+        if (command === `!portrait`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            settings.fullSizeLogo = false
+            settings.landscapeView = false
             printLogo()
-            return talk(channel, `The small logo will be used`)
+            return talk(channel, `Display is in portrait orientation mode`)
         }
-
-        if (command === `!biglogo`) {
+        if (command === `!landscape`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            settings.fullSizeLogo = true
+            settings.landscapeView = true
             printLogo()
-            return talk(channel, `The full-size logo will be used`)
+            return talk(channel, `Display is in landscape orientation mode`)
         }
 
         // RECRUIT

@@ -36,8 +36,8 @@ const settings = {
     // Upon first connection to Twitch IRC
     firstConnection: true,
 
-    // Use full-size logo for landscape-oriented screens, mini logo for portrait-oriented screens
-    fullSizeLogo: true,
+    // Change to false for portrait-oriented screens
+    landscapeView: true,
 
     // Helper functions log their params when invoked
     debug: false

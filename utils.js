@@ -574,7 +574,7 @@ function printLogo() {
     // Colored text
     console.log(`${orangeTxt}Bravery.${resetTxt}`, `${yellowTxt}Justice.${resetTxt}`, `${blueTxt}Integrity.${resetTxt}`, `${greenTxt}Kindness.${resetTxt}`, `${magentaTxt}Perseverance.${resetTxt}`, `${cyanTxt}Patience.${resetTxt}`)
 
-    if (settings.fullSizeLogo) {
+    if (settings.landscapeView) {
         // UNDERTALE logo (full-size)
         //          U (10 blocks wide)                                                           N (10 blocks wide)                                                           D (9 blocks wide)                                                     E (8 blocks wide)                                              R (10 blocks wide)                                                           T (10 blocks wide)                                                           A (9 blocks wide)                                                     L (8 blocks wide)                                              E (8 blocks wide)
         console.log(gySq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + bkSq + bkSq + whSq + whSq + whSq + whSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + gySq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + gySq + whSq + whSq + whSq + bkSq + bkSq + bkSq + bkSq + bkSq + gySq + whSq + whSq + whSq + whSq + whSq + whSq + whSq) // [ 1 ]

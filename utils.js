@@ -609,7 +609,9 @@ function printLogo() {
 }
 
 function showPlayers(channel) {
-    const columnGroups = settings.landscapeView ? 4 : 2
+    let columnGroups = settings.landscapeView ? 4 : 2
+    if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
+
     let columnWidth = Math.max(...Object.keys(players).map((name) => name.length))
     if (columnWidth > 23) { columnWidth = 23 }
 
@@ -631,7 +633,7 @@ function showPlayers(channel) {
             } else {
                 allPlayers.push(username)
                 const spaces = username.length > 23 ? (columnWidth - username.length) + 2 : columnWidth - username.length
-                row.push(`${logColor}${username.length > 23 ? username.substring(0, 23) : username + Array(spaces).fill(` `).join(``)}${resetTxt}`)
+                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > 23 ? username.substring(0, 23) : username}${Array(spaces).fill(` `).join(``)}${resetTxt}`)
             }
             let attackBoost = 0
             if (player.armor === `Cowboy Hat`) { attackBoost = 5 }

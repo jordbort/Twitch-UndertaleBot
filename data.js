@@ -1,5 +1,5 @@
 // All users' active status, number of times joined/parted, and channel clients:
-const globalUsers = {}
+const joinedChannels = {}
 
 // Initializing players
 const players = {
@@ -173,7 +173,7 @@ const itemPrices = {
 }
 
 module.exports = {
-    globalUsers,
+    joinedChannels,
     players,
     playerSave,
     highestLevels,

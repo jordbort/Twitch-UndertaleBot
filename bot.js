@@ -4,7 +4,7 @@ const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserM
 
 const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
-const { globalUsers, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
+const { joinedChannels, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, joinedChannels, itemPrices } = require(`./data`)
 
 const { handleFight } = require(`./fight`)
 
@@ -24,7 +24,7 @@ process.on('uncaughtException', async (err) => {
 
 // Called every time a message comes in
 function onMessageHandler(channel, tags, message, self) {
-    if (!globalUsers[channel.substring(1)].active) { return }
+    if (!joinedChannels[channel.substring(1)].active) { return }
 
     // Message context
     const user = tags.username
@@ -123,16 +123,37 @@ function onMessageHandler(channel, tags, message, self) {
         if (command === `!recruit`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            // List all users in globalUsers
-            if (!toUser) { return talk(channel, `All users: ${Object.keys(globalUsers).join(`, `)}`) }
+            // List all users in joinedChannels
+            if (!toUser) { return talk(channel, `All users: ${Object.keys(joinedChannels).join(`, `)}`) }
 
-            // Confirm not in globalUsers
-            if (toUser in globalUsers) { return talk(channel, `Already present in ${toUser}'s channel!`) }
+            // Confirm not in joinedChannels
+            if (toUser in joinedChannels) { return talk(channel, `Already present in ${toUser}'s channel!`) }
 
             // Confirm valid Twitch username format
             if (!toUser.match(/[a-zA-Z0-9]{4,25}/)) { return talk(channel, `Invalid Twitch username format!`) }
 
-            return createClient(toUser, onMessageHandler)
+            createClient(toUser, onMessageHandler)
+            return talk(BOT_CHANNEL, `${toUser} has been recruited!`)
+        }
+
+        // UNRECRUIT
+        if (command === `!unrecruit` && toUser) {
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            // Confirm valid Twitch username format
+            if (!toUser.match(/[a-zA-Z0-9]{4,25}/)) { return talk(channel, `Invalid Twitch username format!`) }
+
+            if (toUser in joinedChannels) {
+                if (joinedChannels[toUser].active) {
+                    joinedChannels[toUser].active = false
+                    joinedChannels[toUser].timesParted++
+                    return talk(BOT_CHANNEL, `Deactivated in ${toUser}'s channel`)
+                } else {
+                    return talk(channel, `Already deactivated in ${toUser}'s channel`)
+                }
+            } else {
+                return talk(channel, `Have not joined ${toUser}'s channel`)
+            }
         }
 
         // Bring the Dummy back to life
@@ -190,12 +211,12 @@ function onMessageHandler(channel, tags, message, self) {
         if (command === `!join`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            if (user in globalUsers) {
-                if (globalUsers[user].active) {
+            if (user in joinedChannels) {
+                if (joinedChannels[user].active) {
                     return talk(channel, `${sendingPlayer.displayName}, I should already be active in your channel! Use !part if you would like me to leave!`)
                 } else {
-                    globalUsers[user].active = true
-                    globalUsers[user].timesJoined++
+                    joinedChannels[user].active = true
+                    joinedChannels[user].timesJoined++
                     talk(channel, `${sendingPlayer.displayName}, I have returned to your channel! Use !part in this channel if you would like me to leave!`)
                     return talk(`#${user}`, `* UndertaleBot blocks the way!`)
                 }
@@ -209,10 +230,10 @@ function onMessageHandler(channel, tags, message, self) {
         if (command === `!part`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            if (user in globalUsers) {
-                if (globalUsers[user].active) {
-                    globalUsers[user].active = false
-                    globalUsers[user].timesParted++
+            if (user in joinedChannels) {
+                if (joinedChannels[user].active) {
+                    joinedChannels[user].active = false
+                    joinedChannels[user].timesParted++
                     return talk(BOT_CHANNEL, `${players[user].displayName}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
                 } else {
                     return talk(channel, `${sendingPlayer.displayName}, I am not currently active in your Twitch channel! Use !join if you would like me to come back!`)

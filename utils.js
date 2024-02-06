@@ -1,6 +1,6 @@
 const fs = require(`fs`)
 
-const { globalUsers, players, playerSave, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
+const { joinedChannels, players, playerSave, highestLevels, baseHP, baseAT, baseDF } = require(`./data`)
 
 const {
     BOT_USERNAME,
@@ -30,7 +30,7 @@ const tmi = require('tmi.js')
 function talk(chatroom, resp) {
     // if (settings.debug) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
     if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
-    const channel = globalUsers[chatroom.substring(1)]
+    const channel = joinedChannels[chatroom.substring(1)]
     if (channel.active) {
         channel.client.say(chatroom, resp)
         console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
@@ -48,13 +48,13 @@ function createClient(user, onMessageHandler) {
         channels: [`#${user}`]
     })
 
-    globalUsers[user] = {
+    joinedChannels[user] = {
         active: true,
         timesJoined: 1,
         timesParted: 0,
         client: newClient
     }
-    const client = globalUsers[user].client
+    const client = joinedChannels[user].client
 
     client.on(`message`, onMessageHandler)
     if (user === BOT_USERNAME) {
@@ -499,11 +499,11 @@ function makeLogs() {
     data += `| UNDERTALE BOT |\n`
     data += `+---------------+\n\n`
 
-    data += `globalUsers: {\n`
-    for (user of Object.keys(globalUsers)) {
+    data += `joinedChannels: {\n`
+    for (user of Object.keys(joinedChannels)) {
         data += `\t${user}: {\n`
-        for (key of Object.keys(globalUsers[user])) {
-            if (typeof globalUsers[user][key] !== `object`) { data += `\t\t${key}: ${globalUsers[user][key]},\n` }
+        for (key of Object.keys(joinedChannels[user])) {
+            if (typeof joinedChannels[user][key] !== `object`) { data += `\t\t${key}: ${joinedChannels[user][key]},\n` }
         }
         data += `\t},\n`
     }
@@ -610,8 +610,8 @@ function printLogo() {
 
 async function announceCrash() {
     if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
-    return Object.keys(globalUsers).forEach((user) => {
-        globalUsers[user].active && talk(`#${user}`, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
+    return Object.keys(joinedChannels).forEach((user) => {
+        joinedChannels[user].active && talk(`#${user}`, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
     })
 }
 

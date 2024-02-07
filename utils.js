@@ -71,7 +71,7 @@ function createClient(user, onMessageHandler) {
         })
     } else {
         client.on(`connected`, () => {
-            console.log(`* Joined ${user}'s channel.`)
+            console.log(`* Connected to ${user}'s channel.`)
             setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 1000)
         })
     }
@@ -378,6 +378,15 @@ function getUserMaxHP(user) {
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
     return maxHP
+}
+function getChannels(bool) {
+    const arr = []
+    for (const channel in joinedChannels) {
+        if (joinedChannels[channel].active === bool) {
+            arr.push(channel)
+        }
+    }
+    return arr.join(`, `)
 }
 
 function calculateUserATK(user) {
@@ -695,6 +704,7 @@ module.exports = {
     getIntroText,
     stainedApronHeal,
     getUserMaxHP,
+    getChannels,
     calculateUserATK,
     calculateUserDEF,
     calculateUserNextLV,

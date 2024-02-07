@@ -1,6 +1,6 @@
 require(`dotenv`).config()
 
-const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, printLogo, calculateTemmieArmorPrice, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
+const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, getChannels, printLogo, calculateTemmieArmorPrice, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
 
 const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
 
@@ -123,22 +123,33 @@ function onMessageHandler(channel, tags, message, self) {
         if (command === `!recruit`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            // List all users in joinedChannels
-            if (!toUser) { return talk(channel, `All users: ${Object.keys(joinedChannels).join(`, `)}`) }
-
-            // Confirm not in joinedChannels
-            if (toUser in joinedChannels) { return talk(channel, `Already present in ${toUser}'s channel!`) }
+            // List all active users in joinedChannels
+            if (!toUser) { return talk(channel, `All active users: ${getChannels(true)}`) }
 
             // Confirm valid Twitch username format
             if (!toUser.match(/[a-zA-Z0-9]{4,25}/)) { return talk(channel, `Invalid Twitch username format!`) }
+
+            // Confirm not in joinedChannels
+            if (toUser in joinedChannels) {
+                if (joinedChannels[toUser].active) {
+                    return talk(channel, `Already activated in ${toUser}'s channel.`)
+                } else {
+                    joinedChannels[toUser].active = true
+                    joinedChannels[toUser].timesJoined++
+                    return talk(channel, `Reactivated in ${toUser}'s channel.`)
+                }
+            }
 
             createClient(toUser, onMessageHandler)
             return talk(BOT_CHANNEL, `${toUser} has been recruited!`)
         }
 
         // UNRECRUIT
-        if (command === `!unrecruit` && toUser) {
+        if (command === `!unrecruit`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            // List all inactive users in joinedChannels
+            if (!toUser) { return talk(channel, `All inactive users: ${getChannels(false)}`) }
 
             // Confirm valid Twitch username format
             if (!toUser.match(/[a-zA-Z0-9]{4,25}/)) { return talk(channel, `Invalid Twitch username format!`) }
@@ -147,12 +158,12 @@ function onMessageHandler(channel, tags, message, self) {
                 if (joinedChannels[toUser].active) {
                     joinedChannels[toUser].active = false
                     joinedChannels[toUser].timesParted++
-                    return talk(BOT_CHANNEL, `Deactivated in ${toUser}'s channel`)
+                    return talk(BOT_CHANNEL, `Deactivated in ${toUser}'s channel.`)
                 } else {
-                    return talk(channel, `Already deactivated in ${toUser}'s channel`)
+                    return talk(channel, `Already deactivated in ${toUser}'s channel.`)
                 }
             } else {
-                return talk(channel, `Have not joined ${toUser}'s channel`)
+                return talk(channel, `Have not joined ${toUser}'s channel.`)
             }
         }
 

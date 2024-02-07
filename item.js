@@ -921,7 +921,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Stick. Its bark is worse than its bite.`
         ]
         const randIdx = Math.floor(Math.random() * stickText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Stick, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Stick ${resetTxt}`)
         showStats(user)
         return stickText[randIdx]
     }
@@ -934,7 +934,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Toy Knife. Made of plastic. A rarity nowadays. +3 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * toyKnifeText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Toy Knife, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Toy Knife ${resetTxt}`)
         showStats(user)
         return toyKnifeText[randIdx]
     }
@@ -947,7 +947,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Tough Glove. A worn pink leather glove. For five-fingered folk. +5 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * toughGloveText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Tough Glove, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Tough Glove ${resetTxt}`)
         showStats(user)
         return toughGloveText[randIdx]
     }
@@ -960,7 +960,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous. +7 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * balletShoesText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Ballet Shoes, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Ballet Shoes ${resetTxt}`)
         showStats(user)
         return balletShoesText[randIdx]
     }
@@ -968,7 +968,7 @@ function useItem(user, str, idx) {
         player.inventory.splice(idx, 1)
         player.inventory.push(player.weapon)
         player.weapon = `Torn Notebook`
-        console.log(`${cyanBg} ${player.displayName} equipped the Torn Notebook, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Torn Notebook ${resetTxt}`)
         showStats(user)
         return `* ${capsName} equipped the Torn Notebook. +2 ATTACK`
     }
@@ -981,7 +981,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP. +10 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * burntPanText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Burnt Pan, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Burnt Pan ${resetTxt}`)
         showStats(user)
         return burntPanText[randIdx]
     }
@@ -994,7 +994,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low. +12 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * emptyGunText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Empty Gun, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Empty Gun ${resetTxt}`)
         showStats(user)
         return emptyGunText[randIdx]
     }
@@ -1007,7 +1007,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Worn Dagger. Perfect for cutting plants and vines. +15 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * wornDaggerText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Worn Dagger, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Worn Dagger ${resetTxt}`)
         showStats(user)
         return wornDaggerText[randIdx]
     }
@@ -1015,7 +1015,7 @@ function useItem(user, str, idx) {
         player.inventory.splice(idx, 1)
         player.inventory.push(player.weapon)
         player.weapon = `Real Knife`
-        console.log(`${cyanBg} ${player.displayName} equipped the Real Knife, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Real Knife ${resetTxt}`)
         showStats(user)
         return `* ${capsName} equipped the Real Knife. About time. +99 ATTACK`
     }
@@ -1030,7 +1030,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Faded Ribbon. If you're cuter, they won't hit you as hard. +5 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * fadedRibbonText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Faded Ribbon, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Faded Ribbon ${resetTxt}`)
         showStats(user)
         return fadedRibbonText[randIdx]
     }
@@ -1043,7 +1043,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it. +7 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * manlyBandannaText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Manly Bandanna, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Manly Bandanna ${resetTxt}`)
         showStats(user)
         return manlyBandannaText[randIdx]
     }
@@ -1056,7 +1056,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Old Tutu. Finally, a protective piece of armor. +10 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * oldTutuText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Old Tutu, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Old Tutu ${resetTxt}`)
         showStats(user)
         return oldTutuText[randIdx]
     }
@@ -1069,7 +1069,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Cloudy Glasses. Glasses marred with wear. +5 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * cloudyGlassesText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Cloudy Glasses, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Cloudy Glasses ${resetTxt}`)
         showStats(user)
         return cloudyGlassesText[randIdx]
     }
@@ -1082,7 +1082,7 @@ function useItem(user, str, idx) {
             `* ${capsName} donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`
         ]
         const randIdx = Math.floor(Math.random() * temmieArmorText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Temmie Armor, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Temmie Armor ${resetTxt}`)
         showStats(user)
         return temmieArmorText[randIdx]
     }
@@ -1095,7 +1095,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Stained Apron. Heals 1 HP every other turn.`
         ]
         const randIdx = Math.floor(Math.random() * stainedApronText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Stained Apron, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Stained Apron ${resetTxt}`)
         showStats(user)
         return stainedApronText[randIdx]
     }
@@ -1108,7 +1108,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. +5 ATTACK +12 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * cowboyHatText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Cowboy Hat, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Cowboy Hat ${resetTxt}`)
         showStats(user)
         return cowboyHatText[randIdx]
     }
@@ -1121,7 +1121,7 @@ function useItem(user, str, idx) {
             `* ${capsName} equipped the Heart Locket. It says "Best Friends Forever." +15 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * heartLocketText.length)
-        console.log(`${cyanBg} ${player.displayName} equipped the Heart Locket, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Heart Locket ${resetTxt}`)
         showStats(user)
         return heartLocketText[randIdx]
     }
@@ -1129,7 +1129,7 @@ function useItem(user, str, idx) {
         player.inventory.splice(idx, 1)
         player.inventory.push(player.armor)
         player.armor = `The Locket`
-        console.log(`${cyanBg} ${player.displayName} equipped the Locket, HP: ${player.hp}/${maxHP} ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} equipped the Locket ${resetTxt}`)
         showStats(user)
         return `* ${capsName} equipped the Locket. Right where it belongs. +99 DEFENSE`
     }

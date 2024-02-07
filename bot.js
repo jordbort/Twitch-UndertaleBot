@@ -322,9 +322,17 @@ function onMessageHandler(channel, tags, message, self) {
         let response
         let attackBoost = 0
         let userInventory = null
-        if (toUser in players) { return showStats(channel, toUser) }
+        if (toUser in players) {
+            showStats(toUser)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(user)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBoost}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
+        }
+
         else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
-        else { return showStats(channel, user) }
+        else {
+            showStats(user)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBoost}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`)
+        }
+
     }
 
     // SPAMTON QUOTE

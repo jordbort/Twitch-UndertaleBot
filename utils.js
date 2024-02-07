@@ -61,9 +61,8 @@ function calculateUserNextLV(user) {
 function calculateUserLV(user) {
     if (settings.debug) { console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${players[user].lv}, Highest level: ${highestLevels[user]}${resetTxt}`) }
     const player = players[user]
-    const collectedItems = []
-    let foundItemsAppend = ``
 
+    const collectedItems = []
     while (player.next <= 0) {
         player.lv += 1
         if (player.lv === 2 && highestLevels[user] < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
@@ -89,12 +88,13 @@ function calculateUserLV(user) {
         player.hp += 4
         console.log(`${cyanBg} ${player.displayName} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
     }
-
+    
+    let foundItemsAppend = ``
     if (collectedItems.length) {
         for (const item of collectedItems) { player.inventory.push(item) }
         foundItemsAppend = ` ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} found: ` + collectedItems.join(`, `)
     }
-    console.log(`Inventory:`, player.inventory)
+    showStats(user)
     return foundItemsAppend
 }
 
@@ -632,7 +632,7 @@ function showPlayers(channel) {
     talk(channel, `Players: ${allPlayers.join(`, `)}`)
 }
 
-function showStats(channel, user) {
+function showStats(user) {
     const player = players[user]
     const columnWidth = player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName.length : user.length
     const logColor = player.dead ? redBg : greenBg
@@ -649,7 +649,6 @@ function showStats(channel, user) {
 
     table.forEach((row) => console.log(row))
     console.log(`Inventory:`, player.inventory)
-    talk(channel, `"${user === `dummy` ? `DUMMY` : player.displayName}" LV: ${player.lv}, HP: ${player.hp}/${getUserMaxHP(user)}, AT: ${player.at}(${weaponsATK[player.weapon] + attackBoost}), DF: ${player.df}(${armorDEF[player.armor]}), EXP: ${player.exp}, NEXT: ${player.next}, WEAPON: ${player.weapon}, ARMOR: ${player.armor}, GOLD: ${player.gold}`)
 }
 
 function stainedApronHeal(user) {

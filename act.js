@@ -1,4 +1,4 @@
-const { talk, stainedApronHeal, getUserMaxHP } = require(`./utils`)
+const { getUserMaxHP, showStats, stainedApronHeal, talk } = require(`./utils`)
 
 const { resetTxt, boldTxt, cyanBg, settings } = require(`./config`)
 
@@ -110,6 +110,7 @@ function getAction(user, target) {
             sendingPlayer.gold -= randGold
             targetPlayer.gold += randGold
         }
+        showStats(user)
     }
 
     // If user took a bite out of the target and recovered 5 HP
@@ -120,6 +121,7 @@ function getAction(user, target) {
             actions[randAction] = ` took a bite out of ${targetPlayer.displayName}. ${capsSender}'s HP was maxed out.`
         }
         console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 5 ${resetTxt}`)
+        showStats(user)
     }
 
     return actions[randAction]

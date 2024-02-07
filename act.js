@@ -4,153 +4,6 @@ const { resetTxt, boldTxt, cyanBg, settings } = require(`./config`)
 
 const { players } = require(`./data`)
 
-function printAct() {
-    if (settings.debug) { console.log(`${boldTxt}> printAct()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const ywSq = `\x1b[43m  \x1b[0m`
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-}
-
-function handleAct(channel, user, toUser) {
-    if (settings.debug) { console.log(`${boldTxt}> handleAct(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
-    const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
-    printAct()
-    let response = `* ${players[user].displayName.substring(0, 1).toUpperCase() + players[user].displayName.substring(1)}`
-    targetPlayer ? response += getAction(user, toUser) : response += getThirdPersonFlavorText()
-
-    if (players[user].armor === `Stained Apron`) { response += stainedApronHeal(user) }
-
-    talk(channel, response)
-}
-
-function getThirdPersonFlavorText() {
-    if (settings.debug) { console.log(`${boldTxt}> getThirdPersonFlavorText()${resetTxt}`) }
-    const actions = [
-        ` prepares a magical attack.`,
-        ` takes a deep breath.`,
-        ` is acting aloof.`,
-        ` is trying hard to play it cool.`,
-        ` whispers "Nyeh heh heh!"`,
-        ` is preparing a bone attack.`,
-        ` is cackling.`,
-        ` prepares a non-bone attack then spends a minute fixing their mistake.`,
-        ` is rattling their bones.`,
-        ` remembered a bad joke JPEGSTRIPES told and is frowning.`,
-        ` is considering their options.`,
-        ` is thinking about what to wear for their date.`,
-        ` is thinking about what to cook for their date.`,
-        ` dabs some Bone Cologne behind their ear.`,
-        ` dabs marinara sauce behind their ear.`,
-        ` dabs MTT-Brand Bishie Cream behind their ear.`,
-        ` dabs MTT-Brand Anime Powder behind their ear.`,
-        ` dabs MTT-Brand Cute Juice behind their ear.`,
-        ` dabs MTT-Brand Attraction Slime behind their ear.`,
-        ` dabs MTT-Brand Beauty Yogurt behind their ear.`,
-        ` flips their spear impatiently.`,
-        ` points heroically towards the sky.`,
-        ` flashes a menacing smile.`,
-        ` draws their finger across their neck.`,
-        ` bounces impatiently.`,
-        ` suplexes a large boulder, just because they can.`,
-        ` thinks of their friends and pounds the ground with their fists.`,
-        ` holds their fist in front of themself and shakes their head.`,
-        ` towers threateningly.`,
-        ` is hyperventilating.`,
-        ` is smashing spears on the ground.`,
-        `'s eye is twitching involuntarily.`,
-        `'s eyes dart around to see if this is a prank.`,
-        ` stands around absentmindedly.`,
-        ` looks like they're about to fall over.`,
-        ` hops to and fro.`,
-        ` doesn't seem to know why they're here.`,
-        ` avoids eye contact.`,
-        ` is fluttering.`,
-        ` gnashes their teeth.`,
-        ` cackles softly.`,
-        ` gave a mysterious smile.`,
-        ` waits pensively.`,
-        ` burbles quietly.`,
-        ` is ruminating.`,
-        ` is wishing they weren't here.`,
-        ` is staring into the distance.`,
-        ` is pretending to sleep.`,
-        ` cocks their head to one side.`,
-        ` is really not paying attention.`,
-        ` is chanting an anarchist spell.`,
-        ` is eating their own homework.`,
-        ` is on the warpath.`,
-        ` does fancy flips.`,
-        ` sees their reflection and gets jealous.`,
-        ` lets out a yawn.`,
-        ` tells everyone they have to go to the bathroom.`,
-        ` sneezes without covering their nose.`,
-        ` is admiring their own muscles.`,
-        ` is friends with a little bird.`,
-        ` wonders if tears are sanitary.`,
-        ` is rinsing off a pizza.`,
-        ` is looking for some good clean fun.`,
-        ` is very normal.`,
-        ` is having quiet time.`,
-        ` sits motionless.`,
-        ` gyrates reservedly.`,
-        ` mills about in the corner.`,
-        ` needs some distance.`,
-        ` thinks about doing karaoke by themself.`,
-        ` hums very faintly.`,
-        ` pretends to be a pop idol.`,
-        ` is looking nervous.`,
-        ` is doing an armless ska dance.`,
-        ` is hopping mad.`,
-        ` stands around absentmindedly.`,
-        ` forgot their other attack.`,
-        ` vibrates intensely.`,
-        ` makes a smoke hoop and jumps through it.`,
-        ` looks over, then turns up their nose.`,
-        ` is pretending to pull the fire alarm.`,
-        ` is chuckling through their teeth.`,
-        ` is pretending to be a candle.`,
-        ` is protected by their winsome smile.`,
-        ` looks nervous.`,
-        ` looks anxious.`,
-        ` looks perturbed.`,
-        ` taps their fingers together like jackhammers.`,
-        ` uses a hypnotizing 3D-tush-wiggle attack.`,
-        ` is polishing their face.`,
-        ` stands guard.`,
-        ` knows exactly why they're here.`,
-        ` jumps ominously up and down.`,
-        ` spins their weapon around.`,
-        ` shakes their head dismissively.`,
-        ` flutters silently.`,
-        ` clicks their teeth.`,
-        ` has gone bloodshot.`,
-        ` whispers arcane swear words.`,
-        ` does a mysterious jig.`,
-        ` flaunts their orbs in a menacing manner.`,
-        ` watches quietly.`,
-        `'s armor emits a dark sheen.`,
-        ` smashes their morningstar.`,
-        ` breathes deeply.`,
-        ` completely closes their mouth. They look short and weird.`,
-        ` has a hissy fit.`,
-        ` makes a balloon animal out of bees. Shape: Pile of bees.`,
-        ` is juggling balls of ants.`,
-        ` intentionally pratfalls. Twenty times.`
-    ]
-    return actions[Math.floor(Math.random() * actions.length)]
-}
-
 function getAction(user, target) {
     if (settings.debug) { console.log(`${boldTxt}> getAction(user: ${user}, target: ${target})${resetTxt}`) }
     const sendingPlayer = players[user]
@@ -272,4 +125,151 @@ function getAction(user, target) {
     return actions[randAction]
 }
 
-module.exports = { handleAct, getThirdPersonFlavorText }
+function getThirdPersonFlavorText() {
+    if (settings.debug) { console.log(`${boldTxt}> getThirdPersonFlavorText()${resetTxt}`) }
+    const actions = [
+        ` prepares a magical attack.`,
+        ` takes a deep breath.`,
+        ` is acting aloof.`,
+        ` is trying hard to play it cool.`,
+        ` whispers "Nyeh heh heh!"`,
+        ` is preparing a bone attack.`,
+        ` is cackling.`,
+        ` prepares a non-bone attack then spends a minute fixing their mistake.`,
+        ` is rattling their bones.`,
+        ` remembered a bad joke JPEGSTRIPES told and is frowning.`,
+        ` is considering their options.`,
+        ` is thinking about what to wear for their date.`,
+        ` is thinking about what to cook for their date.`,
+        ` dabs some Bone Cologne behind their ear.`,
+        ` dabs marinara sauce behind their ear.`,
+        ` dabs MTT-Brand Bishie Cream behind their ear.`,
+        ` dabs MTT-Brand Anime Powder behind their ear.`,
+        ` dabs MTT-Brand Cute Juice behind their ear.`,
+        ` dabs MTT-Brand Attraction Slime behind their ear.`,
+        ` dabs MTT-Brand Beauty Yogurt behind their ear.`,
+        ` flips their spear impatiently.`,
+        ` points heroically towards the sky.`,
+        ` flashes a menacing smile.`,
+        ` draws their finger across their neck.`,
+        ` bounces impatiently.`,
+        ` suplexes a large boulder, just because they can.`,
+        ` thinks of their friends and pounds the ground with their fists.`,
+        ` holds their fist in front of themself and shakes their head.`,
+        ` towers threateningly.`,
+        ` is hyperventilating.`,
+        ` is smashing spears on the ground.`,
+        `'s eye is twitching involuntarily.`,
+        `'s eyes dart around to see if this is a prank.`,
+        ` stands around absentmindedly.`,
+        ` looks like they're about to fall over.`,
+        ` hops to and fro.`,
+        ` doesn't seem to know why they're here.`,
+        ` avoids eye contact.`,
+        ` is fluttering.`,
+        ` gnashes their teeth.`,
+        ` cackles softly.`,
+        ` gave a mysterious smile.`,
+        ` waits pensively.`,
+        ` burbles quietly.`,
+        ` is ruminating.`,
+        ` is wishing they weren't here.`,
+        ` is staring into the distance.`,
+        ` is pretending to sleep.`,
+        ` cocks their head to one side.`,
+        ` is really not paying attention.`,
+        ` is chanting an anarchist spell.`,
+        ` is eating their own homework.`,
+        ` is on the warpath.`,
+        ` does fancy flips.`,
+        ` sees their reflection and gets jealous.`,
+        ` lets out a yawn.`,
+        ` tells everyone they have to go to the bathroom.`,
+        ` sneezes without covering their nose.`,
+        ` is admiring their own muscles.`,
+        ` is friends with a little bird.`,
+        ` wonders if tears are sanitary.`,
+        ` is rinsing off a pizza.`,
+        ` is looking for some good clean fun.`,
+        ` is very normal.`,
+        ` is having quiet time.`,
+        ` sits motionless.`,
+        ` gyrates reservedly.`,
+        ` mills about in the corner.`,
+        ` needs some distance.`,
+        ` thinks about doing karaoke by themself.`,
+        ` hums very faintly.`,
+        ` pretends to be a pop idol.`,
+        ` is looking nervous.`,
+        ` is doing an armless ska dance.`,
+        ` is hopping mad.`,
+        ` stands around absentmindedly.`,
+        ` forgot their other attack.`,
+        ` vibrates intensely.`,
+        ` makes a smoke hoop and jumps through it.`,
+        ` looks over, then turns up their nose.`,
+        ` is pretending to pull the fire alarm.`,
+        ` is chuckling through their teeth.`,
+        ` is pretending to be a candle.`,
+        ` is protected by their winsome smile.`,
+        ` looks nervous.`,
+        ` looks anxious.`,
+        ` looks perturbed.`,
+        ` taps their fingers together like jackhammers.`,
+        ` uses a hypnotizing 3D-tush-wiggle attack.`,
+        ` is polishing their face.`,
+        ` stands guard.`,
+        ` knows exactly why they're here.`,
+        ` jumps ominously up and down.`,
+        ` spins their weapon around.`,
+        ` shakes their head dismissively.`,
+        ` flutters silently.`,
+        ` clicks their teeth.`,
+        ` has gone bloodshot.`,
+        ` whispers arcane swear words.`,
+        ` does a mysterious jig.`,
+        ` flaunts their orbs in a menacing manner.`,
+        ` watches quietly.`,
+        `'s armor emits a dark sheen.`,
+        ` smashes their morningstar.`,
+        ` breathes deeply.`,
+        ` completely closes their mouth. They look short and weird.`,
+        ` has a hissy fit.`,
+        ` makes a balloon animal out of bees. Shape: Pile of bees.`,
+        ` is juggling balls of ants.`,
+        ` intentionally pratfalls. Twenty times.`
+    ]
+    return actions[Math.floor(Math.random() * actions.length)]
+}
+
+function handleAct(channel, user, toUser) {
+    if (settings.debug) { console.log(`${boldTxt}> handleAct(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
+    const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
+    printAct()
+    let response = `* ${players[user].displayName.substring(0, 1).toUpperCase() + players[user].displayName.substring(1)}`
+    targetPlayer ? response += getAction(user, toUser) : response += getThirdPersonFlavorText()
+
+    if (players[user].armor === `Stained Apron`) { response += stainedApronHeal(user) }
+
+    talk(channel, response)
+}
+
+function printAct() {
+    if (settings.debug) { console.log(`${boldTxt}> printAct()${resetTxt}`) }
+    const bkSq = `\x1b[40m  \x1b[0m`
+    const ywSq = `\x1b[43m  \x1b[0m`
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-
+    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
+    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
+}
+
+module.exports = { getThirdPersonFlavorText, handleAct }

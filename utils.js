@@ -2,39 +2,130 @@ const fs = require(`fs`)
 
 const { joinedChannels, players, playerSave, highestLevels, baseHP, baseAT, baseDF, weaponsATK, armorDEF } = require(`./data`)
 
-const {
-    BOT_USERNAME,
-    OAUTH_TOKEN,
-    resetTxt,
-    boldTxt,
-    redTxt,
-    greenTxt,
-    yellowTxt,
-    blueTxt,
-    magentaTxt,
-    cyanTxt,
-    orangeTxt,
-    redBg,
-    greenBg,
-    yellowBg,
-    blueBg,
-    magentaBg,
-    cyanBg,
-    orangeBg,
-    settings
-} = require(`./config`)
+const { BOT_USERNAME, OAUTH_TOKEN, resetTxt, boldTxt, redTxt, greenTxt, yellowTxt, blueTxt, magentaTxt, cyanTxt, orangeTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, cyanBg, orangeBg, settings } = require(`./config`)
 
 const tmi = require('tmi.js')
 
 // Helper functions
-function talk(chatroom, resp) {
-    // if (settings.debug) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
-    if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
-    const channel = joinedChannels[chatroom.substring(1)]
-    if (channel.active) {
-        channel.client.say(chatroom, resp)
-        console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
+async function announceCrash() {
+    if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
+    return Object.keys(joinedChannels).forEach((user) => {
+        joinedChannels[user].active && talk(`#${user}`, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
+    })
+}
+
+function calculateUserATK(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateUserATK(user: ${user})${resetTxt}`) }
+    const userLV = players[user].lv
+    let attack = baseAT + (2 * userLV)
+    if (userLV >= 20) { attack = 38 }
+    return attack
+}
+
+function calculateUserDEF(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateUserDEF(user: ${user})${resetTxt}`) }
+    const userLV = players[user].lv
+    let defense = Math.floor((userLV - 1) * baseDF)
+    if (userLV >= 20) { defense = 4 }
+    return defense
+}
+
+function calculateUserNextLV(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateUserNextLV(user: ${user})${resetTxt}`) }
+    const userLV = players[user].lv
+
+    let userNext = 0
+    if (userLV === 1) { userNext = 10 }
+    if (userLV === 2) { userNext = 20 }
+    if (userLV === 3) { userNext = 40 }
+    if (userLV === 4) { userNext = 50 }
+    if (userLV === 5) { userNext = 80 }
+    if (userLV === 6) { userNext = 100 }
+    if (userLV === 7) { userNext = 200 }
+    if (userLV === 8) { userNext = 300 }
+    if (userLV === 9) { userNext = 400 }
+    if (userLV === 10) { userNext = 500 }
+    if (userLV === 11) { userNext = 800 }
+    if (userLV === 12) { userNext = 1000 }
+    if (userLV === 13) { userNext = 1500 }
+    if (userLV === 14) { userNext = 2000 }
+    if (userLV === 15) { userNext = 3000 }
+    if (userLV === 16) { userNext = 5000 }
+    if (userLV === 17) { userNext = 10000 }
+    if (userLV === 18) { userNext = 25000 }
+    if (userLV === 19) { userNext = 49999 }
+    if (userLV >= 20) { userNext = 999999 }
+    return userNext
+}
+
+function calculateUserLV(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${players[user].lv}, Highest level: ${highestLevels[user]}${resetTxt}`) }
+    const player = players[user]
+    const collectedItems = []
+    let foundItemsAppend = ``
+
+    while (player.next <= 0) {
+        player.lv += 1
+        if (player.lv === 2 && highestLevels[user] < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
+        if (player.lv === 3 && highestLevels[user] < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
+        if (player.lv === 4 && highestLevels[user] < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
+        if (player.lv === 5 && highestLevels[user] < 5) { collectedItems.push(`Instant Noodles`) }
+        if (player.lv === 6 && highestLevels[user] < 6) { collectedItems.push(`Hush Puppy`) }
+        if (player.lv === 7 && highestLevels[user] < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
+        if (player.lv === 8 && highestLevels[user] < 8) { collectedItems.push(`Bad Memory`) }
+        if (player.lv === 9 && highestLevels[user] < 9) { collectedItems.push(`Last Dream`) }
+        if (player.lv === 10 && highestLevels[user] < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
+        if (player.lv === 11 && highestLevels[user] < 11) { collectedItems.push(`Puppydough Icecream`) }
+        if (player.lv === 12 && highestLevels[user] < 12) { collectedItems.push(`Pumpkin Rings`) }
+        if (player.lv === 13 && highestLevels[user] < 13) { collectedItems.push(`Croquet Roll`) }
+        if (player.lv === 14 && highestLevels[user] < 14) { collectedItems.push(`Ghost Fruit`) }
+        if (player.lv === 15 && highestLevels[user] < 15) { collectedItems.push(`Stoic Onion`) }
+        if (player.lv === 16 && highestLevels[user] < 16) { collectedItems.push(`Rock Candy`) }
+
+        if (player.lv > highestLevels[user]) { highestLevels[user] = player.lv }
+        player.next += calculateUserNextLV(user)
+        player.at = calculateUserATK(user)
+        player.df = calculateUserDEF(user)
+        player.hp += 4
+        console.log(`${cyanBg} ${player.displayName} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
     }
+
+    if (collectedItems.length) {
+        for (const item of collectedItems) { player.inventory.push(item) }
+        foundItemsAppend = ` ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} found: ` + collectedItems.join(`, `)
+    }
+    console.log(`Inventory:`, player.inventory)
+    return foundItemsAppend
+}
+
+function calculateTemmieArmorPrice(user) {
+    const deaths = players[user].timesKilled
+    const priceTable = {
+        0: 9999,
+        1: 9000,
+        2: 8000,
+        3: 7000,
+        4: 6000,
+        5: 5000,
+        6: 4500,
+        7: 4000,
+        8: 3500,
+        9: 3000,
+        10: 2800,
+        11: 2600,
+        12: 2400,
+        13: 2200,
+        14: 2000,
+        15: 1800,
+        16: 1600,
+        17: 1400,
+        18: 1250,
+        19: 1100
+    }
+    if (deaths >= 30) { return 500 }
+    else if (deaths >= 25) { return 750 }
+    else if (deaths >= 20) { return 1000 }
+    else { return priceTable[deaths] }
 }
 
 function createClient(user, onMessageHandler) {
@@ -76,6 +167,135 @@ function createClient(user, onMessageHandler) {
         })
     }
     client.connect()
+}
+
+function getChannels(bool) {
+    const arr = []
+    for (const channel in joinedChannels) {
+        if (joinedChannels[channel].active === bool) {
+            arr.push(channel)
+        }
+    }
+    return arr.join(`, `)
+}
+
+function getIntroText(name) {
+    if (settings.debug) { console.log(`${boldTxt}> getIntroText(name: ${name})${resetTxt}`) }
+    const capsName = name.substring(0, 1).toUpperCase() + name.substring(1)
+    let response = `* `
+    const introText = [
+        `${capsName} and co. decided to pick on you!`,
+        `${capsName} appeared.`,
+        `${capsName} appeared.`,
+        `${capsName} appeared.`,
+        `${capsName} appears.`,
+        `${capsName} appears.`,
+        `${capsName} appears. Jerry came, too.`,
+        `${capsName} approached meekly!`,
+        `${capsName} assaults you!`,
+        `${capsName} attacked!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} attacks!`,
+        `${capsName} blocked the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way!`,
+        `${capsName} blocks the way.`,
+        `${capsName} bounds towards you!`,
+        `${capsName} came out of the earth!`,
+        `${capsName} clings to you!`,
+        `${capsName} confronts you, sighing. Jerry.`,
+        `${capsName} confronts you!`,
+        `${capsName} crawled up close!`,
+        `${capsName} crawled up close!`,
+        `${capsName} decided to pick on you!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near!`,
+        `${capsName} drew near.`,
+        `${capsName} emerges from the shadows.`,
+        `${capsName} emerges from the shadows.`,
+        `${capsName} flexes in!`,
+        `${capsName} flutters forth!`,
+        `${capsName} flutters forth!`,
+        `${capsName} flutters in.`,
+        `${capsName} gets in the way! Not on purpose or anything.`,
+        `${capsName} hides in the corner but somehow encounters you anyway.`,
+        `${capsName} hissed out of the earth!`,
+        `${capsName} hopped close!`,
+        `${capsName} hopped in...?`,
+        `${capsName} hopped towards you.`,
+        `${capsName} pops out of their hat!`,
+        `${capsName} rushed in!`,
+        `${capsName} saunters up!`,
+        `${capsName} shuffles up.`,
+        `${capsName} slithered out of the earth!`,
+        `${capsName} strolls in.`,
+        `${capsName} struts into view.`,
+        `${capsName} swooped in!`,
+        `${capsName} traps you!`,
+        `${capsName} was already there, waiting for you.`,
+        `Here comes ${name}.`,
+        `Here comes ${name}. Same as usual.`,
+        `It's ${name}.`,
+        `It's ${name}.`,
+        `Special enemy ${name} appears here to defeat you!!`,
+        `You encountered ${name}.`,
+        `You tripped over ${name}.`
+    ]
+    const randIntroText = Math.floor(Math.random() * introText.length)
+    response += introText[randIntroText]
+    return response
+}
+
+function getSaveText(displayName) {
+    if (settings.debug) { console.log(`${boldTxt}> getSaveText(displayName: ${displayName})${resetTxt}`) }
+    const capsName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
+    const saveText = [
+        `The shadow of the ruins looms above, filling ${displayName} with determination.`,
+        `Playfully crinkling through the leaves fills ${displayName} with determination.`,
+        `Knowing the mouse might one day leave its hole and get the cheese... It fills ${displayName} with determination.`,
+        `Seeing such a cute, tidy house in the RUINS gives ${displayName} determination.`,
+        `The cold atmosphere of a new land... it fills ${displayName} with determination.`,
+        `The convenience of that lamp still fill    s ${displayName} with determination.`,
+        `Knowing the mouse might one day find a way to heat up the spaghetti... It fills ${displayName} with determination.`,
+        `Snow can always be broken down and rebuilt into something more useful. This simple fact fills ${displayName} with determination.`,
+        `Knowing that dog will never give up trying to make the perfect snowdog... It fills ${displayName} with determination.`,
+        `The sight of such a friendly town fills ${displayName} with determination.`,
+        `The sound of rushing water fills ${displayName} with determination.`,
+        `A feeling of dread hangs over ${displayName}... But ${displayName} stays determined.`,
+        `Knowing the mouse might one day extract the cheese from the mystical crystal... It fills ${displayName} with determination.`,
+        `The serene sound of a distant music box... It fills ${displayName} with determination.`,
+        `The sound of muffled rain on the cavetop... It fills ${displayName} with determination.`,
+        `The waterfall here seems to flow from the ceiling of the cavern... Occasionally, a piece of trash will flow through... and fall into the bottomless abyss below. Viewing this endless cycle of worthless garbage... It fills ${displayName} with determination.`,
+        `Partaking in useless garbage fills ${displayName} with determination.`,
+        `${capsName} feels a calming tranquility. ${capsName} is filled with determination.`,
+        `${capsName} feels... something. ${capsName} is filled with detemmienation.`,
+        `The wind is howling. ${capsName} is filled with determination.`,
+        `The wind has stopped. ${capsName} is filled with determination.`,
+        `The howling wind is now a breeze. This gives ${displayName} determination.`,
+        `Seeing such a strange laboratory in a place like this... ${capsName} is filled with determination.`,
+        `The wooshing sound of steam and cogs... it fills ${displayName} with determination.`,
+        `An ominous structure looms in the distance... ${capsName} is filled with determination.`,
+        `Knowing the mouse might one day hack into the computerized safe and get the cheese... It fills ${displayName} with determination.`,
+        `The smell of cobwebs fills the air... ${capsName} is filled with determination.`,
+        `The relaxing atmosphere of this hotel... it fills ${displayName} with determination.`,
+        `The air is filled with the smell of ozone... it fills ${displayName} with determination.`,
+        `Behind this door must be the elevator to the King's castle. ${capsName} is filled with determination.`
+    ]
+    const randSaveText = saveText[Math.floor(Math.random() * saveText.length)]
+    return `* ${randSaveText}`
 }
 
 function getSpamtonQuote(num) {
@@ -238,269 +458,12 @@ function getSpamtonQuote(num) {
     }
 }
 
-function getSaveText(displayName) {
-    if (settings.debug) { console.log(`${boldTxt}> getSaveText(displayName: ${displayName})${resetTxt}`) }
-    const capsName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
-    const saveText = [
-        `The shadow of the ruins looms above, filling ${displayName} with determination.`,
-        `Playfully crinkling through the leaves fills ${displayName} with determination.`,
-        `Knowing the mouse might one day leave its hole and get the cheese... It fills ${displayName} with determination.`,
-        `Seeing such a cute, tidy house in the RUINS gives ${displayName} determination.`,
-        `The cold atmosphere of a new land... it fills ${displayName} with determination.`,
-        `The convenience of that lamp still fill    s ${displayName} with determination.`,
-        `Knowing the mouse might one day find a way to heat up the spaghetti... It fills ${displayName} with determination.`,
-        `Snow can always be broken down and rebuilt into something more useful. This simple fact fills ${displayName} with determination.`,
-        `Knowing that dog will never give up trying to make the perfect snowdog... It fills ${displayName} with determination.`,
-        `The sight of such a friendly town fills ${displayName} with determination.`,
-        `The sound of rushing water fills ${displayName} with determination.`,
-        `A feeling of dread hangs over ${displayName}... But ${displayName} stays determined.`,
-        `Knowing the mouse might one day extract the cheese from the mystical crystal... It fills ${displayName} with determination.`,
-        `The serene sound of a distant music box... It fills ${displayName} with determination.`,
-        `The sound of muffled rain on the cavetop... It fills ${displayName} with determination.`,
-        `The waterfall here seems to flow from the ceiling of the cavern... Occasionally, a piece of trash will flow through... and fall into the bottomless abyss below. Viewing this endless cycle of worthless garbage... It fills ${displayName} with determination.`,
-        `Partaking in useless garbage fills ${displayName} with determination.`,
-        `${capsName} feels a calming tranquility. ${capsName} is filled with determination.`,
-        `${capsName} feels... something. ${capsName} is filled with detemmienation.`,
-        `The wind is howling. ${capsName} is filled with determination.`,
-        `The wind has stopped. ${capsName} is filled with determination.`,
-        `The howling wind is now a breeze. This gives ${displayName} determination.`,
-        `Seeing such a strange laboratory in a place like this... ${capsName} is filled with determination.`,
-        `The wooshing sound of steam and cogs... it fills ${displayName} with determination.`,
-        `An ominous structure looms in the distance... ${capsName} is filled with determination.`,
-        `Knowing the mouse might one day hack into the computerized safe and get the cheese... It fills ${displayName} with determination.`,
-        `The smell of cobwebs fills the air... ${capsName} is filled with determination.`,
-        `The relaxing atmosphere of this hotel... it fills ${displayName} with determination.`,
-        `The air is filled with the smell of ozone... it fills ${displayName} with determination.`,
-        `Behind this door must be the elevator to the King's castle. ${capsName} is filled with determination.`
-    ]
-    const randSaveText = saveText[Math.floor(Math.random() * saveText.length)]
-    return `* ${randSaveText}`
-}
-
-function getIntroText(name) {
-    if (settings.debug) { console.log(`${boldTxt}> getIntroText(name: ${name})${resetTxt}`) }
-    const capsName = name.substring(0, 1).toUpperCase() + name.substring(1)
-    let response = `* `
-    const introText = [
-        `${capsName} and co. decided to pick on you!`,
-        `${capsName} appeared.`,
-        `${capsName} appeared.`,
-        `${capsName} appeared.`,
-        `${capsName} appears.`,
-        `${capsName} appears.`,
-        `${capsName} appears. Jerry came, too.`,
-        `${capsName} approached meekly!`,
-        `${capsName} assaults you!`,
-        `${capsName} attacked!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} attacks!`,
-        `${capsName} blocked the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way!`,
-        `${capsName} blocks the way.`,
-        `${capsName} bounds towards you!`,
-        `${capsName} came out of the earth!`,
-        `${capsName} clings to you!`,
-        `${capsName} confronts you, sighing. Jerry.`,
-        `${capsName} confronts you!`,
-        `${capsName} crawled up close!`,
-        `${capsName} crawled up close!`,
-        `${capsName} decided to pick on you!`,
-        `${capsName} drew near!`,
-        `${capsName} drew near!`,
-        `${capsName} drew near!`,
-        `${capsName} drew near!`,
-        `${capsName} drew near.`,
-        `${capsName} emerges from the shadows.`,
-        `${capsName} emerges from the shadows.`,
-        `${capsName} flexes in!`,
-        `${capsName} flutters forth!`,
-        `${capsName} flutters forth!`,
-        `${capsName} flutters in.`,
-        `${capsName} gets in the way! Not on purpose or anything.`,
-        `${capsName} hides in the corner but somehow encounters you anyway.`,
-        `${capsName} hissed out of the earth!`,
-        `${capsName} hopped close!`,
-        `${capsName} hopped in...?`,
-        `${capsName} hopped towards you.`,
-        `${capsName} pops out of their hat!`,
-        `${capsName} rushed in!`,
-        `${capsName} saunters up!`,
-        `${capsName} shuffles up.`,
-        `${capsName} slithered out of the earth!`,
-        `${capsName} strolls in.`,
-        `${capsName} struts into view.`,
-        `${capsName} swooped in!`,
-        `${capsName} traps you!`,
-        `${capsName} was already there, waiting for you.`,
-        `Here comes ${name}.`,
-        `Here comes ${name}. Same as usual.`,
-        `It's ${name}.`,
-        `It's ${name}.`,
-        `Special enemy ${name} appears here to defeat you!!`,
-        `You encountered ${name}.`,
-        `You tripped over ${name}.`
-    ]
-    const randIntroText = Math.floor(Math.random() * introText.length)
-    response += introText[randIntroText]
-    return response
-}
-
-function stainedApronHeal(user) {
-    if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
-    const sendingPlayer = players[user]
-    const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-    sendingPlayer.stainedApronHealTime = !sendingPlayer.stainedApronHealTime
-    if (!sendingPlayer.stainedApronHealTime) {
-        if (sendingPlayer.hp < getUserMaxHP(user)) {
-            sendingPlayer.hp += 1
-            console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
-            return sendingPlayer.hp === getUserMaxHP(user) ? ` ${capsName}'s HP was maxed out.` : ` ${capsName} recovered 1 HP!`
-        }
-    }
-    return ``
-}
-
 function getUserMaxHP(user) {
     if (settings.debug) { console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
     let maxHP = baseHP + (4 * userLV)
     if (userLV >= 20) { maxHP = 99 }
     return maxHP
-}
-function getChannels(bool) {
-    const arr = []
-    for (const channel in joinedChannels) {
-        if (joinedChannels[channel].active === bool) {
-            arr.push(channel)
-        }
-    }
-    return arr.join(`, `)
-}
-
-function calculateUserATK(user) {
-    if (settings.debug) { console.log(`${boldTxt}> calculateUserATK(user: ${user})${resetTxt}`) }
-    const userLV = players[user].lv
-    let attack = baseAT + (2 * userLV)
-    if (userLV >= 20) { attack = 38 }
-    return attack
-}
-
-function calculateUserDEF(user) {
-    if (settings.debug) { console.log(`${boldTxt}> calculateUserDEF(user: ${user})${resetTxt}`) }
-    const userLV = players[user].lv
-    let defense = Math.floor((userLV - 1) * baseDF)
-    if (userLV >= 20) { defense = 4 }
-    return defense
-}
-
-function calculateUserNextLV(user) {
-    if (settings.debug) { console.log(`${boldTxt}> calculateUserNextLV(user: ${user})${resetTxt}`) }
-    const userLV = players[user].lv
-
-    let userNext = 0
-    if (userLV === 1) { userNext = 10 }
-    if (userLV === 2) { userNext = 20 }
-    if (userLV === 3) { userNext = 40 }
-    if (userLV === 4) { userNext = 50 }
-    if (userLV === 5) { userNext = 80 }
-    if (userLV === 6) { userNext = 100 }
-    if (userLV === 7) { userNext = 200 }
-    if (userLV === 8) { userNext = 300 }
-    if (userLV === 9) { userNext = 400 }
-    if (userLV === 10) { userNext = 500 }
-    if (userLV === 11) { userNext = 800 }
-    if (userLV === 12) { userNext = 1000 }
-    if (userLV === 13) { userNext = 1500 }
-    if (userLV === 14) { userNext = 2000 }
-    if (userLV === 15) { userNext = 3000 }
-    if (userLV === 16) { userNext = 5000 }
-    if (userLV === 17) { userNext = 10000 }
-    if (userLV === 18) { userNext = 25000 }
-    if (userLV === 19) { userNext = 49999 }
-    if (userLV >= 20) { userNext = 999999 }
-    return userNext
-}
-
-function calculateUserLV(user) {
-    if (settings.debug) { console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${players[user].lv}, Highest level: ${highestLevels[user]}${resetTxt}`) }
-    const player = players[user]
-    const collectedItems = []
-    let foundItemsAppend = ``
-
-    while (player.next <= 0) {
-        player.lv += 1
-        if (player.lv === 2 && highestLevels[user] < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
-        if (player.lv === 3 && highestLevels[user] < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
-        if (player.lv === 4 && highestLevels[user] < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
-        if (player.lv === 5 && highestLevels[user] < 5) { collectedItems.push(`Instant Noodles`) }
-        if (player.lv === 6 && highestLevels[user] < 6) { collectedItems.push(`Hush Puppy`) }
-        if (player.lv === 7 && highestLevels[user] < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
-        if (player.lv === 8 && highestLevels[user] < 8) { collectedItems.push(`Bad Memory`) }
-        if (player.lv === 9 && highestLevels[user] < 9) { collectedItems.push(`Last Dream`) }
-        if (player.lv === 10 && highestLevels[user] < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
-        if (player.lv === 11 && highestLevels[user] < 11) { collectedItems.push(`Puppydough Icecream`) }
-        if (player.lv === 12 && highestLevels[user] < 12) { collectedItems.push(`Pumpkin Rings`) }
-        if (player.lv === 13 && highestLevels[user] < 13) { collectedItems.push(`Croquet Roll`) }
-        if (player.lv === 14 && highestLevels[user] < 14) { collectedItems.push(`Ghost Fruit`) }
-        if (player.lv === 15 && highestLevels[user] < 15) { collectedItems.push(`Stoic Onion`) }
-        if (player.lv === 16 && highestLevels[user] < 16) { collectedItems.push(`Rock Candy`) }
-
-        if (player.lv > highestLevels[user]) { highestLevels[user] = player.lv }
-        player.next += calculateUserNextLV(user)
-        player.at = calculateUserATK(user)
-        player.df = calculateUserDEF(user)
-        player.hp += 4
-        console.log(`${cyanBg} ${player.displayName} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
-    }
-
-    if (collectedItems.length) {
-        for (const item of collectedItems) { player.inventory.push(item) }
-        foundItemsAppend = ` ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} found: ` + collectedItems.join(`, `)
-    }
-    console.log(`Inventory:`, player.inventory)
-    return foundItemsAppend
-}
-
-function calculateTemmieArmorPrice(user) {
-    const deaths = players[user].timesKilled
-    const priceTable = {
-        0: 9999,
-        1: 9000,
-        2: 8000,
-        3: 7000,
-        4: 6000,
-        5: 5000,
-        6: 4500,
-        7: 4000,
-        8: 3500,
-        9: 3000,
-        10: 2800,
-        11: 2600,
-        12: 2400,
-        13: 2200,
-        14: 2000,
-        15: 1800,
-        16: 1600,
-        17: 1400,
-        18: 1250,
-        19: 1100
-    }
-    if (deaths >= 30) { return 500 }
-    else if (deaths >= 25) { return 750 }
-    else if (deaths >= 20) { return 1000 }
-    else { return priceTable[deaths] }
 }
 
 function makeLogs() {
@@ -619,26 +582,6 @@ function printLogo() {
 
 const bufferSpaces = (len) => Array(len).fill(` `).join(``)
 
-function showStats(channel, user) {
-    const player = players[user]
-    const columnWidth = player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName.length : user.length
-    const logColor = player.dead ? redBg : greenBg
-
-    const table = []
-    const usersColumnTitle = `username`
-    table.push([`${usersColumnTitle}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `lv`, `hp`, `at`, `df`, `exp`, `next`, `gold`].join(`\t`))
-    table.push([`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `--`, `--`, `--`, `--`, `---`, `----`, `----`].join(`\t`))
-
-    let attackBoost = 0
-    if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
-    if (player.armor === `Temmie Armor`) { attackBoost = 10 }
-    table.push([`${logColor}${user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? `${player.displayName}` : `${user}`}${columnWidth < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - columnWidth) : ``}${resetTxt}`, player.lv, `${player.hp}/${getUserMaxHP(user)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`, player.exp, player.next, player.gold].join(`\t`))
-
-    table.forEach((row) => console.log(row))
-    console.log(`Inventory:`, player.inventory)
-    talk(channel, `"${user === `dummy` ? `DUMMY` : player.displayName}" LV: ${player.lv}, HP: ${player.hp}/${getUserMaxHP(user)}, AT: ${player.at}(${weaponsATK[player.weapon] + attackBoost}), DF: ${player.df}(${armorDEF[player.armor]}), EXP: ${player.exp}, NEXT: ${player.next}, WEAPON: ${player.weapon}, ARMOR: ${player.armor}, GOLD: ${player.gold}`)
-}
-
 function showPlayers(channel) {
     let columnGroups = settings.landscapeView ? 4 : 2
     if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
@@ -689,30 +632,68 @@ function showPlayers(channel) {
     talk(channel, `Players: ${allPlayers.join(`, `)}`)
 }
 
-async function announceCrash() {
-    if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
-    return Object.keys(joinedChannels).forEach((user) => {
-        joinedChannels[user].active && talk(`#${user}`, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
-    })
+function showStats(channel, user) {
+    const player = players[user]
+    const columnWidth = player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName.length : user.length
+    const logColor = player.dead ? redBg : greenBg
+
+    const table = []
+    const usersColumnTitle = `username`
+    table.push([`${usersColumnTitle}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `lv`, `hp`, `at`, `df`, `exp`, `next`, `gold`].join(`\t`))
+    table.push([`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `--`, `--`, `--`, `--`, `---`, `----`, `----`].join(`\t`))
+
+    let attackBoost = 0
+    if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
+    if (player.armor === `Temmie Armor`) { attackBoost = 10 }
+    table.push([`${logColor}${user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? `${player.displayName}` : `${user}`}${columnWidth < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - columnWidth) : ``}${resetTxt}`, player.lv, `${player.hp}/${getUserMaxHP(user)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`, player.exp, player.next, player.gold].join(`\t`))
+
+    table.forEach((row) => console.log(row))
+    console.log(`Inventory:`, player.inventory)
+    talk(channel, `"${user === `dummy` ? `DUMMY` : player.displayName}" LV: ${player.lv}, HP: ${player.hp}/${getUserMaxHP(user)}, AT: ${player.at}(${weaponsATK[player.weapon] + attackBoost}), DF: ${player.df}(${armorDEF[player.armor]}), EXP: ${player.exp}, NEXT: ${player.next}, WEAPON: ${player.weapon}, ARMOR: ${player.armor}, GOLD: ${player.gold}`)
+}
+
+function stainedApronHeal(user) {
+    if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
+    const sendingPlayer = players[user]
+    const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
+    sendingPlayer.stainedApronHealTime = !sendingPlayer.stainedApronHealTime
+    if (!sendingPlayer.stainedApronHealTime) {
+        if (sendingPlayer.hp < getUserMaxHP(user)) {
+            sendingPlayer.hp += 1
+            console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
+            return sendingPlayer.hp === getUserMaxHP(user) ? ` ${capsName}'s HP was maxed out.` : ` ${capsName} recovered 1 HP!`
+        }
+    }
+    return ``
+}
+
+function talk(chatroom, resp) {
+    // if (settings.debug) { console.log(`${boldTxt}> talk(chatroom: ${chatroom}, resp: '${resp.substring(0, 8)}...')${resetTxt}`) }
+    if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
+    const channel = joinedChannels[chatroom.substring(1)]
+    if (channel.active) {
+        channel.client.say(chatroom, resp)
+        console.log(`${yellowBg}${chatroom} ${resetTxt}`, `${boldTxt}${yellowTxt}UndertaleBot:${resetTxt}`, `${yellowTxt}${resp}${resetTxt}`)
+    }
 }
 
 module.exports = {
-    talk,
-    createClient,
-    getSpamtonQuote,
-    getSaveText,
-    getIntroText,
-    stainedApronHeal,
-    getUserMaxHP,
-    getChannels,
+    announceCrash,
     calculateUserATK,
     calculateUserDEF,
     calculateUserNextLV,
     calculateUserLV,
     calculateTemmieArmorPrice,
+    createClient,
+    getChannels,
+    getIntroText,
+    getSaveText,
+    getSpamtonQuote,
+    getUserMaxHP,
     makeLogs,
     printLogo,
-    showStats,
     showPlayers,
-    announceCrash
+    showStats,
+    stainedApronHeal,
+    talk
 }

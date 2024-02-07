@@ -2,7 +2,7 @@ require(`dotenv`).config()
 
 const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, getChannels, printLogo, calculateTemmieArmorPrice, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
 
-const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, redBg, greenBg, settings } = require(`./config`)
+const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, settings } = require(`./config`)
 
 const { joinedChannels, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
 

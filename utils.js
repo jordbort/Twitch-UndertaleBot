@@ -608,19 +608,22 @@ function printLogo() {
     console.log(`${cyanBg} !load ${resetTxt}`, `${boldTxt + cyanTxt} - Reload your previous save file${resetTxt}`)
 }
 
+const bufferSpaces = (len) => Array(len).fill(` `).join(``)
+
 function showStats(channel, user) {
     const player = players[user]
     const columnWidth = player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName.length : user.length
     const logColor = player.dead ? redBg : greenBg
 
     const table = []
-    table.push([`username${Array(columnWidth > 8 ? columnWidth - 8 : 0).fill(` `).join(``)}`, `lv`, `hp`, `at`, `df`, `exp`, `next`, `gold`].join(`\t`))
-    table.push([`--------${Array(columnWidth > 8 ? columnWidth - 8 : 0).fill(` `).join(``)}`, `--`, `--`, `--`, `--`, `---`, `----`, `----`].join(`\t`))
+    const usersColumnTitle = `username`
+    table.push([`${usersColumnTitle}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `lv`, `hp`, `at`, `df`, `exp`, `next`, `gold`].join(`\t`))
+    table.push([`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `--`, `--`, `--`, `--`, `---`, `----`, `----`].join(`\t`))
 
     let attackBoost = 0
     if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
     if (player.armor === `Temmie Armor`) { attackBoost = 10 }
-    table.push([`${logColor}${user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? `${player.displayName}` : `${user}`}${columnWidth < 8 ? Array(8 - columnWidth).fill(` `).join(``) : ``}${resetTxt}`, player.lv, `${player.hp}/${getUserMaxHP(user)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`, player.exp, player.next, player.gold].join(`\t`))
+    table.push([`${logColor}${user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? `${player.displayName}` : `${user}`}${columnWidth < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - columnWidth) : ``}${resetTxt}`, player.lv, `${player.hp}/${getUserMaxHP(user)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`, player.exp, player.next, player.gold].join(`\t`))
 
     table.forEach((row) => console.log(row))
     console.log(`Inventory:`, player.inventory)
@@ -631,12 +634,15 @@ function showPlayers(channel) {
     let columnGroups = settings.landscapeView ? 4 : 2
     if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
 
+    const usersColumnTitle = `username`
+    const maxColWidth = 23
     let columnWidth = Math.max(...Object.keys(players).map((name) => name.length))
-    if (columnWidth > 23) { columnWidth = 23 }
+    if (columnWidth < usersColumnTitle.length) { columnWidth = usersColumnTitle.length }
+    if (columnWidth > maxColWidth) { columnWidth = maxColWidth }
 
     const table = []
-    table.push(Array(columnGroups).fill(`username${Array(columnWidth - 8).fill(` `).join(``)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))
-    table.push(Array(columnGroups).fill(`--------${Array(columnWidth - 8).fill(` `).join(``)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`))
+    table.push(Array(columnGroups).fill(`${usersColumnTitle}${bufferSpaces(columnWidth - usersColumnTitle.length)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))
+    table.push(Array(columnGroups).fill(`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(columnWidth - usersColumnTitle.length)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`))
 
     const allPlayers = []
     function makeFullRow(columnWidth, i, j) {
@@ -647,12 +653,12 @@ function showPlayers(channel) {
             const logColor = player.dead ? redBg : greenBg
             if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
                 allPlayers.push(player.displayName)
-                const spaces = player.displayName.length > 23 ? (columnWidth - player.displayName.length) + 2 : columnWidth - player.displayName.length
-                row.push(`${logColor}${player.displayName.length > 23 ? player.displayName.substring(0, 23) : player.displayName + Array(spaces).fill(` `).join(``)}${resetTxt}`)
+                const spaces = player.displayName.length > maxColWidth ? (columnWidth - player.displayName.length) + 2 : columnWidth - player.displayName.length
+                row.push(`${logColor}${player.displayName.length > maxColWidth ? player.displayName.substring(0, maxColWidth) : player.displayName}${player.displayName.length < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - player.displayName.length) : ``}${bufferSpaces(spaces)}${resetTxt}`)
             } else {
                 allPlayers.push(username)
-                const spaces = username.length > 23 ? (columnWidth - username.length) + 2 : columnWidth - username.length
-                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > 23 ? username.substring(0, 23) : username}${Array(spaces).fill(` `).join(``)}${resetTxt}`)
+                const spaces = username.length > maxColWidth ? (columnWidth - username.length) + 2 : columnWidth - username.length
+                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > maxColWidth ? username.substring(0, maxColWidth) : username}${username.length < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - username.length) : ``}${bufferSpaces(spaces)}${resetTxt}`)
             }
             let attackBoost = 0
             if (player.armor === `Cowboy Hat`) { attackBoost = 5 }

@@ -392,28 +392,39 @@ function onMessageHandler(channel, tags, message, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-        console.log(`Inventory:`, sendingPlayer.inventory)
 
         // Show items if none selected
-        if (args.length === 0) { return talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`) }
+        if (args.length === 0) {
+            console.log(`Inventory:`, sendingPlayer.inventory)
+            return talk(channel, `${capsName}'s items: ${sendingPlayer.inventory.join(`, `)}`)
+        }
 
         const inventory = sendingPlayer.inventory.map(item => item.toLowerCase())
         if (inventory.length === 0) { return talk(channel, `${capsName} has no items! :(`) }
 
         // Can't use if dead
-        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
+        if (sendingPlayer.dead) {
+            console.log(`Inventory:`, sendingPlayer.inventory)
+            return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`)
+        }
 
         // Item validation
         const usedItem = itemLookup(args.join(` `))
 
-        if (!usedItem) { return talk(channel, `${capsName}, that isn't an item! :(`) }
+        if (!usedItem) {
+            console.log(`Inventory:`, sendingPlayer.inventory)
+            return talk(channel, `${capsName}, that isn't an item! :(`)
+        }
 
         // Can't use !equip if not a weapon or armor
         if (command === `!equip` && usedItem in consumableItems) { return }
 
         // Check possession
         const index = inventory.indexOf(usedItem)
-        if (index < 0) { return talk(channel, `${capsName}, you don't have that item! :(`) }
+        if (index < 0) {
+            console.log(`Inventory:`, sendingPlayer.inventory)
+            return talk(channel, `${capsName}, you don't have that item! :(`)
+        }
 
         const response = useItem(user, usedItem, index)
         return talk(channel, response)

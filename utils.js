@@ -88,7 +88,7 @@ function calculateUserLV(user) {
         player.hp += 4
         console.log(`${cyanBg} ${player.displayName} reached LV ${player.lv}, next: ${player.next}, ATK: ${player.at}, DEF: ${player.df}, HP: ${player.hp} / ${getUserMaxHP(user)} ${resetTxt}`)
     }
-    
+
     let foundItemsAppend = ``
     if (collectedItems.length) {
         for (const item of collectedItems) { player.inventory.push(item) }
@@ -588,13 +588,13 @@ function showPlayers(channel) {
 
     const usersColumnTitle = `username`
     const maxColWidth = 23
-    let columnWidth = Math.max(...Object.keys(players).map((name) => name.length))
-    if (columnWidth < usersColumnTitle.length) { columnWidth = usersColumnTitle.length }
-    if (columnWidth > maxColWidth) { columnWidth = maxColWidth }
+    let usersColumnWidth = Math.max(...Object.keys(players).map((name) => name.length))
+    if (usersColumnWidth < usersColumnTitle.length) { usersColumnWidth = usersColumnTitle.length }
+    if (usersColumnWidth > maxColWidth) { usersColumnWidth = maxColWidth }
 
     const table = []
-    table.push(Array(columnGroups).fill(`${usersColumnTitle}${bufferSpaces(columnWidth - usersColumnTitle.length)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))
-    table.push(Array(columnGroups).fill(`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(columnWidth - usersColumnTitle.length)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`))
+    table.push(Array(columnGroups).fill(`${usersColumnTitle}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))
+    table.push(Array(columnGroups).fill(`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`))
 
     const allPlayers = []
     function makeFullRow(columnWidth, i, j) {
@@ -623,7 +623,7 @@ function showPlayers(channel) {
     for (const [i] of Object.keys(players).entries()) {
         if (i % columnGroups === 0) {
             const fullRow = []
-            for (let j = 0; j < columnGroups; j++) { fullRow.push(makeFullRow(columnWidth, i, j)) }
+            for (let j = 0; j < columnGroups; j++) { fullRow.push(makeFullRow(usersColumnWidth, i, j)) }
             table.push(fullRow.join(`\t`))
         }
     }
@@ -632,20 +632,62 @@ function showPlayers(channel) {
     talk(channel, `Players: ${allPlayers.join(`, `)}`)
 }
 
+const fillTitleGap = (colWidth, title) => { return bufferSpaces(colWidth > title.length ? colWidth - title.length : 0) }
+const fillShortEntry = (colWidth, title) => { return colWidth < title.length ? bufferSpaces(title.length - colWidth) : `` }
+
 function showStats(user) {
     const player = players[user]
-    const columnWidth = player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName.length : user.length
     const logColor = player.dead ? redBg : greenBg
 
+    const userColumnTitle = `username`
+    const userEntry = user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? player.displayName : user
+    const userColumnWidth = userEntry.length
+    const weaponColumnTitle = `weapon`
+    const weaponColumnWidth = player.weapon.length
+    const armorColumnTitle = `armor`
+    const armorColumnWidth = player.armor.length
+
     const table = []
-    const usersColumnTitle = `username`
-    table.push([`${usersColumnTitle}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `lv`, `hp`, `at`, `df`, `exp`, `next`, `gold`].join(`\t`))
-    table.push([`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(columnWidth > usersColumnTitle.length ? columnWidth - usersColumnTitle.length : 0)}`, `--`, `--`, `--`, `--`, `---`, `----`, `----`].join(`\t`))
+    table.push([
+        `${userColumnTitle}${fillTitleGap(userColumnWidth, userColumnTitle)}`,
+        `lv`,
+        `hp`,
+        `at`,
+        `df`,
+        `exp`,
+        `next`,
+        `${weaponColumnTitle}${fillTitleGap(weaponColumnWidth, weaponColumnTitle)}`,
+        `${armorColumnTitle}${fillTitleGap(armorColumnWidth, armorColumnTitle)}`,
+        `gold`
+    ].join(`\t`))
+    table.push([
+        `${Array(userColumnTitle.length).fill(`-`).join(``)}${fillTitleGap(userColumnWidth, userColumnTitle)}`,
+        `--`,
+        `--`,
+        `--`,
+        `--`,
+        `---`,
+        `----`,
+        `${Array(weaponColumnTitle.length).fill(`-`).join(``)}${fillTitleGap(weaponColumnWidth, weaponColumnTitle)}`,
+        `${Array(armorColumnTitle.length).fill(`-`).join(``)}${fillTitleGap(armorColumnWidth, armorColumnTitle)}`,
+        `----`
+    ].join(`\t`))
 
     let attackBoost = 0
     if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
     if (player.armor === `Temmie Armor`) { attackBoost = 10 }
-    table.push([`${logColor}${user === `dummy` ? `DUMMY` : player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/) ? `${player.displayName}` : `${user}`}${columnWidth < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - columnWidth) : ``}${resetTxt}`, player.lv, `${player.hp}/${getUserMaxHP(user)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`, player.exp, player.next, player.gold].join(`\t`))
+    table.push([
+        `${logColor}${userEntry}${fillShortEntry(userColumnWidth, userColumnTitle)}${resetTxt}`,
+        player.lv,
+        `${player.hp}/${getUserMaxHP(user)}`,
+        `${player.at}(${weaponsATK[player.weapon] + attackBoost})`,
+        `${player.df}(${armorDEF[player.armor] + attackBoost})`,
+        player.exp,
+        player.next,
+        `${player.weapon}${fillShortEntry(weaponColumnWidth, weaponColumnTitle)}`,
+        `${player.armor}${fillShortEntry(armorColumnWidth, armorColumnTitle)}`,
+        player.gold
+    ].join(`\t`))
 
     table.forEach((row) => console.log(row))
     console.log(`Inventory:`, player.inventory)

@@ -606,11 +606,11 @@ function showPlayers(channel) {
             if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
                 allPlayers.push(player.displayName)
                 const spaces = player.displayName.length > maxColWidth ? (columnWidth - player.displayName.length) + 2 : columnWidth - player.displayName.length
-                row.push(`${logColor}${player.displayName.length > maxColWidth ? player.displayName.substring(0, maxColWidth) : player.displayName}${player.displayName.length < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - player.displayName.length) : ``}${bufferSpaces(spaces)}${resetTxt}`)
+                row.push(`${logColor}${player.displayName.length > maxColWidth ? player.displayName.substring(0, maxColWidth) : player.displayName}${bufferSpaces(spaces)}${resetTxt}`)
             } else {
                 allPlayers.push(username)
                 const spaces = username.length > maxColWidth ? (columnWidth - username.length) + 2 : columnWidth - username.length
-                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > maxColWidth ? username.substring(0, maxColWidth) : username}${username.length < usersColumnTitle.length ? bufferSpaces(usersColumnTitle.length - username.length) : ``}${bufferSpaces(spaces)}${resetTxt}`)
+                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > maxColWidth ? username.substring(0, maxColWidth) : username}${bufferSpaces(spaces)}${resetTxt}`)
             }
             let attackBoost = 0
             if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
@@ -632,8 +632,8 @@ function showPlayers(channel) {
     talk(channel, `Players: ${allPlayers.join(`, `)}`)
 }
 
-const fillTitleGap = (colWidth, title) => { return bufferSpaces(colWidth > title.length ? colWidth - title.length : 0) }
 const fillShortEntry = (colWidth, title) => { return colWidth < title.length ? bufferSpaces(title.length - colWidth) : `` }
+const fillTitleGap = (colWidth, title) => { return bufferSpaces(colWidth > title.length ? colWidth - title.length : 0) }
 
 function showStats(user) {
     const player = players[user]

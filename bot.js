@@ -208,8 +208,8 @@ function onMessageHandler(channel, tags, message, self) {
                     players[player].armor = `Bandage`
                     players[player].gold = 0
                     players[player].stainedApronHealTime = false
-                    highestLevels[player] = 1
                     players[player].inventory = []
+                    highestLevels[player] = 1
                 }
             }
             talk(channel, `/me If you DO end up erasing everything... You have to erase my memories, too.`)

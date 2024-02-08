@@ -2,7 +2,7 @@ const fs = require(`fs`)
 
 const { joinedChannels, players, playerSave, highestLevels, baseHP, baseAT, baseDF, weaponsATK, armorDEF } = require(`./data`)
 
-const { BOT_USERNAME, OAUTH_TOKEN, resetTxt, boldTxt, redTxt, greenTxt, yellowTxt, blueTxt, magentaTxt, cyanTxt, orangeTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, cyanBg, orangeBg, settings } = require(`./config`)
+const { BOT_USERNAME, OAUTH_TOKEN, resetTxt, boldTxt, redTxt, greenTxt, yellowTxt, blueTxt, magentaTxt, cyanTxt, orangeTxt, blackBg, redBg, greenBg, yellowBg, blueBg, magentaBg, cyanBg, whiteBg, grayBg, orangeBg, settings } = require(`./config`)
 
 const tmi = require('tmi.js')
 
@@ -534,14 +534,16 @@ function makeLogs() {
 
 function printLogo() {
     if (settings.debug) { console.log(`${boldTxt}> printLogo()${resetTxt}`) }
-    const whSq = `\x1b[47m  \x1b[0m`
-    const gySq = `\x1b[100m  \x1b[0m`
-    const rdSq = `\x1b[41m  \x1b[0m`
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const ws = `\x1b[47m \x1b[0m`
-    const gs = `\x1b[100m \x1b[0m`
-    const rs = `\x1b[41m \x1b[0m`
-    const bs = `\x1b[40m \x1b[0m`
+
+    const whSq = `${whiteBg}  ${resetTxt}`
+    const gySq = `${grayBg}  ${resetTxt}`
+    const rdSq = `${redBg}  ${resetTxt}`
+    const bkSq = `${blackBg}  ${resetTxt}`
+
+    const ws = `${whiteBg} ${resetTxt}`
+    const gs = `${grayBg} ${resetTxt}`
+    const rs = `${redBg} ${resetTxt}`
+    const bs = `${blackBg} ${resetTxt}`
 
     // Colored text
     console.log(`${boldTxt + orangeTxt}Bravery.${resetTxt} ${boldTxt + yellowTxt}Justice.${resetTxt} ${boldTxt + blueTxt}Integrity.${resetTxt} ${boldTxt + greenTxt}Kindness.${resetTxt} ${boldTxt + magentaTxt}Perseverance.${resetTxt} ${boldTxt + cyanTxt}Patience.${resetTxt}`)

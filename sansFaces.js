@@ -1,6 +1,11 @@
-const { resetTxt, boldTxt, settings } = require(`./config`)
+const { resetTxt, boldTxt, blackBg, whiteBg, blueBg, grayBg, settings } = require(`./config`)
 
 let lastSansFace = 4
+const bkSq = `${blackBg}  ${resetTxt}`
+const whSq = `${whiteBg}  ${resetTxt}`
+const blSq = `${blueBg}  ${resetTxt}`
+const gySq = `${grayBg}  ${resetTxt}`
+const noSq = `  `
 
 function getSansFace() {
     const sansExpressions = [
@@ -22,10 +27,8 @@ function getSansFace() {
 
 function sansOpenEyes() {
     if (settings.debug) { console.log(`${boldTxt}> sansOpenEyes()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const whSq = `\x1b[47m  \x1b[0m`
-    const noSq = `  `
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
+
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
@@ -63,10 +66,8 @@ function sansOpenEyes() {
 
 function sansClosedEyes() {
     if (settings.debug) { console.log(`${boldTxt}> sansClosedEyes()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const whSq = `\x1b[47m  \x1b[0m`
-    const noSq = `  `
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
+
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
@@ -104,10 +105,8 @@ function sansClosedEyes() {
 
 function sansNoEyes() {
     if (settings.debug) { console.log(`${boldTxt}> sansNoEyes()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const whSq = `\x1b[47m  \x1b[0m`
-    const noSq = `  `
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
+
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
@@ -145,10 +144,8 @@ function sansNoEyes() {
 
 function sansWink() {
     if (settings.debug) { console.log(`${boldTxt}> sansWink()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const whSq = `\x1b[47m  \x1b[0m`
-    const noSq = `  `
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
+
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
@@ -186,10 +183,8 @@ function sansWink() {
 
 function sansLookAround() {
     if (settings.debug) { console.log(`${boldTxt}> sansLookAround()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const whSq = `\x1b[47m  \x1b[0m`
-    const noSq = `  `
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-   -37-   -38-   -39-   -40-   -41-   -42-   -43-   -44-   -45-   -46-   -47-   -48-   -49-   -50-   -51-   -52-   -53-   -54-   -56-   -57-   -58-   -59-   -60-   -61-   -62-   -63-   -64-   -65-   -66-   -67-   -68-   -69-   -70-   -71-   -72-
+
+    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-   -33-   -34-   -35-   -36-
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 2
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + noSq + noSq + noSq + noSq + noSq + noSq) // 3
@@ -227,11 +222,7 @@ function sansLookAround() {
 
 function sansSmall() {
     if (settings.debug) { console.log(`${boldTxt}> sansSmall()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const whSq = `\x1b[47m  \x1b[0m`
-    const blSq = `\x1b[44m  \x1b[0m`
-    const gySq = `\x1b[100m  \x1b[0m`
-    const noSq = `  `
+
     //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-
     console.log(noSq + noSq + noSq + noSq + noSq + noSq + noSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + noSq + noSq + noSq + noSq + noSq + noSq + noSq) // 1
     console.log(noSq + noSq + noSq + noSq + noSq + bkSq + bkSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + whSq + bkSq + bkSq + noSq + noSq + noSq + noSq + noSq) // 2

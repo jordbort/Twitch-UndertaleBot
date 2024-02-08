@@ -3,17 +3,10 @@
 # UndertaleBot on Twitch [(watch)](https://www.twitch.tv/undertalebot)
 This is a Twitch chatbot that simulates encounters from the 2015 video game "Undertale" by Toby Fox, is hosted in the cloud, and sometimes livestreams.
 
-You can visit its Twitch chat and type `!join` to make the bot active in your Twitch chat as well at any time. Commands always are live, but additionally the bot may simultaneously be live streaming its terminal output, which has a UI and simple graphics.
+Commands always work while the bot is running, and you can visit its Twitch chat and type `!join` at any time to make the bot active in your Twitch chat as well. Additionally, the bot may simultaneously be streaming its terminal output, which has a UI and simple graphics.
 
 ## How it works
 When the bot is active in a Twitch channel, it keeps track of everyone sending messages in the chat. Upon speaking, each chat member is created with base-level stats. A dummy is also always initialized by the bot, which the dev can revive. Users can use commands to interact with the bot and toward players, particularly in the style of the battle system from Undertale. Users can `!act`, use an `!item`, `!mercy`, or `!fight` each other to deplete their HP. If a user "kills" another user, they can earn EXP and increase their LV, and if a user "dies", they lose the ability to use most commands. Any user (dead or alive) can use the `!load` command to revert to their last `!save`.
-
-## Technologies used
-- [JavaScript](https://javascript.com/)
-- [Node.js](https://nodejs.org/)
-- [tmi.js](https://tmijs.com)
-
-Hosted on [Google Cloud](https://cloud.google.com/), streams from a [Raspberry Pi 5](https://www.raspberrypi.com/).
 
 ## Main commands
 `!fight @user` or `!attack @user`
@@ -51,7 +44,7 @@ This command checks the current stats of the user specified (or the user who use
 
 `!intro`
 
-This command uses random battle-starting text from Undertale. Some text is rarer than others, but it's all just for fun. Users cannot use introduce themselves if they are dead.
+This command uses random battle-starting text from Undertale. Some text is rarer than others, but it's all just for fun. Users cannot introduce themselves if they are dead.
 
 `!spamton <number>`
 
@@ -59,7 +52,7 @@ This command returns a random Spamton quote from Deltarune. Optionally, a number
 
 `!memory` or `!players`
 
-This command returns a list of each chat member the bot has acknowledged in memory. This data is lost when the bot's server is rebooted.
+This command returns a list of each chat member the bot has acknowledged in memory. In the terminal, it prints at-a-glance data for all players in a table. This data is lost when the bot's server is rebooted.
 
 `!help`
 
@@ -68,3 +61,66 @@ This command posts a brief summary of why the bot exists and how to use it.
 `!commands`
 
 This command posts a short list of commonly-used commands to help new users get started.
+
+`!undertale` or `!logo`
+
+This command prints the Undertale logo in the terminal. The full- or half-sized version will be used, depending on screen orientation settings (see below).
+
+`!docs`
+
+This command posts a link to this documentation.
+
+## Channel-specific commands
+
+`!join`
+
+This command can be used in UndertaleBot's Twitch chat to create another client in the user's Twitch chat, or re-join if the bot was previously deactivated. The user can use the `!part` command if they would like to deactivate the bot.
+
+`!part`
+
+This command can be used in UndertaleBot's Twitch chat to stop the bot from listening to the user's Twitch chat, if it has created a listening client in there. The bot can be reactivated by using the `!join` command.
+
+`!sans`
+
+This command can be used in UndertaleBot's Twitch chat to print one of five random Sans pixel art images in the terminal. It is programmed not to repeat the same image twice in a row.
+
+## Dev commands
+
+`!revive`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to bring the Dummy back to full HP.
+
+`!recruit @user`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to create a client in another user's Twitch chat, or re-join if the bot was previously deactivated. It is the equivalent of a user using `!join` for their own channel. If a user is not specified, this command lists all channels the bot is active in.
+
+`!unrecruit @user`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to stop the bot from listening to another user's Twitch chat, if it has created a listening client in there. It is the equivalent of a user using `!part` for their own channel. If a user is not specified, this command lists all channels the bot is deactivated in.
+
+`!portrait`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to change the orientation setting to be better-suited for portrait-oriented displays. Specifically, the half-size Undertale logo is used, and the table printed by the `!memory` command is two columns wide instead of four.
+
+`!landscape`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to change the orientation setting to its default, for landscape-oriented displays. Specifically, the full-size Undertale logo is used, and the table printed by the `!memory` command is four columns wide instead of two.
+
+`!reset`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to revert all players back to base-level stats and inventory.
+
+`!truereset`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to delete all player information and SAVE data from memory. The bot does not forget which channels that it is listening in.
+
+`!debug`
+
+This command can be used by the dev in UndertaleBot's Twitch chat to toggle the debug setting. When debug mode is on, most functions print their names and arguments in the terminal when they are called.
+
+## Technologies used
+- [JavaScript](https://javascript.com/)
+- [Node.js](https://nodejs.org/)
+- [tmi.js](https://tmijs.com)
+
+Hosted on [Google Cloud](https://cloud.google.com/), streams from a [Raspberry Pi 5](https://www.raspberrypi.com/).

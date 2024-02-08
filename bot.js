@@ -92,31 +92,13 @@ function onMessageHandler(channel, tags, message, self) {
 
     if (user === DEV
         && channel === BOT_CHANNEL) {
-        // TOGGLE DEBUG MODE
-        if (command === `!debug`) {
+        // Bring the Dummy back to life
+        if (command === `!revive`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            const initialDebugState = settings.debug
-            if (toUser === `on`) { settings.debug = true }
-            else if (toUser === `off`) { settings.debug = false }
-            else { settings.debug = !settings.debug }
-            settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
-        }
-
-        // CHANGE ORIENTATION
-        if (command === `!portrait`) {
-            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-            settings.landscapeView = false
-            printLogo()
-            return talk(channel, `Display is in portrait orientation mode`)
-        }
-        if (command === `!landscape`) {
-            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-            settings.landscapeView = true
-            printLogo()
-            return talk(channel, `Display is in landscape orientation mode`)
+            players.dummy.hp = getUserMaxHP(`dummy`)
+            players.dummy.dead = false
+            return talk(channel, `The Dummy has been revived!`)
         }
 
         // RECRUIT
@@ -167,13 +149,20 @@ function onMessageHandler(channel, tags, message, self) {
             }
         }
 
-        // Bring the Dummy back to life
-        if (command === `!revive`) {
+        // CHANGE ORIENTATION
+        if (command === `!portrait`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            players.dummy.hp = getUserMaxHP(`dummy`)
-            players.dummy.dead = false
-            return talk(channel, `The Dummy has been revived!`)
+            settings.landscapeView = false
+            printLogo()
+            return talk(channel, `Display is in portrait orientation mode`)
+        }
+        if (command === `!landscape`) {
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            settings.landscapeView = true
+            printLogo()
+            return talk(channel, `Display is in landscape orientation mode`)
         }
 
         // RESET
@@ -206,9 +195,35 @@ function onMessageHandler(channel, tags, message, self) {
                     delete players[player]
                     delete playerSave[player]
                     delete highestLevels[player]
+                } else {
+                    players[player].lv = 1
+                    players[player].hp = 20
+                    players[player].dead = false
+                    players[player].timesKilled = 0
+                    players[player].at = 0
+                    players[player].df = 0
+                    players[player].exp = 0
+                    players[player].next = 10
+                    players[player].weapon = `Stick`
+                    players[player].armor = `Bandage`
+                    players[player].gold = 0
+                    players[player].stainedApronHealTime = false
+                    highestLevels[player] = 1
+                    players[player].inventory = []
                 }
             }
             talk(channel, `/me If you DO end up erasing everything... You have to erase my memories, too.`)
+        }
+
+        // TOGGLE DEBUG MODE
+        if (command === `!debug`) {
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+            const initialDebugState = settings.debug
+            if (toUser === `on`) { settings.debug = true }
+            else if (toUser === `off`) { settings.debug = false }
+            else { settings.debug = !settings.debug }
+            settings.debug === initialDebugState ? talk(channel, `Debug mode is currently ${settings.debug ? `on` : `off`}!`) : talk(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
         }
     }
 
@@ -262,92 +277,8 @@ function onMessageHandler(channel, tags, message, self) {
         }
     }
 
-    // MEMORY
-    if ([
-        `!memory`,
-        `!players`
-    ].includes(command)) {
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        return showPlayers(channel)
-    }
-
-    // SAVE
-    if (command === `!save`) {
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
-
-        playerSave[user] = { ...players[user] }
-
-        const response = getSaveText(displayName)
-        return talk(channel, response)
-    }
-
-    // LOAD
-    if (command === `!load`) {
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        players[user] = { ...playerSave[user] }
-        players[user].inventory = playerSave[user].inventory
-
-        let response = `Reloading: "${sendingPlayer.displayName}" `
-        let attackBoost = 0
-        if (players[user].armor === `Cowboy Hat`) { attackBoost = 5 }
-        if (players[user].armor === `Temmie Armor`) { attackBoost = 10 }
-        response += `LV: ${players[user].lv}, HP: ${players[user].hp}/${getUserMaxHP(user)}, AT: ${players[user].at}(${weaponsATK[players[user].weapon] + attackBoost}), DF: ${players[user].df}(${armorDEF[players[user].armor]}), EXP: ${players[user].exp}, NEXT: ${players[user].next}, WEAPON: ${players[user].weapon}, ARMOR: ${players[user].armor}, GOLD: ${players[user].gold}`
-        talk(channel, response)
-        console.log(`Inventory:`, players[user].inventory)
-        return
-    }
-
-    // INTRO
-    if (command === `!intro`) {
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
-
-        const response = getIntroText(sendingPlayer.displayName)
-        return talk(channel, response)
-    }
-
-    // STAT(S)
-    if ([
-        `!stats`,
-        `!stat`,
-        `!status`
-    ].includes(command)) {
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        let response
-        let attackBoost = 0
-        let userInventory = null
-        if (toUser in players) {
-            showStats(toUser)
-            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(user)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBoost}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
-        }
-
-        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
-        else {
-            showStats(user)
-            return talk(channel, `"${user === `dummy` ? `DUMMY` : sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBoost}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`)
-        }
-
-    }
-
-    // SPAMTON QUOTE
-    if (command === `!spamton`) {
-        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
-
-        const response = getSpamtonQuote(toUser)
-        return talk(channel, response)
-    }
-
     // FIGHT or ATTACK
-    if ([
-        `!fight`,
-        `!attack`
-    ].includes(command)) {
+    if ([`!fight`, `!attack`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -383,12 +314,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
 
     // ITEM or ITEMS or USE or EQUIP (for non-consumable items)
-    if ([
-        `!item`,
-        `!items`,
-        `!use`,
-        `!equip`
-    ].includes(command)) {
+    if ([`!item`, `!items`, `!use`, `!equip`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
@@ -431,10 +357,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
 
     // MERCY or SPARE
-    if ([
-        `!mercy`,
-        `!spare`
-    ].includes(command)) {
+    if ([`!mercy`, `!spare`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
@@ -449,6 +372,79 @@ function onMessageHandler(channel, tags, message, self) {
         else { return talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`) }
 
         return handleMercy(channel, user, toUser)
+    }
+
+    // BUY or SHOP or GET
+    if ([`!buy`, `!get`, `!shop`].includes(command)) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
+
+        if (args.length === 0) {
+            let response = `${sendingPlayer.displayName} can buy: `
+            if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
+            if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
+            if (sendingPlayer.lv >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
+            if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?` }
+            if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
+            if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
+            return talk(channel, response)
+        }
+
+        const purchasedItem = args.join(` `) in itemPrices ? args.join(` `) : null
+
+        return purchasedItem
+            ? talk(channel, buyItem(user, purchasedItem, purchasedItem === `temmie armor` ? calculateTemmieArmorPrice(user) : itemPrices[purchasedItem]))
+            : talk(channel, `Sorry ${sendingPlayer.displayName}, that item doesn't exist! :(`)
+    }
+
+    // SAVE
+    if (command === `!save`) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
+
+        playerSave[user] = { ...players[user] }
+
+        const response = getSaveText(displayName)
+        return talk(channel, response)
+    }
+
+    // LOAD
+    if (command === `!load`) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        players[user] = { ...playerSave[user] }
+        players[user].inventory = playerSave[user].inventory
+
+        let response = `Reloading: "${sendingPlayer.displayName}" `
+        let attackBoost = 0
+        if (players[user].armor === `Cowboy Hat`) { attackBoost = 5 }
+        if (players[user].armor === `Temmie Armor`) { attackBoost = 10 }
+        response += `LV: ${players[user].lv}, HP: ${players[user].hp}/${getUserMaxHP(user)}, AT: ${players[user].at}(${weaponsATK[players[user].weapon] + attackBoost}), DF: ${players[user].df}(${armorDEF[players[user].armor]}), EXP: ${players[user].exp}, NEXT: ${players[user].next}, WEAPON: ${players[user].weapon}, ARMOR: ${players[user].armor}, GOLD: ${players[user].gold}`
+        talk(channel, response)
+        console.log(`Inventory:`, players[user].inventory)
+        return
+    }
+
+    // STAT(S)
+    if ([`!stats`, `!stat`, `!status`].includes(command)) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        let response
+        let attackBoost = 0
+        let userInventory = null
+        if (toUser in players) {
+            showStats(toUser)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(user)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBoost}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
+        }
+
+        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
+        else {
+            showStats(user)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBoost}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`)
+        }
+
     }
 
     // HP
@@ -470,10 +466,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
 
     // EXP or EXPERIENCE
-    if ([
-        `!exp`,
-        `!experience`
-    ].includes(command)) {
+    if ([`!exp`, `!experience`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has ${targetPlayer.exp} EXP`) }
@@ -508,40 +501,29 @@ function onMessageHandler(channel, tags, message, self) {
         else { return talk(channel, `${sendingPlayer.displayName} has the ${sendingPlayer.armor} equipped (${armorDEF[sendingPlayer.armor]} DEF)`) }
     }
 
-    // BUY or SHOP or GET
-    if ([
-        `!buy`,
-        `!get`,
-        `!shop`
-    ].includes(command)) {
+    // INTRO
+    if (command === `!intro`) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
-        if (args.length === 0) {
-            let response = `${sendingPlayer.displayName} can buy: `
-            if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
-            if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
-            if (sendingPlayer.lv >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
-            if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?` }
-            if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
-            if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
-            return talk(channel, response)
-        }
-
-        const purchasedItem = args.join(` `) in itemPrices ? args.join(` `) : null
-
-        return purchasedItem
-            ? talk(channel, buyItem(user, purchasedItem, purchasedItem === `temmie armor` ? calculateTemmieArmorPrice(user) : itemPrices[purchasedItem]))
-            : talk(channel, `Sorry ${sendingPlayer.displayName}, that item doesn't exist! :(`)
+        const response = getIntroText(sendingPlayer.displayName)
+        return talk(channel, response)
     }
 
-    // COMMANDS
-    if (command === `!commands`) {
+    // SPAMTON QUOTE
+    if (command === `!spamton`) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
+        const response = getSpamtonQuote(toUser)
         return talk(channel, response)
+    }
+
+    // MEMORY or PLAYERS
+    if ([`!memory`, `!players`].includes(command)) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        return showPlayers(channel)
     }
 
     // HELP
@@ -552,14 +534,22 @@ function onMessageHandler(channel, tags, message, self) {
         return talk(channel, response)
     }
 
+    // COMMANDS
+    if (command === `!commands`) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
+        return talk(channel, response)
+    }
+
     // UNDERTALE or LOGO
-    if ([
-        `!undertale`,
-        `!logo`
-    ].includes(command)) {
+    if ([`!undertale`, `!logo`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
         return printLogo()
     }
+
+    // DOCS
+    if (command === `!docs`) { return talk(chatroom, `Check out the docs here: https://github.com/jordbort/Twitch-UndertaleBot/blob/main/README.md`) }
 }
 
 createClient(BOT_USERNAME, onMessageHandler)

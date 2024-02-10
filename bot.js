@@ -549,7 +549,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
 
     // DOCS
-    if (command === `!docs`) { return talk(chatroom, `Check out the docs here: https://github.com/jordbort/Twitch-UndertaleBot/blob/main/README.md`) }
+    if (command === `!docs`) { return talk(channel, `Check out the docs here: https://github.com/jordbort/Twitch-UndertaleBot/blob/main/README.md`) }
 }
 
 createClient(BOT_USERNAME, onMessageHandler)

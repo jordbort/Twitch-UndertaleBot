@@ -607,7 +607,7 @@ function showPlayers(channel) {
             const logColor = player.dead ? redBg : greenBg
             if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
                 allPlayers.push(player.displayName)
-                const spaces = player.displayName.length > maxColWidth ? (columnWidth - player.displayName.length) + 2 : columnWidth - player.displayName.length
+                const spaces = player.displayName.length < columnWidth ? columnWidth - player.displayName.length : 0
                 row.push(`${logColor}${player.displayName.length > maxColWidth ? player.displayName.substring(0, maxColWidth) : player.displayName}${bufferSpaces(spaces)}${resetTxt}`)
             } else {
                 allPlayers.push(username)

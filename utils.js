@@ -583,6 +583,7 @@ function printLogo() {
 }
 
 const bufferSpaces = (len) => Array(len).fill(` `).join(``)
+const fillNameGap = (colWidth, user) => { return colWidth > user.length ? bufferSpaces(colWidth - user.length) : `` }
 
 function showPlayers(channel) {
     let columnGroups = settings.landscapeView ? 4 : 2
@@ -607,12 +608,10 @@ function showPlayers(channel) {
             const logColor = player.dead ? redBg : greenBg
             if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
                 allPlayers.push(player.displayName)
-                const spaces = player.displayName.length < columnWidth ? columnWidth - player.displayName.length : 0
-                row.push(`${logColor}${player.displayName.length > maxColWidth ? player.displayName.substring(0, maxColWidth) : player.displayName}${bufferSpaces(spaces)}${resetTxt}`)
+                row.push(`${logColor}${player.displayName.length > usersColumnWidth ? player.displayName.substring(0, usersColumnWidth) : player.displayName}${fillNameGap(usersColumnWidth, player.displayName)}${resetTxt}`)
             } else {
                 allPlayers.push(username)
-                const spaces = username.length < columnWidth ? columnWidth - username.length : 0
-                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > maxColWidth ? username.substring(0, maxColWidth) : username}${bufferSpaces(spaces)}${resetTxt}`)
+                row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > usersColumnWidth ? username.substring(0, usersColumnWidth) : username}${fillNameGap(usersColumnWidth, username)}${resetTxt}`)
             }
             let attackBoost = 0
             if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
@@ -635,7 +634,6 @@ function showPlayers(channel) {
 }
 
 const fillShortEntry = (colWidth, title) => { return colWidth < title.length ? bufferSpaces(title.length - colWidth) : `` }
-const fillTitleGap = (colWidth, title) => { return bufferSpaces(colWidth > title.length ? colWidth - title.length : 0) }
 
 function showStats(user) {
     const player = players[user]
@@ -651,27 +649,27 @@ function showStats(user) {
 
     const table = []
     table.push([
-        `${userColumnTitle}${fillTitleGap(userColumnWidth, userColumnTitle)}`,
+        `${userColumnTitle}${fillNameGap(userColumnWidth, userColumnTitle)}`,
         `lv`,
         `hp`,
         `at`,
         `df`,
         `exp`,
         `next`,
-        `${weaponColumnTitle}${fillTitleGap(weaponColumnWidth, weaponColumnTitle)}`,
-        `${armorColumnTitle}${fillTitleGap(armorColumnWidth, armorColumnTitle)}`,
+        `${weaponColumnTitle}${fillNameGap(weaponColumnWidth, weaponColumnTitle)}`,
+        `${armorColumnTitle}${fillNameGap(armorColumnWidth, armorColumnTitle)}`,
         `gold`
     ].join(`\t`))
     table.push([
-        `${Array(userColumnTitle.length).fill(`-`).join(``)}${fillTitleGap(userColumnWidth, userColumnTitle)}`,
+        `${Array(userColumnTitle.length).fill(`-`).join(``)}${fillNameGap(userColumnWidth, userColumnTitle)}`,
         `--`,
         `--`,
         `--`,
         `--`,
         `---`,
         `----`,
-        `${Array(weaponColumnTitle.length).fill(`-`).join(``)}${fillTitleGap(weaponColumnWidth, weaponColumnTitle)}`,
-        `${Array(armorColumnTitle.length).fill(`-`).join(``)}${fillTitleGap(armorColumnWidth, armorColumnTitle)}`,
+        `${Array(weaponColumnTitle.length).fill(`-`).join(``)}${fillNameGap(weaponColumnWidth, weaponColumnTitle)}`,
+        `${Array(armorColumnTitle.length).fill(`-`).join(``)}${fillNameGap(armorColumnWidth, armorColumnTitle)}`,
         `----`
     ].join(`\t`))
 

@@ -589,7 +589,7 @@ function showPlayers(channel) {
     if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
 
     const usersColumnTitle = `username`
-    const maxColWidth = 23
+    const maxColWidth = 22
     let usersColumnWidth = Math.max(...Object.keys(players).map((name) => name.length))
     if (usersColumnWidth < usersColumnTitle.length) { usersColumnWidth = usersColumnTitle.length }
     if (usersColumnWidth > maxColWidth) { usersColumnWidth = maxColWidth }

@@ -589,7 +589,7 @@ function showPlayers(channel) {
     if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
 
     const usersColumnTitle = `username`
-    const maxColWidth = 22
+    const maxColWidth = 23
     let usersColumnWidth = Math.max(...Object.keys(players).map((name) => name.length))
     if (usersColumnWidth < usersColumnTitle.length) { usersColumnWidth = usersColumnTitle.length }
     if (usersColumnWidth > maxColWidth) { usersColumnWidth = maxColWidth }
@@ -611,7 +611,7 @@ function showPlayers(channel) {
                 row.push(`${logColor}${player.displayName.length > maxColWidth ? player.displayName.substring(0, maxColWidth) : player.displayName}${bufferSpaces(spaces)}${resetTxt}`)
             } else {
                 allPlayers.push(username)
-                const spaces = username.length > maxColWidth ? (columnWidth - username.length) + 2 : columnWidth - username.length
+                const spaces = username.length < columnWidth ? columnWidth - username.length : 0
                 row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > maxColWidth ? username.substring(0, maxColWidth) : username}${bufferSpaces(spaces)}${resetTxt}`)
             }
             let attackBoost = 0

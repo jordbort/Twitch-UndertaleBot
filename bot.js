@@ -405,8 +405,10 @@ function onMessageHandler(channel, tags, message, self) {
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
         playerSave[user] = { ...players[user] }
+        playerSave[user].inventory = [...players[user].inventory]
 
         const response = getSaveText(displayName)
+        showStats(user)
         return talk(channel, response)
     }
 
@@ -422,9 +424,8 @@ function onMessageHandler(channel, tags, message, self) {
         if (players[user].armor === `Cowboy Hat`) { attackBoost = 5 }
         if (players[user].armor === `Temmie Armor`) { attackBoost = 10 }
         response += `LV: ${players[user].lv}, HP: ${players[user].hp}/${getUserMaxHP(user)}, AT: ${players[user].at}(${weaponsATK[players[user].weapon] + attackBoost}), DF: ${players[user].df}(${armorDEF[players[user].armor]}), EXP: ${players[user].exp}, NEXT: ${players[user].next}, WEAPON: ${players[user].weapon}, ARMOR: ${players[user].armor}, GOLD: ${players[user].gold}`
-        talk(channel, response)
-        console.log(`Inventory:`, players[user].inventory)
-        return
+        showStats(user)
+        return talk(channel, response)
     }
 
     // STAT(S)

@@ -494,7 +494,7 @@ function onMessageHandler(channel, tags, message, self) {
     }
 
     // ARMOR
-    if (command === `!armor`) {
+    if ([`!armor`, `!armour`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         if (targetPlayer) { return talk(channel, `${targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)} has the ${targetPlayer.armor} equipped (${armorDEF[targetPlayer.armor]} DEF)`) }

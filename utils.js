@@ -268,7 +268,7 @@ function getSaveText(displayName) {
         `Knowing the mouse might one day leave its hole and get the cheese... It fills ${displayName} with determination.`,
         `Seeing such a cute, tidy house in the RUINS gives ${displayName} determination.`,
         `The cold atmosphere of a new land... it fills ${displayName} with determination.`,
-        `The convenience of that lamp still fill    s ${displayName} with determination.`,
+        `The convenience of that lamp still fills ${displayName} with determination.`,
         `Knowing the mouse might one day find a way to heat up the spaghetti... It fills ${displayName} with determination.`,
         `Snow can always be broken down and rebuilt into something more useful. This simple fact fills ${displayName} with determination.`,
         `Knowing that dog will never give up trying to make the perfect snowdog... It fills ${displayName} with determination.`,

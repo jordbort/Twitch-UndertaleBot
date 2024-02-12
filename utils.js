@@ -590,10 +590,10 @@ function showPlayers(channel) {
     if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
 
     const usersColumnTitle = `username`
-    const maxColWidth = 23
+    const maxUsersColWidth = process.stdout.columns < 224 ? process.stdout.columns < 192 ? 7 : 15 : 23
     let usersColumnWidth = Math.max(...Object.keys(players).map((name) => name.length))
     if (usersColumnWidth < usersColumnTitle.length) { usersColumnWidth = usersColumnTitle.length }
-    if (usersColumnWidth > maxColWidth) { usersColumnWidth = maxColWidth }
+    if (usersColumnWidth > maxUsersColWidth) { usersColumnWidth = maxUsersColWidth }
 
     const table = []
     table.push(Array(columnGroups).fill(`${usersColumnTitle}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))

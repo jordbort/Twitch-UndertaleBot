@@ -162,8 +162,10 @@ function createClient(user, onMessageHandler) {
         })
     } else {
         client.on(`connected`, () => {
-            console.log(`* Connected to ${user}'s channel.`)
-            setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 1000)
+            if (joinedChannels[user].active) {
+                console.log(`* Connected to ${user}'s channel.`)
+                // setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 1000)
+            }
         })
     }
     client.connect()

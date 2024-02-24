@@ -417,7 +417,7 @@ function onMessageHandler(channel, tags, message, self) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
         players[user] = { ...playerSave[user] }
-        players[user].inventory = playerSave[user].inventory
+        players[user].inventory = [...playerSave[user].inventory]
 
         let response = `Reloading: "${sendingPlayer.displayName}" `
         let attackBoost = 0

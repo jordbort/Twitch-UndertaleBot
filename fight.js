@@ -142,7 +142,23 @@ function deathCheck(chatroom, user, target) {
         // Building death response
         let response = `* `
         response += deathText[Math.floor(Math.random() * deathText.length)]
-        target === `dummy` ? response += ` The Dummy was ripped to shreds... ` : response += ` ${capsTarget}! Stay determined... `
+
+        if (target === `dummy`) {
+            response += ` The Dummy was ripped to shreds... `
+            setTimeout(() => {
+                const flavorTexts = [
+                    `* You encountered the Dummy.`,
+                    `* Dummy looks like it's going to fall over.`,
+                    `* Dummy stands around absentmindedly.`
+                ]
+                const flavorText = flavorTexts[Math.floor(Math.random() * flavorTexts.length)]
+                players.dummy.hp = getUserMaxHP(`dummy`)
+                players.dummy.dead = false
+                talk(chatroom, flavorText)
+            }, settings.respawnTimer)
+        } else {
+            response += ` ${capsTarget}! Stay determined... `
+        }
 
         // Checking if user killed a different user
         if (user !== target) {

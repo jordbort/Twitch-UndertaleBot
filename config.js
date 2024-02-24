@@ -39,6 +39,9 @@ const settings = {
     // Change to false for portrait-oriented screens
     landscapeView: true,
 
+    // The Dummy's respawn timer
+    respawnTimer: 300000,
+
     // Helper functions log their params when invoked
     debug: false
 }

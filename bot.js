@@ -90,8 +90,7 @@ function onMessageHandler(channel, tags, message, self) {
     // ** DEV COMMANDS **
     // ******************
 
-    if (user === DEV
-        && channel === BOT_CHANNEL) {
+    if (user === DEV && channel === BOT_CHANNEL) {
         // Bring the Dummy back to life
         if (command === `!revive`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
@@ -391,7 +390,7 @@ function onMessageHandler(channel, tags, message, self) {
             return talk(channel, response)
         }
 
-        const purchasedItem = args.join(` `) in itemPrices ? args.join(` `) : null
+        const purchasedItem = args.join(` `) === `temmie armor` || args.join(` `) in itemPrices ? args.join(` `) : null
 
         return purchasedItem
             ? talk(channel, buyItem(user, purchasedItem, purchasedItem === `temmie armor` ? calculateTemmieArmorPrice(user) : itemPrices[purchasedItem]))

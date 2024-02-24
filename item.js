@@ -283,10 +283,11 @@ function dropItem(user, str, idx) {
         "astronaut food": "Astronaut Food",
         "crab apple": "Crab Apple",
         "sea tea": "Sea Tea",
-        "abandoned quiche": "Abandoned quiche",
+        "abandoned quiche": "Abandoned Quiche",
         "temmie flakes": "Temmie Flakes",
         "dog salad": "Dog Salad",
         "instant noodles": "Instant Noodles",
+        "hot dog...?": "Hot Dog...?",
         "hot cat": "Hot Cat",
         "junk food": "Junk Food",
         "hush puppy": "Hush Puppy",
@@ -421,6 +422,304 @@ function itemLookup(str) {
         : allItems.includes(str)
             ? str
             : null
+}
+
+function sellItem(user, str, idx) {
+    if (settings.debug) {
+        console.log(`${boldTxt}> sellItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
+        if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
+    }
+
+    const items = {
+        // Consumable items
+        "bandage": {
+            shortName: "Bandage",
+            sellPrice: 150,
+            negotiatePrice: 190
+        },
+        "monster candy": {
+            shortName: "MnstrCndy",
+            sellPrice: 25,
+            negotiatePrice: 34
+        },
+        "spider donut": {
+            shortName: "SpidrDont",
+            sellPrice: 30,
+            negotiatePrice: 40
+        },
+        "spider cider": {
+            shortName: "SpidrCidr",
+            sellPrice: 60,
+            negotiatePrice: 78
+        },
+        "butterscotch pie": {
+            shortName: "ButtsPie",
+            sellPrice: 180,
+            negotiatePrice: 228
+        },
+        "snail pie": {
+            shortName: "Snail Pie",
+            sellPrice: 350,
+            negotiatePrice: 440
+        },
+        "snowman piece": {
+            shortName: "SnowPiece",
+            sellPrice: 40,
+            negotiatePrice: 53
+        },
+        "nice cream": {
+            shortName: "NiceCream",
+            sellPrice: 2,
+            negotiatePrice: 5
+        },
+        "bisicle": {
+            shortName: "Bisicle",
+            sellPrice: 5,
+            negotiatePrice: 9
+        },
+        "unisicle": {
+            shortName: "Unisicle",
+            sellPrice: 2,
+            negotiatePrice: 5
+        },
+        "cinnamon bunny": {
+            shortName: "CinnaBun",
+            sellPrice: 8,
+            negotiatePrice: 13
+        },
+        "astronaut food": {
+            shortName: "AstroFood",
+            sellPrice: 25,
+            negotiatePrice: 34
+        },
+        "crab apple": {
+            shortName: "CrabApple",
+            sellPrice: 5,
+            negotiatePrice: 9
+        },
+        "sea tea": {
+            shortName: "Sea Tea",
+            sellPrice: 5,
+            negotiatePrice: 9
+        },
+        "abandoned quiche": {
+            shortName: "Ab Quiche",
+            sellPrice: 76,
+            negotiatePrice: 98
+        },
+        "temmie flakes": {
+            shortName: "TemFlakes",
+            sellPrice: 2,
+            negotiatePrice: 5
+        },
+        "dog salad": {
+            shortName: "Dog Salad",
+            sellPrice: 8,
+            negotiatePrice: 13
+        },
+        "instant noodles": {
+            shortName: "InstaNood",
+            sellPrice: 50,
+            negotiatePrice: 65
+        },
+        "hot dog...?": {
+            shortName: "Hot Dog",
+            sellPrice: 10,
+            negotiatePrice: 15
+        },
+        "hot cat": {
+            shortName: "Hot Cat",
+            sellPrice: 11,
+            negotiatePrice: 16
+        },
+        "junk food": {
+            shortName: "Junk Food",
+            sellPrice: 1,
+            negotiatePrice: 4
+        },
+        "hush puppy": {
+            shortName: "HushPupe",
+            sellPrice: 150,
+            negotiatePrice: 190
+        },
+        "starfait": {
+            shortName: "Starfait",
+            sellPrice: 10,
+            negotiatePrice: 15
+        },
+        "glamburger": {
+            shortName: "GlamBurg",
+            sellPrice: 15,
+            negotiatePrice: 21
+        },
+        "legendary hero": {
+            shortName: "Leg.Hero",
+            sellPrice: 40,
+            negotiatePrice: 53
+        },
+        "steak in the shape of mettaton's face": {
+            shortName: "FaceSteak",
+            sellPrice: 14,
+            negotiatePrice: 20
+        },
+        "popato chisps": {
+            shortName: "PT Chisps",
+            sellPrice: 35,
+            negotiatePrice: 46
+        },
+        "bad memory": {
+            shortName: "BadMemory",
+            sellPrice: 300,
+            negotiatePrice: 378
+        },
+        "last dream": {
+            shortName: "LastDream",
+            sellPrice: 250,
+            negotiatePrice: 315
+        },
+
+        // Unused items
+        "puppydough icecream": {
+            shortName: "PDIceCram",
+            sellPrice: 2,
+            negotiatePrice: 5
+        },
+        "pumpkin rings": {
+            shortName: "PunkRings",
+            sellPrice: 3,
+            negotiatePrice: 6
+        },
+        "croquet roll": {
+            shortName: "CroqtRoll",
+            sellPrice: 10,
+            negotiatePrice: 15
+        },
+        "ghost fruit": {
+            shortName: "GhostFrut",
+            sellPrice: 10,
+            negotiatePrice: 15
+        },
+        "stoic onion": {
+            shortName: "StocOnoin",
+            sellPrice: 10,
+            negotiatePrice: 15
+        },
+        "rock candy": {
+            shortName: "RockCandy",
+            sellPrice: 3,
+            negotiatePrice: 6
+        },
+
+        // Weapons
+        "stick": {
+            shortName: "Stick",
+            sellPrice: 150,
+            negotiatePrice: 190
+        },
+        "toy knife": {
+            shortName: "Toy Knife",
+            sellPrice: 100,
+            negotiatePrice: 128
+        },
+        "tough glove": {
+            shortName: "TuffGlove",
+            sellPrice: 50,
+            negotiatePrice: 65
+        },
+        "ballet shoes": {
+            shortName: "BallShoes",
+            sellPrice: 80,
+            negotiatePrice: 103
+        },
+        "torn notebook": {
+            shortName: "TornNotbo",
+            sellPrice: 50,
+            negotiatePrice: 65
+        },
+        "burnt pan": {
+            shortName: "Burnt Pan",
+            sellPrice: 100,
+            negotiatePrice: 128
+        },
+        "empty gun": {
+            shortName: "Empty Gun",
+            sellPrice: 100,
+            negotiatePrice: 128
+        },
+        "worn dagger": {
+            shortName: "WornDG",
+            sellPrice: 250,
+            negotiatePrice: 315
+        },
+        "real knife": {
+            shortName: "RealKnife",
+            sellPrice: 500,
+            negotiatePrice: 628
+        },
+
+        // Armor
+        "faded ribbon": {
+            shortName: "Ribbon",
+            sellPrice: 100,
+            negotiatePrice: 128
+        },
+        "manly bandanna": {
+            shortName: "Mandanna",
+            sellPrice: 50,
+            negotiatePrice: 65
+        },
+        "old tutu": {
+            shortName: "Old Tutu",
+            sellPrice: 80,
+            negotiatePrice: 103
+        },
+        "cloudy glasses": {
+            shortName: "ClodGlass",
+            sellPrice: 50,
+            negotiatePrice: 65
+        },
+        "temmie armor": {
+            shortName: "Temmie AR",
+            sellPrice: 500,
+            negotiatePrice: 628
+        },
+        "stained apron": {
+            shortName: "StainApro",
+            sellPrice: 100,
+            negotiatePrice: 128
+        },
+        "cowboy hat": {
+            shortName: "CowboyHat",
+            sellPrice: 100,
+            negotiatePrice: 128
+        },
+        "heart locket": {
+            shortName: "<--Locket",
+            sellPrice: 250,
+            negotiatePrice: 315
+        },
+        "the locket": {
+            shortName: "TheLocket",
+            sellPrice: 500,
+            negotiatePrice: 628
+        }
+    }
+
+    const player = players[user]
+    const item = items[str].shortName
+
+    player.inventory.splice(idx, 1)
+    if (player.itemsSold % 8 === 0) {
+        const price = items[str].negotiatePrice
+        player.gold += price
+        player.itemsSold++
+        return `* WOA!! u gota... ${item}s!!! hnnn.... i gota have dat ${item}s... but i gota pay for colleg, hnnnn....!!! tem always wanna ${item}s...! tem buy ${item} for... ${price}G!!!`
+    } else {
+        const price = items[str].sellPrice
+        player.gold += price
+        player.itemsSold++
+        return `* tem buy ${item} for ${price}G!!!`
+    }
 }
 
 function useItem(user, str, idx) {
@@ -1230,4 +1529,4 @@ function useItem(user, str, idx) {
     return `* ${capsName} used 0. If you are reading this, I messed up somehow.`
 }
 
-module.exports = { buyItem, dropItem, itemLookup, useItem }
+module.exports = { buyItem, dropItem, itemLookup, sellItem, useItem }

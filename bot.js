@@ -10,7 +10,7 @@ const { handleFight } = require(`./fight`)
 
 const { handleAct } = require(`./act`)
 
-const { buyItem, dropItem, itemLookup, useItem } = require(`./item`)
+const { buyItem, dropItem, itemLookup, sellItem, useItem } = require(`./item`)
 
 const { handleMercy } = require(`./mercy`)
 
@@ -48,6 +48,7 @@ function onMessageHandler(channel, tags, message, self) {
             hp: 20,
             dead: false,
             timesKilled: 0,
+            itemsSold: 0,
             at: 0,
             df: 0,
             exp: 0,
@@ -64,6 +65,7 @@ function onMessageHandler(channel, tags, message, self) {
             hp: 20,
             dead: false,
             timesKilled: 0,
+            itemsSold: 0,
             at: 0,
             df: 0,
             exp: 0,
@@ -75,8 +77,8 @@ function onMessageHandler(channel, tags, message, self) {
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
         highestLevels[user] = 1
-        const message = getIntroText(displayName)
-        talk(BOT_CHANNEL, message)
+        // const message = getIntroText(displayName)
+        // talk(BOT_CHANNEL, message)
     }
 
     makeLogs()
@@ -429,6 +431,38 @@ function onMessageHandler(channel, tags, message, self) {
         }
 
         const response = dropItem(user, droppedItem, index)
+        console.log(`Inventory:`, sendingPlayer.inventory)
+        return talk(channel, response)
+    }
+
+    // SELL item (LV 3)
+    if (command === `!sell`) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        // Can't use if dead
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
+
+        // Can't use if not LV 3
+        if (sendingPlayer.lv < 3) { return talk(channel, `* Huh? Sell somethin'? Does this look like a pawn shop? I don't know how it works where you come from... but... If I started spending money on old branches and used bandages, I'd be out of business in a jiffy!`) }
+
+        if (args.length === 0) { return talk(channel, `* hOI! welcom to... da TEM SHOP!!!`) }
+
+        const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
+        const inventory = sendingPlayer.inventory.map(item => item.toLowerCase())
+        if (inventory.length === 0) { return talk(channel, `* no more item...`) }
+
+        // Item validation
+        const soldItem = itemLookup(args.join(` `))
+        if (!soldItem) { return talk(channel, `${capsName}, that isn't an item! :(`) }
+
+        // Check possession
+        const index = inventory.indexOf(soldItem)
+        if (index < 0) {
+            console.log(`Inventory:`, sendingPlayer.inventory)
+            return talk(channel, `${capsName}, you don't have that item! :(`)
+        }
+
+        const response = sellItem(user, soldItem, index)
         console.log(`Inventory:`, sendingPlayer.inventory)
         return talk(channel, response)
     }

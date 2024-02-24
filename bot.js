@@ -428,16 +428,14 @@ function onMessageHandler(channel, tags, message, self) {
         return talk(channel, response)
     }
 
-    // STAT(S)
-    if ([`!stats`, `!stat`, `!status`].includes(command)) {
+    // CHECK or STAT(S)
+    if ([`!check`, `!stats`, `!stat`, `!status`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let response
         let attackBoost = 0
-        let userInventory = null
         if (toUser in players) {
             showStats(toUser)
-            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(user)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBoost}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(toUser)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBoost}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
         }
 
         else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }

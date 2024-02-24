@@ -147,8 +147,6 @@ const itemPrices = {
     // Consumable items
     "spider donut": 7,
     "spider cider": 18,
-    "nice cream": 15, // 25G later
-    "bisicle": 15, // 30, 45, 70G later
     "cinnamon bunny": 25,
     "crab apple": 25,
     "sea tea": 18,

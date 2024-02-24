@@ -98,7 +98,28 @@ function calculateUserLV(user) {
     return foundItemsAppend
 }
 
+function calculateBisiclePrice(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateBisiclePrice(user: ${user})${resetTxt}`) }
+
+    const lv = players[user].lv
+    if (lv < 3) { return 15 }
+    else if (lv < 4) { return 30 }
+    else if (lv < 5) { return 45 }
+    else { return 75 }
+}
+
+function calculateNiceCreamPrice(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateNiceCreamPrice(user: ${user})${resetTxt}`) }
+
+    const lv = players[user].lv
+    if (lv < 3) { return 15 }
+    else if (lv < 4) { return 25 }
+    else { return 12 }
+}
+
 function calculateTemmieArmorPrice(user) {
+    if (settings.debug) { console.log(`${boldTxt}> calculateTemmieArmorPrice(user: ${user})${resetTxt}`) }
+
     const deaths = players[user].timesKilled
     const priceTable = {
         0: 9999,
@@ -726,6 +747,8 @@ module.exports = {
     calculateUserDEF,
     calculateUserNextLV,
     calculateUserLV,
+    calculateBisiclePrice,
+    calculateNiceCreamPrice,
     calculateTemmieArmorPrice,
     createClient,
     getChannels,

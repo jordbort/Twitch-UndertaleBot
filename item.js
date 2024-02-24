@@ -827,7 +827,7 @@ function useItem(user, str, idx) {
             console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ALL ${resetTxt}`)
         } else {
             player.hp += healAmt
-            itemText += `${player.displayName} lost 1 HP.`
+            itemText += `${capsName} lost 1 HP.`
             console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         }
         showStats(user)

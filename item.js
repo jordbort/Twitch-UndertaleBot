@@ -259,6 +259,100 @@ function buyItem(user, str, price) {
     return `If you are reading this, ${player.displayName}, I messed up somehow.`
 }
 
+function dropItem(user, str, idx) {
+    if (settings.debug) {
+        console.log(`${boldTxt}> dropItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
+        if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
+    }
+    const player = players[user]
+    const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+
+    const items = {
+        // Consumable items
+        "bandage": "Bandage",
+        "monster candy": "Monster Candy",
+        "spider donut": "Spider Donut",
+        "spider cider": "Spider Cider",
+        "butterscotch pie": "Butterscotch Pie",
+        "snail pie": "Snail Pie",
+        "snowman piece": "Snowman Piece",
+        "nice cream": "Nice Cream",
+        "bisicle": "Bisicle",
+        "unisicle": "Unisicle",
+        "cinnamon bunny": "Cinnamon Bunny",
+        "astronaut food": "Astronaut Food",
+        "crab apple": "Crab Apple",
+        "sea tea": "Sea Tea",
+        "abandoned quiche": "Abandoned quiche",
+        "temmie flakes": "Temmie Flakes",
+        "dog salad": "Dog Salad",
+        "instant noodles": "Instant Noodles",
+        "hot cat": "Hot Cat",
+        "junk food": "Junk Food",
+        "hush puppy": "Hush Puppy",
+        "starfait": "Starfait",
+        "glamburger": "Glamburger",
+        "legendary hero": "Legendary Hero",
+        "steak in the shape of mettaton's face": "Steak in the Shape of Mettaton's Face",
+        "popato chisps": "Popato Chisps",
+        "bad memory": "Bad Memory",
+        "last dream": "Last Dream",
+
+        // Unused items
+        "puppydough icecream": "Puppydough Icecream",
+        "pumpkin rings": "Pumpkin Rings",
+        "croquet roll": "Croquet Roll",
+        "ghost fruit": "Ghost Fruit",
+        "stoic onion": "Stoic Onion",
+        "rock candy": "Rock Candy",
+
+        // Weapons
+        "stick": "Stick",
+        "toy knife": "Toy Knife",
+        "tough glove": "Tough Glove",
+        "ballet shoes": "Ballet Shoes",
+        "torn notebook": "Torn Notebook",
+        "burnt pan": "Burnt Pan",
+        "empty gun": "Empty Gun",
+        "worn dagger": "Worn Dagger",
+        "real knife": "Real Knife",
+
+        // Armor
+        "faded ribbon": "Faded Ribbon",
+        "manly bandanna": "Manly Bandanna",
+        "old tutu": "Old Tutu",
+        "cloudy glasses": "Cloudy Glasses",
+        "temmie armor": "Temmie Armor",
+        "stained apron": "Stained Apron",
+        "cowboy hat": "Cowboy Hat",
+        "heart locket": "Heart Locket",
+        "the locket": "The Locket"
+    }
+
+    if (str === `abandoned quiche`) {
+        player.inventory.splice(idx, 1)
+        return `* ${capsName} leaves the Quiche on the ground and tells it they'll be right back.`
+    }
+    else if (str === `bad memory`) {
+        return `* (${capsName} threw the Bad Memory away.) (But it came back.)`
+    }
+    else {
+        player.inventory.splice(idx, 1)
+        const randNum = Math.floor(Math.random() * 36)
+        if (randNum < 29) {
+            return `* The ${items[str]} was thrown away.`
+        } else if ([29, 30].includes(randNum)) {
+            return `* ${capsName} abandoned the ${items[str]}.`
+        } else if ([31, 32].includes(randNum)) {
+            return `* ${capsName} threw the ${items[str]} on the ground like the piece of trash it is.`
+        } else if ([33, 34].includes(randNum)) {
+            return `* ${capsName} put the ${items[str]} on the ground and gave it a little pat.`
+        } else {
+            return `* ${capsName} bid a quiet farewell to the ${items[str]}.`
+        }
+    }
+}
+
 function itemLookup(str) {
     if (settings.debug) { console.log(`${boldTxt}> itemLookup(str: ${str})${resetTxt}`) }
     const allItems = [
@@ -1136,4 +1230,4 @@ function useItem(user, str, idx) {
     return `* ${capsName} used 0. If you are reading this, I messed up somehow.`
 }
 
-module.exports = { buyItem, itemLookup, useItem }
+module.exports = { buyItem, dropItem, itemLookup, useItem }

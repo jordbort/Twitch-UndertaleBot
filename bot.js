@@ -10,7 +10,7 @@ const { handleFight } = require(`./fight`)
 
 const { handleAct } = require(`./act`)
 
-const { buyItem, itemLookup, useItem } = require(`./item`)
+const { buyItem, dropItem, itemLookup, useItem } = require(`./item`)
 
 const { handleMercy } = require(`./mercy`)
 
@@ -395,6 +395,35 @@ function onMessageHandler(channel, tags, message, self) {
         return purchasedItem
             ? talk(channel, buyItem(user, purchasedItem, purchasedItem === `temmie armor` ? calculateTemmieArmorPrice(user) : itemPrices[purchasedItem]))
             : talk(channel, `Sorry ${sendingPlayer.displayName}, that item doesn't exist! :(`)
+    }
+
+    // DROP item
+    if (command === `!drop` && args.length !== 0) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+
+        // Can't use if dead
+        if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
+
+        const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
+
+        const inventory = sendingPlayer.inventory.map(item => item.toLowerCase())
+        if (inventory.length === 0) { return talk(channel, `${capsName} has no items! :(`) }
+
+        // Item validation
+        const droppedItem = itemLookup(args.join(` `))
+
+        if (!droppedItem) { return talk(channel, `${capsName}, that isn't an item! :(`) }
+
+        // Check possession
+        const index = inventory.indexOf(droppedItem)
+        if (index < 0) {
+            console.log(`Inventory:`, sendingPlayer.inventory)
+            return talk(channel, `${capsName}, you don't have that item! :(`)
+        }
+
+        const response = dropItem(user, droppedItem, index)
+        console.log(`Inventory:`, sendingPlayer.inventory)
+        return talk(channel, response)
     }
 
     // SAVE

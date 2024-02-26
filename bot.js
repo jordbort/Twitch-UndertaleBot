@@ -2,7 +2,7 @@ require(`dotenv`).config()
 
 const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, getChannels, printLogo, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
 
-const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, settings } = require(`./config`)
+const { BOT_USERNAME, BOT_CHANNEL, DEV, ACTIVE_CHANNELS, resetTxt, boldTxt, inverted, redTxt, greenTxt, settings } = require(`./config`)
 
 const { joinedChannels, players, playerSave, highestLevels, weaponsATK, armorDEF, consumableItems, itemPrices } = require(`./data`)
 
@@ -77,8 +77,8 @@ function onMessageHandler(channel, tags, message, self) {
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
         highestLevels[user] = 1
-        // const message = getIntroText(displayName)
-        // talk(BOT_CHANNEL, message)
+        const message = getIntroText(displayName)
+        talk(BOT_CHANNEL, message)
     }
 
     makeLogs()
@@ -100,6 +100,14 @@ function onMessageHandler(channel, tags, message, self) {
             players.dummy.hp = getUserMaxHP(`dummy`)
             players.dummy.dead = false
             return talk(channel, `The Dummy has been revived!`)
+        }
+
+        // Connect to all known active channels
+        if (command === `!connect`) {
+            for (const chat of ACTIVE_CHANNELS) {
+                createClient(chat, onMessageHandler)
+            }
+            return
         }
 
         // RECRUIT

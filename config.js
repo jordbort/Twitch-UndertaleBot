@@ -3,6 +3,7 @@ const BOT_USERNAME = process.env.BOT_USERNAME
 const BOT_CHANNEL = `#${BOT_USERNAME}`
 const DEV = process.env.DEV
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
+const ACTIVE_CHANNELS = process.env.ACTIVE_CHANNELS.split(`,`)
 
 // Terminal colors
 const resetTxt = `\x1b[0m`
@@ -51,6 +52,7 @@ module.exports = {
     BOT_CHANNEL,
     DEV,
     OAUTH_TOKEN,
+    ACTIVE_CHANNELS,
     resetTxt,
     boldTxt,
     underlined,

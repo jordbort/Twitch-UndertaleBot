@@ -29,6 +29,10 @@ This command attempts to "spare" the user specified. If no user is specified, or
 
 If this command is used without an item name, it tells the user which items they are able to purchase. More items from various shopkeepers become available to purchase by the user as their LV increases. If the user types the command followed by the name of an item available to them, they'll spend their gold to buy it, unless they can't afford it. Purchased items can then be used or equipped with the `!item` command. Users cannot buy items if they are dead.
 
+`!price` or `!prices`
+
+This command can be used to get the price of any item available to the user. If an item isn't specified, or the item isn't available to the user yet, the prices of all items available to the user are listed.
+
 `!drop <item>`
 
 This command is used to dispose of an item in the user's inventory. Users cannot use `!drop` if they are dead, or if they have no items.

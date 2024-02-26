@@ -11,7 +11,7 @@ When the bot is active in a Twitch channel, it keeps track of everyone sending m
 ## Main commands
 `!fight @user` or `!attack @user`
 
-This command attacks the user specified (or no one, if none specified). There is a 20% chance that you'll "miss", otherwise the ATK stat + weapon damage + a random number will be used to calculate damage, from which the DEF stat and armor bonuses are deducted. If the user kills a user, the bot also sends a message that the dead user should "stay determined..." When a player kills another user, they receive all their EXP and gold (if any), plus a base of 10 EXP. Users cannot use `!fight` if they are dead, nor can the command be used on a dead user or a user that isn't in the bot's memory. If users try to fight the bot, it suggests that they try fighting the Dummy instead.
+This command attacks the user specified (or no one, if none specified). There is a 20% chance that you'll "miss", otherwise the ATK stat + weapon damage + a random number will be used to calculate damage, from which the DEF stat and armor bonuses are deducted. If the user kills a user, the bot also sends a message that the dead user should "stay determined..." When a player kills another user, they receive all their EXP and gold (if any), plus a base of 10 EXP. Users cannot use `!fight` if they are dead, nor can the command be used on a dead user or a user that isn't in the bot's memory. If users try to fight the bot, it suggests that they try fighting the Dummy instead. If the Dummy is killed, it will automatically respawn after 5 minutes.
 
 `!act @user`
 
@@ -28,6 +28,14 @@ This command attempts to "spare" the user specified. If no user is specified, or
 `!buy` or `!shop` or `!get`
 
 If this command is used without an item name, it tells the user which items they are able to purchase. More items from various shopkeepers become available to purchase by the user as their LV increases. If the user types the command followed by the name of an item available to them, they'll spend their gold to buy it, unless they can't afford it. Purchased items can then be used or equipped with the `!item` command. Users cannot buy items if they are dead.
+
+`!drop <item>`
+
+This command is used to dispose of an item in the user's inventory. Users cannot use `!drop` if they are dead, or if they have no items.
+
+`!sell`
+
+After reaching LV 3, users are able to sell items in their inventory at the Tem Shop. Starting with the first item sold, users will get a higher sell price on every eighth item sold. Users cannot use `!sell` if they are dead, have no items, or have not yet reached LV 3.
 
 `!save`
 
@@ -88,7 +96,7 @@ This command can be used in UndertaleBot's Twitch chat to print one of five rand
 
 `!revive`
 
-This command can be used by the dev in UndertaleBot's Twitch chat to bring the Dummy back to full HP.
+This command can be used by the dev in UndertaleBot's Twitch chat to bring the Dummy back to full HP. The Dummy also respawns automatically 5 minutes after being killed.
 
 `!recruit @user`
 

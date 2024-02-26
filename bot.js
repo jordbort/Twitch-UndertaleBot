@@ -488,10 +488,8 @@ function onMessageHandler(channel, tags, message, self) {
         players[user].inventory = [...playerSave[user].inventory]
 
         let response = `Reloading: "${sendingPlayer.displayName}" `
-        let attackBoost = 0
-        if (players[user].armor === `Cowboy Hat`) { attackBoost = 5 }
-        if (players[user].armor === `Temmie Armor`) { attackBoost = 10 }
-        response += `LV: ${players[user].lv}, HP: ${players[user].hp}/${getUserMaxHP(user)}, AT: ${players[user].at}(${weaponsATK[players[user].weapon] + attackBoost}), DF: ${players[user].df}(${armorDEF[players[user].armor]}), EXP: ${players[user].exp}, NEXT: ${players[user].next}, WEAPON: ${players[user].weapon}, ARMOR: ${players[user].armor}, GOLD: ${players[user].gold}`
+        const attackBonus = sendingPlayer.armor === `Cowboy Hat` ? 5 : sendingPlayer.armor === `Temmie Armor` ? 10 : 0
+        response += `LV: ${players[user].lv}, HP: ${players[user].hp}/${getUserMaxHP(user)}, AT: ${players[user].at}(${weaponsATK[players[user].weapon] + attackBonus}), DF: ${players[user].df}(${armorDEF[players[user].armor]}), EXP: ${players[user].exp}, NEXT: ${players[user].next}, WEAPON: ${players[user].weapon}, ARMOR: ${players[user].armor}, GOLD: ${players[user].gold}`
         showStats(user)
         return talk(channel, response)
     }
@@ -500,16 +498,16 @@ function onMessageHandler(channel, tags, message, self) {
     if ([`!check`, `!stats`, `!stat`, `!status`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        let attackBoost = 0
+        const attackBonus = sendingPlayer.armor === `Cowboy Hat` ? 5 : sendingPlayer.armor === `Temmie Armor` ? 10 : 0
         if (toUser in players) {
             showStats(toUser)
-            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(toUser)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBoost}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(toUser)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBonus}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
         }
 
         else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
         else {
             showStats(user)
-            return talk(channel, `"${user === `dummy` ? `DUMMY` : sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBoost}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`)
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBonus}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`)
         }
 
     }

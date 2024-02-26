@@ -74,35 +74,97 @@ const armorDEF = {
     'The Locket': 99
 }
 
-const itemLvThreshold = {
+const itemNames = {
     // Consumable items
+    "bandage": "Bandage",
+    "monster candy": "Monster Candy",
+    "spider donut": "Spider Donut",
+    "spider cider": "Spider Cider",
+    "butterscotch pie": "Butterscotch Pie",
+    "snail pie": "Snail Pie",
+    "snowman piece": "Snowman Piece",
+    "nice cream": "Nice Cream",
+    "bisicle": "Bisicle",
+    "unisicle": "Unisicle",
+    "cinnamon bunny": "Cinnamon Bunny",
+    "astronaut food": "Astronaut Food",
+    "crab apple": "Crab Apple",
+    "sea tea": "Sea Tea",
+    "abandoned quiche": "Abandoned Quiche",
+    "temmie flakes": "Temmie Flakes",
+    "dog salad": "Dog Salad",
+    "instant noodles": "Instant Noodles",
+    "hot dog...?": "Hot Dog...?",
+    "hot cat": "Hot Cat",
+    "junk food": "Junk Food",
+    "hush puppy": "Hush Puppy",
+    "starfait": "Starfait",
+    "glamburger": "Glamburger",
+    "legendary hero": "Legendary Hero",
+    "steak in the shape of mettaton's face": "Steak in the Shape of Mettaton's Face",
+    "popato chisps": "Popato Chisps",
+    "bad memory": "Bad Memory",
+    "last dream": "Last Dream",
+
+    // Unused items
+    "puppydough icecream": "Puppydough Icecream",
+    "pumpkin rings": "Pumpkin Rings",
+    "croquet roll": "Croquet Roll",
+    "ghost fruit": "Ghost Fruit",
+    "stoic onion": "Stoic Onion",
+    "rock candy": "Rock Candy",
+
+    // Weapons
+    "stick": "Stick",
+    "toy knife": "Toy Knife",
+    "tough glove": "Tough Glove",
+    "ballet shoes": "Ballet Shoes",
+    "torn notebook": "Torn Notebook",
+    "burnt pan": "Burnt Pan",
+    "empty gun": "Empty Gun",
+    "worn dagger": "Worn Dagger",
+    "real knife": "Real Knife",
+
+    // Armor
+    "faded ribbon": "Faded Ribbon",
+    "manly bandanna": "Manly Bandanna",
+    "old tutu": "Old Tutu",
+    "cloudy glasses": "Cloudy Glasses",
+    "temmie armor": "Temmie Armor",
+    "stained apron": "Stained Apron",
+    "cowboy hat": "Cowboy Hat",
+    "heart locket": "Heart Locket",
+    "the locket": "The Locket"
+}
+
+const itemLvThreshold = {
     "spider donut": 1,
     "spider cider": 1,
+
     "nice cream": 2,
     "bisicle": 2,
     "cinnamon bunny": 2,
+    "tough glove": 2,
+    "manly bandanna": 2,
+
     "crab apple": 3,
     "sea tea": 3,
     "temmie flakes": 3,
-    "hot dog": 4,
-    "hot cat": 4,
+    "torn notebook": 3,
+    "cloudy glasses": 3,
+
+    "temmie armor": 4,
+    "hot dog...?": 4,
+
     "junk food": 5,
     "starfait": 5,
     "glamburger": 5,
     "legendary hero": 5,
     "steak in the shape of mettaton's face": 5,
-    "popato chisps": 6,
-
-    // Weapons
-    "tough glove": 2,
-    "torn notebook": 3,
     "empty gun": 5,
+    "cowboy hat": 5,
 
-    // Armor
-    "manly bandanna": 2,
-    "cloudy glasses": 3,
-    "temmie armor": 4,
-    "cowboy hat": 5
+    "popato chisps": 6
 }
 
 const consumableItems = {
@@ -153,7 +215,7 @@ const itemPrices = {
     "crab apple": 25,
     "sea tea": 18,
     "temmie flakes": 1, // (ON SALE,) -  3G (Normal) -  20G (expensiv) -  1000G (premiem, Genocide Route exclusive)
-    "hot dog": 30,
+    "hot dog...?": 30,
     "junk food": 25,
     "starfait": 60,
     "glamburger": 120,
@@ -182,6 +244,7 @@ module.exports = {
     baseDF,
     weaponsATK,
     armorDEF,
+    itemNames,
     itemLvThreshold,
     consumableItems,
     itemPrices

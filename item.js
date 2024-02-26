@@ -1,8 +1,8 @@
-const { getUserMaxHP, showStats } = require(`./utils`)
+const { getUserMaxHP, showStats, calculateTemmieArmorPrice, calculateNiceCreamPrice, calculateBisiclePrice } = require(`./utils`)
 
 const { resetTxt, boldTxt, redBg, magentaBg, cyanBg, grayBg, settings } = require(`./config`)
 
-const { players, consumableItems, itemLvThreshold } = require(`./data`)
+const { players, consumableItems, itemLvThreshold, itemNames, itemPrices } = require(`./data`)
 
 function printItem() {
     if (settings.debug) { console.log(`${boldTxt}> printItem()${resetTxt}`) }
@@ -22,9 +22,9 @@ function printItem() {
     console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
 }
 
-function buyItem(user, str, price) {
+function buyItem(user, str) {
     if (settings.debug) {
-        console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str}, price: ${price})${resetTxt}`)
+        console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str})${resetTxt}`)
         if (typeof price !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'price' data being sent (not of type 'number')!${resetTxt}`) }
     }
 
@@ -32,6 +32,13 @@ function buyItem(user, str, price) {
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
 
     if (player.lv < itemLvThreshold[str]) { return `${player.displayName}, that item isn't available to you yet! :(` }
+    const price = str === `nice cream`
+        ? calculateNiceCreamPrice(user)
+        : str === `bisicle`
+            ? calculateBisiclePrice(user)
+            : str === `temmie armor`
+                ? calculateTemmieArmorPrice(user)
+                : itemPrices[str]
 
     if (str === `spider donut`) {
         if (player.gold < price) {
@@ -267,69 +274,6 @@ function dropItem(user, str, idx) {
     const player = players[user]
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
 
-    const items = {
-        // Consumable items
-        "bandage": "Bandage",
-        "monster candy": "Monster Candy",
-        "spider donut": "Spider Donut",
-        "spider cider": "Spider Cider",
-        "butterscotch pie": "Butterscotch Pie",
-        "snail pie": "Snail Pie",
-        "snowman piece": "Snowman Piece",
-        "nice cream": "Nice Cream",
-        "bisicle": "Bisicle",
-        "unisicle": "Unisicle",
-        "cinnamon bunny": "Cinnamon Bunny",
-        "astronaut food": "Astronaut Food",
-        "crab apple": "Crab Apple",
-        "sea tea": "Sea Tea",
-        "abandoned quiche": "Abandoned Quiche",
-        "temmie flakes": "Temmie Flakes",
-        "dog salad": "Dog Salad",
-        "instant noodles": "Instant Noodles",
-        "hot dog...?": "Hot Dog...?",
-        "hot cat": "Hot Cat",
-        "junk food": "Junk Food",
-        "hush puppy": "Hush Puppy",
-        "starfait": "Starfait",
-        "glamburger": "Glamburger",
-        "legendary hero": "Legendary Hero",
-        "steak in the shape of mettaton's face": "Steak in the Shape of Mettaton's Face",
-        "popato chisps": "Popato Chisps",
-        "bad memory": "Bad Memory",
-        "last dream": "Last Dream",
-
-        // Unused items
-        "puppydough icecream": "Puppydough Icecream",
-        "pumpkin rings": "Pumpkin Rings",
-        "croquet roll": "Croquet Roll",
-        "ghost fruit": "Ghost Fruit",
-        "stoic onion": "Stoic Onion",
-        "rock candy": "Rock Candy",
-
-        // Weapons
-        "stick": "Stick",
-        "toy knife": "Toy Knife",
-        "tough glove": "Tough Glove",
-        "ballet shoes": "Ballet Shoes",
-        "torn notebook": "Torn Notebook",
-        "burnt pan": "Burnt Pan",
-        "empty gun": "Empty Gun",
-        "worn dagger": "Worn Dagger",
-        "real knife": "Real Knife",
-
-        // Armor
-        "faded ribbon": "Faded Ribbon",
-        "manly bandanna": "Manly Bandanna",
-        "old tutu": "Old Tutu",
-        "cloudy glasses": "Cloudy Glasses",
-        "temmie armor": "Temmie Armor",
-        "stained apron": "Stained Apron",
-        "cowboy hat": "Cowboy Hat",
-        "heart locket": "Heart Locket",
-        "the locket": "The Locket"
-    }
-
     if (str === `abandoned quiche`) {
         player.inventory.splice(idx, 1)
         return `* ${capsName} leaves the Quiche on the ground and tells it they'll be right back.`
@@ -341,17 +285,47 @@ function dropItem(user, str, idx) {
         player.inventory.splice(idx, 1)
         const randNum = Math.floor(Math.random() * 36)
         if (randNum < 29) {
-            return `* The ${items[str]} was thrown away.`
+            return `* The ${itemNames[str]} was thrown away.`
         } else if ([29, 30].includes(randNum)) {
-            return `* ${capsName} abandoned the ${items[str]}.`
+            return `* ${capsName} abandoned the ${itemNames[str]}.`
         } else if ([31, 32].includes(randNum)) {
-            return `* ${capsName} threw the ${items[str]} on the ground like the piece of trash it is.`
+            return `* ${capsName} threw the ${itemNames[str]} on the ground like the piece of trash it is.`
         } else if ([33, 34].includes(randNum)) {
-            return `* ${capsName} put the ${items[str]} on the ground and gave it a little pat.`
+            return `* ${capsName} put the ${itemNames[str]} on the ground and gave it a little pat.`
         } else {
-            return `* ${capsName} bid a quiet farewell to the ${items[str]}.`
+            return `* ${capsName} bid a quiet farewell to the ${itemNames[str]}.`
         }
     }
+}
+
+function getPrices(user, args) {
+    if (settings.debug) { console.log(`${boldTxt}> getPrice(user: ${user}, args: ${args})${resetTxt}`) }
+
+    const player = players[user]
+    const availableItems = Object.keys(itemLvThreshold).filter((item) => itemLvThreshold[item] <= player.lv)
+    const prices = availableItems.map((item) => `${itemNames[item]} (${item === `temmie armor`
+        ? calculateTemmieArmorPrice(user)
+        : item === `nice cream`
+            ? calculateNiceCreamPrice(user)
+            : item === `bisicle`
+                ? calculateBisiclePrice(user)
+                : itemPrices[item]
+        }G)`)
+
+    const item = itemLookup(args.join(` `))
+    if (player.lv < itemLvThreshold[item]) { return `Sorry ${player.displayName}, that item isn't available to you yet!` }
+
+    const checkedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
+    return checkedItem
+        ? `The ${itemNames[checkedItem]} costs ${checkedItem === `nice cream`
+            ? calculateNiceCreamPrice(user)
+            : checkedItem === `bisicle`
+                ? calculateBisiclePrice(user)
+                : checkedItem === `temmie armor`
+                    ? calculateTemmieArmorPrice(user)
+                    : itemPrices[checkedItem]
+        }G.`
+        : `Item prices: ${prices.join(`, `)}`
 }
 
 function itemLookup(str) {
@@ -1529,4 +1503,4 @@ function useItem(user, str, idx) {
     return `* ${capsName} used 0. If you are reading this, I messed up somehow.`
 }
 
-module.exports = { buyItem, dropItem, itemLookup, sellItem, useItem }
+module.exports = { buyItem, dropItem, getPrices, itemLookup, sellItem, useItem }

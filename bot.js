@@ -1,6 +1,6 @@
 require(`dotenv`).config()
 
-const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, getChannels, printLogo, calculateBisiclePrice, calculateNiceCreamPrice, calculateTemmieArmorPrice, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
+const { talk, createClient, getSpamtonQuote, getSaveText, getIntroText, getUserMaxHP, getChannels, printLogo, makeLogs, showStats, showPlayers, announceCrash } = require(`./utils`)
 
 const { BOT_USERNAME, BOT_CHANNEL, DEV, resetTxt, boldTxt, inverted, redTxt, greenTxt, settings } = require(`./config`)
 
@@ -10,7 +10,7 @@ const { handleFight } = require(`./fight`)
 
 const { handleAct } = require(`./act`)
 
-const { buyItem, dropItem, itemLookup, sellItem, useItem } = require(`./item`)
+const { buyItem, dropItem, getPrices, itemLookup, sellItem, useItem } = require(`./item`)
 
 const { handleMercy } = require(`./mercy`)
 
@@ -381,7 +381,12 @@ function onMessageHandler(channel, tags, message, self) {
 
         if (sendingPlayer.dead) { return talk(channel, `Sorry ${sendingPlayer.displayName}, you are dead! :(`) }
 
-        if (args.length === 0) {
+        const item = itemLookup(args.join(` `))
+        const purchasedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
+
+        if (purchasedItem) {
+            talk(channel, buyItem(user, purchasedItem))
+        } else {
             let response = `${sendingPlayer.displayName} can buy: `
             if (sendingPlayer.lv >= 1) { response += `Spider Donut, Spider Cider` }
             if (sendingPlayer.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
@@ -389,21 +394,15 @@ function onMessageHandler(channel, tags, message, self) {
             if (sendingPlayer.lv >= 4) { response += `, Temmie Armor, Hot Dog...?` }
             if (sendingPlayer.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
             if (sendingPlayer.lv >= 6) { response += `, Popato Chisps` }
-            return talk(channel, response)
+            talk(channel, response)
         }
+    }
 
-        const purchasedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(args.join(` `)) || args.join(` `) in itemPrices ? args.join(` `) : null
-
-        return purchasedItem
-            ? talk(channel, buyItem(user, purchasedItem,
-                purchasedItem === `nice cream`
-                    ? calculateNiceCreamPrice(user)
-                    : purchasedItem === `bisicle`
-                        ? calculateBisiclePrice(user)
-                        : purchasedItem === `temmie armor`
-                            ? calculateTemmieArmorPrice(user)
-                            : itemPrices[purchasedItem]))
-            : talk(channel, `Sorry ${sendingPlayer.displayName}, that item doesn't exist! :(`)
+    // PRICE(S) of items
+    if ([`!price`, `!prices`].includes(command)) {
+        console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
+        const response = getPrices(user, args)
+        return talk(channel, response)
     }
 
     // DROP item

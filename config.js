@@ -37,6 +37,9 @@ const settings = {
     // Helper functions log their params when invoked
     debug: false,
     
+    // Last rebooted at
+    startTime: new Date(),
+
     // Upon first connection to Twitch IRC
     firstConnection: true,
 

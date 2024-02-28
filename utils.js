@@ -492,7 +492,8 @@ function getUserMaxHP(user) {
 function makeLogs() {
     let data = `+---------------+\n`
     data += `| UNDERTALE BOT |\n`
-    data += `+---------------+\n\n`
+    data += `+---------------+\n`
+    data += `Session started: ${settings.startTime}\n\n`
 
     data += `joinedChannels: {\n`
     for (user of Object.keys(joinedChannels)) {

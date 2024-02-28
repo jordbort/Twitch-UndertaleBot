@@ -173,7 +173,7 @@ function createClient(user, onMessageHandler) {
         client.on(`connected`, (addr, port) => {
             if (settings.firstConnection) {
                 printLogo()
-                console.log(`* Connected to ${addr}:${port} on ${new Date()}`)
+                console.log(`* Connected to ${addr}:${port} on ${settings.startTime}`)
                 setTimeout(() => talk(`#${user}`, `* UndertaleBot blocks the way!`), 1000)
             } else {
                 console.log(`* Reconnected to ${addr}:${port}`)

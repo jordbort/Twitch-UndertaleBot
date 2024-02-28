@@ -145,7 +145,8 @@ function deathCheck(chatroom, user, target) {
 
         if (target === `dummy`) {
             response += ` The Dummy was ripped to shreds... `
-            setTimeout(() => {
+            clearTimeout(settings.respawnTimer)
+            settings.respawnTimer = setTimeout(() => {
                 const flavorTexts = [
                     `* You encountered the Dummy.`,
                     `* Dummy looks like it's going to fall over.`,
@@ -155,7 +156,7 @@ function deathCheck(chatroom, user, target) {
                 players.dummy.hp = getUserMaxHP(`dummy`)
                 players.dummy.dead = false
                 talk(chatroom, flavorText)
-            }, settings.respawnTimer)
+            }, settings.msDelay)
         } else {
             response += ` ${capsTarget}! Stay determined... `
         }

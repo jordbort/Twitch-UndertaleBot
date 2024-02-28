@@ -97,7 +97,8 @@ function onMessageHandler(channel, tags, message, self) {
         if (command === `!revive`) {
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-            players.dummy.hp = getUserMaxHP(`dummy`)
+            clearTimeout(settings.respawnTimer)
+            players.dummy.hp = 20
             players.dummy.dead = false
             return talk(channel, `The Dummy has been revived!`)
         }

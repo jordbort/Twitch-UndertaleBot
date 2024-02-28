@@ -34,6 +34,9 @@ const grayBg = `\x1b[100m`
 const orangeBg = `\x1b[48;2;255;164;0m`
 
 const settings = {
+    // Helper functions log their params when invoked
+    debug: false,
+    
     // Upon first connection to Twitch IRC
     firstConnection: true,
 
@@ -41,10 +44,8 @@ const settings = {
     landscapeView: true,
 
     // The Dummy's respawn timer
-    respawnTimer: 300000,
-
-    // Helper functions log their params when invoked
-    debug: false
+    respawnTimer: null,
+    msDelay: 300000
 }
 
 module.exports = {

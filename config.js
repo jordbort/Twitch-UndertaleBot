@@ -36,9 +36,9 @@ const orangeBg = `\x1b[48;2;255;164;0m`
 const settings = {
     // Helper functions log their params when invoked
     debug: false,
-    
+
     // Last rebooted at
-    startTime: new Date(),
+    startTime: new Date().toLocaleString(`en-US`, { timeZone: `EST` }),
 
     // Upon first connection to Twitch IRC
     firstConnection: true,

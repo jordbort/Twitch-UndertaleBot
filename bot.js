@@ -612,7 +612,7 @@ function onMessageHandler(channel, tags, message, self) {
     if (command === `!commands`) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const response = `!fight: @ another chat member to attack them, !act: Do an action by yourself or @ another chat member, !item: Check for (or use) items in your inventory, !mercy: @ another chat member to attempt to spare them, !buy: Spend gold on items, or check what is possible to buy, !save: Use determination to save your current state, !load: Reload your previous save file`
+        const response = `!FIGHT user -> Attack a user, !ACT -> With or without another user, !ITEM -> Check for (or use) items in your inventory, !MERCY user -> Attempt to spare a user. Use !buy and/or !price to spend gold. Manage your SAVE file with !save and !load. Try !docs to read more!`
         return talk(channel, response)
     }
 

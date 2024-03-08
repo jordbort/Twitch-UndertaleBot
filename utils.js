@@ -509,9 +509,9 @@ function getUserMaxHP(user) {
     return maxHP
 }
 
-function renderArr(arr, indentation = ``) {
+function renderArr(arr, arrName, indentation = ``) {
     const tab = `${indentation}\t`
-    const data = [`[`]
+    const data = [`${arrName}: [`]
     if (arr.length) {
         const entry = arr.map((val) => {
             return typeof val === `string`
@@ -532,7 +532,7 @@ function renderArr(arr, indentation = ``) {
 
 function renderObj(obj, objName, indentation = ``) {
     const tab = `${indentation}\t`
-    const data = [`${objName ? `${objName}: ` : ``}{`]
+    const data = [`${objName}: {`]
     if (Object.keys(obj).length) {
         const keys = Object.keys(obj).map((key) => {
             return typeof obj[key] === `string`
@@ -541,8 +541,8 @@ function renderObj(obj, objName, indentation = ``) {
                     ? obj[key] === null
                         ? `${tab}${key}: null`
                         : Array.isArray(obj[key])
-                            ? `${tab}${key}: ${renderArr(obj[key], tab)}`
-                            : `${tab}${key}: ${renderObj(obj[key], ``, tab)}`
+                            ? `${tab}${renderArr(obj[key], key, tab)}`
+                            : `${tab}${renderObj(obj[key], key, tab)}`
                     : `${tab}${key}: ${obj[key]}`
         }).join(`,\n`)
         data.push(keys)

@@ -37,8 +37,8 @@ const settings = {
     // Helper functions log their params when invoked
     debug: false,
 
-    // Last rebooted at
-    startTime: new Date().toLocaleString(`en-US`, { timeZone: `EST` }),
+    // Time zone setting for logs
+    timeZone: `America/New_York`,
 
     // Upon first connection to Twitch IRC
     firstConnection: true,

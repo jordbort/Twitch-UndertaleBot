@@ -6,6 +6,26 @@ const { BOT_USERNAME, OAUTH_TOKEN, resetTxt, boldTxt, redTxt, greenTxt, yellowTx
 
 const tmi = require('tmi.js')
 
+const dateOptions = {
+    weekday: `long`,
+    month: `long`,
+    day: `numeric`,
+    year: `numeric`,
+    timeZone: settings.timeZone
+}
+
+const timeOptions = {
+    hour: `numeric`,
+    minute: `numeric`,
+    second: `numeric`,
+    timeZone: settings.timeZone,
+    timeZoneName: `short`
+}
+
+const start = new Date()
+const startDate = start.toLocaleDateString(`en-US`, dateOptions)
+const startTime = start.toLocaleTimeString(`en-US`, timeOptions)
+
 // Helper functions
 async function announceCrash() {
     if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
@@ -489,67 +509,59 @@ function getUserMaxHP(user) {
     return maxHP
 }
 
+function renderArr(arr, indentation = ``) {
+    const tab = `${indentation}\t`
+    const data = [`[`]
+    if (arr.length) {
+        const entry = arr.map((val) => {
+            return typeof val === `string`
+                ? `${tab}'${val}'`
+                : typeof val === `object`
+                    ? val === null
+                        ? `${tab}null`
+                        : Array.isArray(val)
+                            ? `${tab}${renderArr(val, tab)}`
+                            : `${tab}${renderObj(val, ``, tab)}`
+                    : `${tab}${val}`
+        }).join(`,\n`)
+        data.push(entry)
+        data.push(`${indentation}]`)
+    } else { data[0] += `]` }
+    return data.join(`\n`)
+}
+
+function renderObj(obj, objName, indentation = ``) {
+    const tab = `${indentation}\t`
+    const data = [`${objName ? `${objName}: ` : ``}{`]
+    if (Object.keys(obj).length) {
+        const keys = Object.keys(obj).map((key) => {
+            return typeof obj[key] === `string`
+                ? `${tab}${key}: '${obj[key]}'`
+                : typeof obj[key] === `object` && ![`respawnTimer`, `client`].includes(key)
+                    ? obj[key] === null
+                        ? `${tab}${key}: null`
+                        : Array.isArray(obj[key])
+                            ? `${tab}${key}: ${renderArr(obj[key], tab)}`
+                            : `${tab}${key}: ${renderObj(obj[key], ``, tab)}`
+                    : `${tab}${key}: ${obj[key]}`
+        }).join(`,\n`)
+        data.push(keys)
+        data.push(`${indentation}}`)
+    } else { data[0] += `}` }
+    return data.join(`\n`)
+}
+
 function makeLogs() {
-    let data = `+---------------+\n`
-    data += `| UNDERTALE BOT |\n`
-    data += `+---------------+\n`
-    data += `Session started: ${settings.startTime}\n\n`
+    let data = `+---------------+\n| UNDERTALE BOT |\n+---------------+\nSession started: ${startDate} at ${startTime}\n`
 
-    data += `joinedChannels: {\n`
-    for (user of Object.keys(joinedChannels)) {
-        data += `\t${user}: {\n`
-        for (key of Object.keys(joinedChannels[user])) {
-            if (typeof joinedChannels[user][key] !== `object`) { data += `\t\t${key}: ${joinedChannels[user][key]},\n` }
-        }
-        data += `\t},\n`
-    }
-    data += `}\n\n`
-
-    data += `highestLevels: {\n`
-    for (key of Object.keys(highestLevels)) {
-        data += `\t${key}: ${highestLevels[key]},\n`
-    }
-    data += `}\n\n`
-
-    data += `players: {\n`
-    for (const key of Object.keys(players)) {
-        data += `\t${key}: {\n`
-        for (const props of Object.keys(players[key])) {
-            if (Array.isArray(players[key][props])) {
-                if (players[key][props].length === 0) {
-                    data += `\t\t${props}: [],\n`
-                } else {
-                    data += `\t\t${props}: ['${players[key][props].join(`', '`)}'],\n`
-                }
-            } else if (typeof players[key][props] === `string`) {
-                data += `\t\t${props}: '${players[key][props]}',\n`
-            } else {
-                data += `\t\t${props}: ${players[key][props]},\n`
-            }
-        }
-        data += `\t},\n`
-    }
-    data += `}\n\n`
-
-    data += `playerSave: {\n`
-    for (const key of Object.keys(playerSave)) {
-        data += `\t${key}: {\n`
-        for (const props of Object.keys(playerSave[key])) {
-            if (Array.isArray(playerSave[key][props])) {
-                if (playerSave[key][props].length === 0) {
-                    data += `\t\t${props}: [],\n`
-                } else {
-                    data += `\t\t${props}: ['${playerSave[key][props].join(`', '`)}'],\n`
-                }
-            } else if (typeof playerSave[key][props] === `string`) {
-                data += `\t\t${props}: '${playerSave[key][props]}',\n`
-            } else {
-                data += `\t\t${props}: ${playerSave[key][props]},\n`
-            }
-        }
-        data += `\t},\n`
-    }
-    data += `}\n`
+    const objectsToLog = [
+        [settings, `settings`],
+        [joinedChannels, `joinedChannels`],
+        [players, `players`],
+        [playerSave, 'playerSave'],
+        [highestLevels, `highestLevels`]
+    ]
+    for (const [obj, objName] of objectsToLog) { data += `\n${renderObj(obj, objName)}\n` }
 
     fs.writeFile(`logs.txt`, data, (err) => {
         if (err) { console.log(`Error writing logs:`, err) }

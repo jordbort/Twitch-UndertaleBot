@@ -507,18 +507,18 @@ function onMessageHandler(channel, tags, message, self) {
     if ([`!check`, `!stats`, `!stat`, `!status`].includes(command)) {
         console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${sendingPlayer.dead ? redTxt : greenTxt}${sendingPlayer.displayName}:${resetTxt}`, msg)
 
-        const attackBonus = sendingPlayer.armor === `Cowboy Hat` ? 5 : sendingPlayer.armor === `Temmie Armor` ? 10 : 0
         if (toUser in players) {
             showStats(toUser)
-            return talk(channel, `"${user === `dummy` ? `DUMMY` : players[toUser].displayName}" LV: ${players[toUser].lv}, HP: ${players[toUser].hp}/${getUserMaxHP(toUser)}, AT: ${players[toUser].at}(${weaponsATK[players[toUser].weapon] + attackBonus}), DF: ${players[toUser].df}(${armorDEF[players[toUser].armor]}), EXP: ${players[toUser].exp}, NEXT: ${players[toUser].next}, WEAPON: ${players[toUser].weapon}, ARMOR: ${players[toUser].armor}, GOLD: ${players[toUser].gold}`)
-        }
-
-        else if (toUser) { return talk(channel, `${toUser} isn't a known player!`) }
-        else {
+            const targetPlayer = players[toUser]
+            const attackBonus = targetPlayer.armor === `Cowboy Hat` ? 5 : targetPlayer.armor === `Temmie Armor` ? 10 : 0
+            return talk(channel, `"${user === `dummy` ? `DUMMY` : targetPlayer.displayName}" LV: ${targetPlayer.lv}, HP: ${targetPlayer.hp}/${getUserMaxHP(toUser)}, AT: ${targetPlayer.at}(${weaponsATK[targetPlayer.weapon] + attackBonus}), DF: ${targetPlayer.df}(${armorDEF[targetPlayer.armor]}), EXP: ${targetPlayer.exp}, NEXT: ${targetPlayer.next}, WEAPON: ${targetPlayer.weapon}, ARMOR: ${targetPlayer.armor}, GOLD: ${targetPlayer.gold}`)
+        } else if (toUser) {
+            return talk(channel, `${toUser} isn't a known player!`)
+        } else {
             showStats(user)
+            const attackBonus = sendingPlayer.armor === `Cowboy Hat` ? 5 : sendingPlayer.armor === `Temmie Armor` ? 10 : 0
             return talk(channel, `"${user === `dummy` ? `DUMMY` : sendingPlayer.displayName}" LV: ${sendingPlayer.lv}, HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, AT: ${sendingPlayer.at}(${weaponsATK[sendingPlayer.weapon] + attackBonus}), DF: ${sendingPlayer.df}(${armorDEF[sendingPlayer.armor]}), EXP: ${sendingPlayer.exp}, NEXT: ${sendingPlayer.next}, WEAPON: ${sendingPlayer.weapon}, ARMOR: ${sendingPlayer.armor}, GOLD: ${sendingPlayer.gold}`)
         }
-
     }
 
     // HP

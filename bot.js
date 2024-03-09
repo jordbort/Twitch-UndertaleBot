@@ -320,7 +320,8 @@ function onMessageHandler(channel, tags, message, self) {
             else if (toUser === `undertalebot`) { return talk(channel, `You can't ACT with me, but you can try ACTing the Dummy!`) }
             else { return talk(channel, `${toUser} is not a registered player :(`) }
         }
-        return handleAct(channel, user, toUser)
+        const response = handleAct(user, toUser)
+        return talk(channel, response)
     }
 
     // ITEM or ITEMS or USE or EQUIP (for non-consumable items)
@@ -381,7 +382,8 @@ function onMessageHandler(channel, tags, message, self) {
         }
         else { return talk(channel, `* ${sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)} tried to spare themself. But nothing happened.`) }
 
-        return handleMercy(channel, user, toUser)
+        const response = handleMercy(user, toUser)
+        return talk(channel, response)
     }
 
     // BUY or SHOP or GET

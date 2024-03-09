@@ -1,4 +1,4 @@
-const { talk, stainedApronHeal, getUserMaxHP } = require(`./utils`)
+const { stainedApronHeal, getUserMaxHP } = require(`./utils`)
 
 const { getThirdPersonFlavorText } = require(`./act`)
 
@@ -24,8 +24,8 @@ function printMercy() {
     console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
 }
 
-function handleMercy(channel, user, toUser) {
-    if (settings.debug) { console.log(`${boldTxt}> handleMercy(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
+function handleMercy(user, toUser) {
+    if (settings.debug) { console.log(`${boldTxt}> handleMercy(user: ${user}, toUser: ${toUser})${resetTxt}`) }
     printMercy()
     const sendingPlayer = players[user]
     const targetPlayer = players[toUser]
@@ -51,8 +51,8 @@ function handleMercy(channel, user, toUser) {
     }
     if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
-    talk(channel, response)
     console.log(`${cyanBg} sender: ${sendingPlayer.displayName} (${sendingPlayer.hp} HP), target: ${toUser === `dummy` ? `DUMMY` : targetPlayer?.displayName || `none`}${targetPlayer ? ` (${targetPlayer.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
+    return response
 }
 
 module.exports = { handleMercy }

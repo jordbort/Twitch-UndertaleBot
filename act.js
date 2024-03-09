@@ -1,4 +1,4 @@
-const { getUserMaxHP, showStats, stainedApronHeal, talk } = require(`./utils`)
+const { getUserMaxHP, showStats, stainedApronHeal } = require(`./utils`)
 
 const { resetTxt, boldTxt, cyanBg, settings } = require(`./config`)
 
@@ -244,8 +244,8 @@ function getThirdPersonFlavorText() {
     return actions[Math.floor(Math.random() * actions.length)]
 }
 
-function handleAct(channel, user, toUser) {
-    if (settings.debug) { console.log(`${boldTxt}> handleAct(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
+function handleAct(user, toUser) {
+    if (settings.debug) { console.log(`${boldTxt}> handleAct(user: ${user}, toUser: ${toUser})${resetTxt}`) }
     const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
     printAct()
     let response = `* ${players[user].displayName.substring(0, 1).toUpperCase() + players[user].displayName.substring(1)}`
@@ -253,7 +253,7 @@ function handleAct(channel, user, toUser) {
 
     if (players[user].armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
-    talk(channel, response)
+    return response
 }
 
 function printAct() {

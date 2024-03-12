@@ -1,28 +1,10 @@
-const { talk, stainedApronHeal, getUserMaxHP, calculateUserLV } = require(`./utils`)
+const { BOT_CHANNEL, settings, resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg } = require(`../config`)
+const { players, playerSave, weaponsATK, armorDEF } = require(`../data`)
+const { getUserMaxHP, getToUser, stainedApronHeal } = require(`./utils`)
+const { calculateUserLV } = require(`./math`)
+const { printFight } = require(`./graphics`)
 
-const { BOT_CHANNEL, resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg, settings } = require(`./config`)
-
-const { players, playerSave, weaponsATK, armorDEF } = require(`./data`)
-
-function printFight() {
-    if (settings.debug) { console.log(`${boldTxt}> printFight()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const ywSq = `\x1b[43m  \x1b[0m`
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-}
-
-function handleFight(channel, user, toUser) {
+function handleFight(bot, channel, user, toUser) {
     if (settings.debug) { console.log(`${boldTxt}> handleFight(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
     printFight()
     const sendingPlayer = players[user]
@@ -68,13 +50,9 @@ function handleFight(channel, user, toUser) {
     const randNum = Math.floor(Math.random() * outcome.length)
     response += outcome[randNum]
 
-    if (randNum === 1) {
-        if (mediumDamage >= 6) { response += ` Critical hit!` }
-    } else if (randNum === 2) {
-        if (largeDamage >= 6) { response += ` Critical hit!` }
-    } else if (randNum === 3) {
-        if (extraLargeDamage >= 6) { extraLargeDamage === 10 ? response += ` Ouch!` : response += ` Critical hit!` }
-    }
+    if (randNum === 1 && mediumDamage >= 6) { response += ` Critical hit!` }
+    else if (randNum === 2 && largeDamage >= 6) { response += ` Critical hit!` }
+    else if (randNum === 3 && extraLargeDamage >= 6) { extraLargeDamage === 10 ? response += ` Ouch!` : response += ` Critical hit!` }
 
     if (targetPlayer) {
         if (randNum === 0) {
@@ -93,8 +71,8 @@ function handleFight(channel, user, toUser) {
 
         if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
-        talk(channel, response)
-        deathCheck(channel, user, toUser)
+        bot.say(channel, response)
+        deathCheck(bot, channel, user, toUser)
     } else {
         if (randNum === 0) {
             sendingPlayer.hp -= smallDamageDealt
@@ -112,15 +90,15 @@ function handleFight(channel, user, toUser) {
 
         if (sendingPlayer.armor === `Stained Apron`) { response += stainedApronHeal(user) }
 
-        talk(channel, response)
-        deathCheck(channel, user, user)
+        bot.say(channel, response)
+        deathCheck(bot, channel, user, user)
     }
 }
 
-function deathCheck(chatroom, user, target) {
+function deathCheck(bot, channel, user, target) {
     if (settings.debug) {
-        console.log(`${boldTxt}> deathCheck(chatroom: ${chatroom}, user: ${user}, target: ${target})${resetTxt}`)
-        if (!chatroom.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'chatroom' data being sent (doesn't start with '#')!${resetTxt}`) }
+        console.log(`${boldTxt}> deathCheck(channel: ${channel}, user: ${user}, target: ${target})${resetTxt}`)
+        if (!channel.startsWith(`#`)) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'channel' data being sent (doesn't start with '#')!${resetTxt}`) }
     }
     const sendingPlayer = players[user]
     const targetPlayer = players[target]
@@ -155,7 +133,7 @@ function deathCheck(chatroom, user, target) {
                 const flavorText = flavorTexts[Math.floor(Math.random() * flavorTexts.length)]
                 players.dummy.hp = getUserMaxHP(`dummy`)
                 players.dummy.dead = false
-                talk(chatroom, flavorText)
+                bot.say(channel, flavorText)
             }, settings.msDelay)
         } else {
             response += ` ${capsTarget}! Stay determined... `
@@ -211,9 +189,37 @@ function deathCheck(chatroom, user, target) {
         targetPlayer.at = 0
         targetPlayer.df = 0
 
-        const msgDelay = chatroom === BOT_CHANNEL ? 1000 : 2000
-        setTimeout(() => talk(chatroom, response), msgDelay)
+        const msgDelay = channel === BOT_CHANNEL ? 1000 : 2000
+        setTimeout(() => bot.say(channel, response), msgDelay)
     }
 }
 
-module.exports = { handleFight }
+module.exports = {
+    attemptFight(props) {
+        const { bot, channel, tags, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> attemptFight(channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+
+        const user = tags.username
+        const toUser = getToUser(args[0])
+        const player = players[user]
+        const target = toUser in players ? players[toUser] : null
+        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+        const capsName = target
+            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
+            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+
+        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
+
+        // Stop if target is the bot, dead, or not known, or if no target is specified
+        if (toUser) {
+            if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
+            if (target) {
+                if (target.dead) { return bot.say(channel, `${capsName} is already dead! :(`) }
+            }
+            else if (toUser === `undertalebot`) { return bot.say(channel, `You can't FIGHT me, but you can try FIGHTing the Dummy!`) }
+            else { return bot.say(channel, `${toUser} isn't a known player!`) }
+        }
+        else { return bot.say(channel, `* ${capsName} tried to fight themself. But nothing happened.`) }
+        return handleFight(bot, channel, user, toUser)
+    }
+}

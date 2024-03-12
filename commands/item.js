@@ -1,37 +1,17 @@
-const { getUserMaxHP, showStats, calculateTemmieArmorPrice, calculateNiceCreamPrice, calculateBisiclePrice } = require(`./utils`)
-
-const { resetTxt, boldTxt, redBg, magentaBg, cyanBg, grayBg, settings } = require(`./config`)
-
-const { players, consumableItems, itemLvThreshold, itemNames, itemPrices } = require(`./data`)
-
-function printItem() {
-    if (settings.debug) { console.log(`${boldTxt}> printItem()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const ywSq = `\x1b[43m  \x1b[0m`
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + bkSq + ywSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + ywSq + bkSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-}
+const { players, itemNames, itemLvThreshold, consumableItems, itemPrices } = require(`../data`)
+const { settings, resetTxt, boldTxt, redBg, magentaBg, cyanBg, grayBg } = require(`../config`)
+const { getUserMaxHP } = require(`./utils`)
+const { printItem } = require(`./graphics`)
+const { showStats } = require(`./stats`)
+const { calculateBisiclePrice, calculateNiceCreamPrice, calculateTemmieArmorPrice } = require(`./math`)
 
 function buyItem(user, str) {
-    if (settings.debug) {
-        console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str})${resetTxt}`)
-        if (typeof price !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'price' data being sent (not of type 'number')!${resetTxt}`) }
-    }
+    if (settings.debug) { console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str})${resetTxt}`) }
 
     const player = players[user]
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
 
-    if (player.lv < itemLvThreshold[str]) { return `${player.displayName}, that item isn't available to you yet! :(` }
+    if (player.lv < itemLvThreshold[str]) { return `${player.displayName}, that item isn't available to you yet!` }
     const price = str === `nice cream`
         ? calculateNiceCreamPrice(user)
         : str === `bisicle`
@@ -263,14 +243,13 @@ function buyItem(user, str) {
             return `* (The vending machine dispensed some chisps.)`
         }
     }
+
     return `If you are reading this, ${player.displayName}, I messed up somehow.`
 }
 
 function dropItem(user, str, idx) {
-    if (settings.debug) {
-        console.log(`${boldTxt}> dropItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
-        if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
-    }
+    if (settings.debug) { console.log(`${boldTxt}> dropItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
+
     const player = players[user]
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
 
@@ -298,38 +277,9 @@ function dropItem(user, str, idx) {
     }
 }
 
-function getPrices(user, args) {
-    if (settings.debug) { console.log(`${boldTxt}> getPrice(user: ${user}, args: ${args})${resetTxt}`) }
-
-    const player = players[user]
-    const availableItems = Object.keys(itemLvThreshold).filter((item) => itemLvThreshold[item] <= player.lv)
-    const prices = availableItems.map((item) => `${itemNames[item]} (${item === `temmie armor`
-        ? calculateTemmieArmorPrice(user)
-        : item === `nice cream`
-            ? calculateNiceCreamPrice(user)
-            : item === `bisicle`
-                ? calculateBisiclePrice(user)
-                : itemPrices[item]
-        }G)`)
-
-    const item = itemLookup(args.join(` `))
-    if (player.lv < itemLvThreshold[item]) { return `Sorry ${player.displayName}, that item isn't available to you yet!` }
-
-    const checkedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
-    return checkedItem
-        ? `The ${itemNames[checkedItem]} costs ${checkedItem === `nice cream`
-            ? calculateNiceCreamPrice(user)
-            : checkedItem === `bisicle`
-                ? calculateBisiclePrice(user)
-                : checkedItem === `temmie armor`
-                    ? calculateTemmieArmorPrice(user)
-                    : itemPrices[checkedItem]
-        }G.`
-        : `Item prices: ${prices.join(`, `)}`
-}
-
 function itemLookup(str) {
     if (settings.debug) { console.log(`${boldTxt}> itemLookup(str: ${str})${resetTxt}`) }
+
     const allItems = [
         // Consumable items
         `bandage`,
@@ -391,6 +341,7 @@ function itemLookup(str) {
         `heart locket`,
         `the locket`
     ]
+
     return /^hot dog[ .?]*$/.test(str)
         ? `hot dog...?`
         : allItems.includes(str)
@@ -399,10 +350,7 @@ function itemLookup(str) {
 }
 
 function sellItem(user, str, idx) {
-    if (settings.debug) {
-        console.log(`${boldTxt}> sellItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
-        if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
-    }
+    if (settings.debug) { console.log(`${boldTxt}> sellItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
 
     const items = {
         // Consumable items
@@ -697,11 +645,9 @@ function sellItem(user, str, idx) {
 }
 
 function useItem(user, str, idx) {
-    if (settings.debug) {
-        console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`)
-        if (typeof idx !== `number`) { console.log(`${redBg}${boldTxt}*** WARNING: Bad 'idx' data being sent (not of type 'number')!${resetTxt}`) }
-    }
+    if (settings.debug) { console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
     printItem()
+
     const player = players[user]
     const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
     const maxHP = getUserMaxHP(user)
@@ -1503,4 +1449,174 @@ function useItem(user, str, idx) {
     return `* ${capsName} used 0. If you are reading this, I messed up somehow.`
 }
 
-module.exports = { buyItem, dropItem, getPrices, itemLookup, sellItem, useItem }
+module.exports = {
+    getPrices(props) {
+        const { bot, channel, tags, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> getPrices(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+
+        const user = tags.username
+        const player = players[user]
+
+        const availableItems = Object.keys(itemLvThreshold).filter((item) => itemLvThreshold[item] <= player.lv)
+        const prices = availableItems.map((item) => `${itemNames[item]} (${item === `temmie armor`
+            ? calculateTemmieArmorPrice(user)
+            : item === `nice cream`
+                ? calculateNiceCreamPrice(user)
+                : item === `bisicle`
+                    ? calculateBisiclePrice(user)
+                    : itemPrices[item]
+            }G)`)
+
+        const item = itemLookup(args.join(` `))
+        if (player.lv < itemLvThreshold[item]) { return `Sorry ${player.displayName}, that item isn't available to you yet!` }
+
+        const checkedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
+        return checkedItem
+            ? bot.say(channel, `The ${itemNames[checkedItem]} costs ${checkedItem === `nice cream`
+                ? calculateNiceCreamPrice(user)
+                : checkedItem === `bisicle`
+                    ? calculateBisiclePrice(user)
+                    : checkedItem === `temmie armor`
+                        ? calculateTemmieArmorPrice(user)
+                        : itemPrices[checkedItem]
+                }G.`)
+            : bot.say(channel, `Item prices: ${prices.join(`, `)}`)
+    },
+    attemptSellItem(props) {
+        const { bot, channel, tags, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> attemptSellItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const user = tags.username
+        const player = players[user]
+
+        // Can't use if dead
+        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+
+        // Can't use if not LV 3
+        if (player.lv < 3) { return bot.say(channel, `* Huh? Sell somethin'? Does this look like a pawn shop? I don't know how it works where you come from... but... If I started spending money on old branches and used bandages, I'd be out of business in a jiffy!`) }
+
+        if (args.length === 0) { return bot.say(channel, `* hOI! welcom to... da TEM SHOP!!!`) }
+
+        const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+        const inventory = player.inventory.map(item => item.toLowerCase())
+        if (inventory.length === 0) { return bot.say(channel, `* no more item...`) }
+
+        // Item validation
+        const soldItem = itemLookup(args.join(` `))
+        if (!soldItem) { return bot.say(channel, `${capsName}, that isn't an item!`) }
+
+        // Check possession
+        const index = inventory.indexOf(soldItem)
+        if (index < 0) {
+            console.log(`Inventory:`, player.inventory)
+            return bot.say(channel, `${capsName}, you don't have that item!`)
+        }
+
+        const response = sellItem(user, soldItem, index)
+        console.log(`Inventory:`, player.inventory)
+        bot.say(channel, response)
+    },
+    attemptDropItem(props) {
+        const { bot, channel, tags, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> attemptDropItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+
+        const user = tags.username
+        const player = players[user]
+
+        // Can't use if dead
+        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+
+        const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+
+        const inventory = player.inventory.map(item => item.toLowerCase())
+        if (inventory.length === 0) { return bot.say(channel, `${capsName} has no items!`) }
+
+        // Stop if no item 
+        if (!args.length) { return bot.say(channel, `${capsName}, no item specified!`) }
+
+        // Item validation
+        const droppedItem = itemLookup(args.join(` `))
+
+        if (!droppedItem) { return bot.say(channel, `${capsName}, that isn't an item!`) }
+
+        // Check possession
+        const index = inventory.indexOf(droppedItem)
+        if (index < 0) {
+            console.log(`Inventory:`, player.inventory)
+            return bot.say(channel, `${capsName}, you don't have that item!`)
+        }
+
+        const response = dropItem(user, droppedItem, index)
+        console.log(`Inventory:`, player.inventory)
+        bot.say(channel, response)
+    },
+    attemptBuyItem(props) {
+        const { bot, channel, tags, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> attemptBuyItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+
+        const user = tags.username
+        const player = players[user]
+
+        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+
+        const item = itemLookup(args.join(` `))
+        const purchasedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
+
+        if (purchasedItem) {
+            return bot.say(channel, buyItem(user, purchasedItem))
+        } else {
+            let response = `${player.displayName} can buy: `
+            if (player.lv >= 1) { response += `Spider Donut, Spider Cider` }
+            if (player.lv >= 2) { response += `, Nice Cream, Bisicle, Cinnamon Bunny, Tough Glove, Manly Bandanna` }
+            if (player.lv >= 3) { response += `, Crab Apple, Sea Tea, Temmie Flakes, Torn Notebook, Cloudy Glasses` }
+            if (player.lv >= 4) { response += `, Temmie Armor, Hot Dog...?` }
+            if (player.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
+            if (player.lv >= 6) { response += `, Popato Chisps` }
+            return bot.say(channel, response)
+        }
+    },
+    attemptUseItem(props) {
+        const { bot, channel, tags, message, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> attemptUseItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, command: ${message.split(` `)[0]}, args:`, args, `)${resetTxt}`) }
+
+        const user = tags.username
+        const player = players[user]
+
+        const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+
+        // Show items if none selected
+        if (args.length === 0) {
+            console.log(`Inventory:`, player.inventory)
+            return bot.say(channel, `${capsName}'s items: ${player.inventory.join(`, `)}`)
+        }
+
+        const inventory = player.inventory.map(item => item.toLowerCase())
+        if (inventory.length === 0) { return bot.say(channel, `${capsName} has no items!`) }
+
+        // Can't use if dead
+        if (player.dead) {
+            console.log(`Inventory:`, player.inventory)
+            return bot.say(channel, `Sorry ${player.displayName}, you are dead!`)
+        }
+
+        // Item validation
+        const usedItem = itemLookup(args.join(` `))
+
+        if (!usedItem) {
+            console.log(`Inventory:`, player.inventory)
+            return bot.say(channel, `${capsName}, that isn't an item!`)
+        }
+
+        // Can't use !equip if not a weapon or armor
+        if (message.startsWith(`!equip`) && usedItem in consumableItems) { return }
+
+        // Check possession
+        const index = inventory.indexOf(usedItem)
+        if (index < 0) {
+            console.log(`Inventory:`, player.inventory)
+            return bot.say(channel, `${capsName}, you don't have that item!`)
+        }
+
+        const response = useItem(user, usedItem, index)
+        bot.say(channel, response)
+    }
+}

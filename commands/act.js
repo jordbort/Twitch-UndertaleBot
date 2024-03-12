@@ -1,8 +1,8 @@
-const { getUserMaxHP, showStats, stainedApronHeal } = require(`./utils`)
-
-const { resetTxt, boldTxt, cyanBg, settings } = require(`./config`)
-
-const { players } = require(`./data`)
+const { BOT_USERNAME, settings, resetTxt, boldTxt, cyanBg, } = require(`../config`)
+const { players } = require(`../data`)
+const { getUserMaxHP, getToUser, stainedApronHeal } = require(`./utils`)
+const { printAct } = require(`./graphics`)
+const { showStats } = require(`./stats`)
 
 function getAction(user, target) {
     if (settings.debug) { console.log(`${boldTxt}> getAction(user: ${user}, target: ${target})${resetTxt}`) }
@@ -241,6 +241,7 @@ function getThirdPersonFlavorText() {
         ` is juggling balls of ants.`,
         ` intentionally pratfalls. Twenty times.`
     ]
+
     return actions[Math.floor(Math.random() * actions.length)]
 }
 
@@ -256,22 +257,29 @@ function handleAct(user, toUser) {
     return response
 }
 
-function printAct() {
-    if (settings.debug) { console.log(`${boldTxt}> printAct()${resetTxt}`) }
-    const bkSq = `\x1b[40m  \x1b[0m`
-    const ywSq = `\x1b[43m  \x1b[0m`
-    //          -1 -   -2 -   -3 -   -4 -   -5 -   -6 -   -7 -   -8 -   -9 -   -10-   -11-   -12-   -13-   -14-   -15-   -16-   -17-   -18-   -19-   -20-   -21-   -22-   -23-   -24-   -25-   -26-   -27-   -28-   -29-   -30-   -31-   -32-
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq + bkSq + ywSq + ywSq + ywSq + ywSq + ywSq + bkSq + bkSq + bkSq + ywSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + bkSq + ywSq)
-    console.log(ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq + ywSq)
-}
+module.exports = {
+    getThirdPersonFlavorText,
+    attemptAct(props) {
+        const { bot, channel, tags, args } = props
+        if (settings.debug) { console.log(`${boldTxt}> attemptAct(channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
 
-module.exports = { getThirdPersonFlavorText, handleAct }
+        const user = tags.username
+        const toUser = getToUser(args[0])
+        const player = players[user]
+        const target = toUser in players ? players[toUser] : null
+        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+
+        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
+
+        if (toUser) {
+            if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
+            if (target) {
+                if (target.dead) { return bot.say(channel, `Sorry ${player.displayName}, ${target.displayName} is dead! :(`) }
+            }
+            else if (toUser === BOT_USERNAME) { return bot.say(channel, `You can't ACT with me, but you can try ACTing the Dummy!`) }
+            else { return bot.say(channel, `${toUser} is not a registered player :(`) }
+        }
+        const response = handleAct(user, toUser)
+        bot.say(channel, response)
+    }
+}

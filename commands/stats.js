@@ -230,6 +230,6 @@ module.exports = {
         table.forEach((row) => console.log(row))
 
         // Not counting the Dummy
-        bot.say(channel, `${numPlayers - 1} human${numPlayers - 1 === 1 ? `` : `s`} ha${numPlayers - 1 === 1 ? `s` : `ve`} fallen into the Underground. Use !check to inspect yourself or another user`)
+        bot.say(channel, `${numPlayers - 1} human${numPlayers - 1 === 1 ? `` : `s`} ha${numPlayers - 1 === 1 ? `s` : `ve`} fallen into the Underground. Use !check to inspect yourself or another user!`)
     }
 }

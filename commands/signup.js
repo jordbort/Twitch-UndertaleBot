@@ -70,7 +70,7 @@ module.exports = {
     },
     handleKnownJoin(props) {
         const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> handleUnrecruit(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
+        if (settings.debug) { console.log(`${boldTxt}> handleKnownJoin(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
         // Dev use in bot's channel only
         if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }

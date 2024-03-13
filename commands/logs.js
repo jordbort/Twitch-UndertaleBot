@@ -43,7 +43,7 @@ function renderObj(obj, objName, indentation = ``) {
 
 module.exports = {
     makeLogs(channels) {
-        if (settings.debug) { console.log(`${boldTxt}> makeLogs(channels: ${channels})${resetTxt}`) }
+        if (settings.debug) { console.log(`${boldTxt}> makeLogs(channels:`, channels, `)${resetTxt}`) }
         let data = `+---------------+\n| UNDERTALE BOT |\n+---------------+\nSession started: ${startDate} at ${startTime}\n`
 
         data += `\n${renderArr(channels, `Current channels`)}\n`

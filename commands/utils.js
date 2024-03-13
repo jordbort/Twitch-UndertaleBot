@@ -13,7 +13,7 @@ function getUserMaxHP(user) {
 
 function getIntroText(props) {
     const { bot, channel, tags } = props
-    if (settings.debug) { console.log(`${boldTxt}> getIntroText(bot: ${typeof bot},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
+    if (settings.debug) { console.log(`${boldTxt}> getIntroText(bot: ${typeof bot}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
     const displayName = tags[`display-name`]
     const capsName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
@@ -92,7 +92,7 @@ function getIntroText(props) {
 
     const randIntroText = Math.floor(Math.random() * introText.length)
     response += introText[randIntroText]
-    bot.say(BOT_CHANNEL, response)
+    bot.say(channel, response)
 }
 
 module.exports = {
@@ -102,6 +102,9 @@ module.exports = {
     initUser(props) {
         const { tags } = props
         if (settings.debug) { console.log(`${boldTxt}> initUser(username: ${tags.username},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
+
+        // Intercept props to getIntroText
+        props.channel = BOT_CHANNEL
 
         const username = tags.username
         const displayName = tags[`display-name`]
@@ -143,7 +146,7 @@ module.exports = {
         highestLevels[username] = 1
         getIntroText(props)
     },
-    getUsername(str) { // used for handleRecruit/handleUnrecruit
+    getUsername(str) {
         return str
             ? str.replace(/^[@#]/, ``).match(twitchUsernamePattern)
                 ? str.replace(/^[@#]/, ``)
@@ -162,7 +165,6 @@ module.exports = {
         })
     },
     stainedApronHeal(user) {
-        // const { bot, channel, tags, message, args } = props
         if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
         const sendingPlayer = players[user]
         const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)

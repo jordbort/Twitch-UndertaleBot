@@ -2,6 +2,7 @@ const { twitchUsernamePattern, getUserMaxHP, getToUser } = require(`./utils`)
 const { settings, resetTxt, boldTxt, redBg, greenBg } = require(`../config`)
 const { players, weaponsATK, armorDEF } = require(`../data`)
 
+const bufferSpaces = (len) => Array(len).fill(` `).join(``)
 const fillNameGap = (colWidth, user) => { return colWidth > user.length ? bufferSpaces(colWidth - user.length) : `` }
 const fillShortEntry = (colWidth, title) => { return colWidth < title.length ? bufferSpaces(title.length - colWidth) : `` }
 
@@ -65,7 +66,24 @@ function showStats(user) {
     console.log(`Inventory:`, player.inventory)
 }
 
-const bufferSpaces = (len) => Array(len).fill(` `).join(``)
+function makeFullRow(columnWidth, i, j) {
+    const row = []
+    const username = Object.keys(players)[i + j]
+    if (username) {
+        const player = players[username]
+        const logColor = player.dead ? redBg : greenBg
+        if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
+            row.push(`${logColor}${player.displayName.length > columnWidth ? player.displayName.substring(0, columnWidth) : player.displayName}${fillNameGap(columnWidth, player.displayName)}${resetTxt}`)
+        } else {
+            row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > columnWidth ? username.substring(0, columnWidth) : username}${fillNameGap(columnWidth, username)}${resetTxt}`)
+        }
+        let attackBoost = 0
+        if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
+        if (player.armor === `Temmie Armor`) { attackBoost = 10 }
+        row.push(player.lv, `${player.hp}/${getUserMaxHP(username)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`)
+    }
+    return row.join(`\t`)
+}
 
 module.exports = {
     showStats,
@@ -185,8 +203,10 @@ module.exports = {
     showPlayers(props) {
         const { bot, channel } = props
         if (settings.debug) { console.log(`${boldTxt}> showPlayers(bot: ${typeof bot}, channel: ${channel})${resetTxt}`) }
+
         let columnGroups = settings.landscapeView ? 4 : 2
-        if (Object.keys(players).length < columnGroups) { columnGroups = Object.keys(players).length }
+        const numPlayers = Object.keys(players).length
+        if (numPlayers < columnGroups) { columnGroups = numPlayers }
 
         const usersColumnTitle = `username`
         const maxUsersColWidth = process.stdout.columns < 224 ? process.stdout.columns < 192 ? 7 : 15 : 23
@@ -194,33 +214,12 @@ module.exports = {
         if (usersColumnWidth < usersColumnTitle.length) { usersColumnWidth = usersColumnTitle.length }
         if (usersColumnWidth > maxUsersColWidth) { usersColumnWidth = maxUsersColWidth }
 
-        const table = []
-        table.push(Array(columnGroups).fill(`${usersColumnTitle}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`))
-        table.push(Array(columnGroups).fill(`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`))
+        const table = [
+            Array(columnGroups).fill(`${usersColumnTitle}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `lv\t` + `hp\t` + `at\t` + `df`).join(`\t`),
+            Array(columnGroups).fill(`${Array(usersColumnTitle.length).fill(`-`).join(``)}${bufferSpaces(usersColumnWidth - usersColumnTitle.length)}\t` + `--\t` + `--\t` + `--\t` + `--`).join(`\t`)
+        ]
 
-        const allPlayers = []
-        function makeFullRow(columnWidth, i, j) {
-            const row = []
-            const username = Object.keys(players)[i + j]
-            if (username) {
-                const player = players[username]
-                const logColor = player.dead ? redBg : greenBg
-                if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
-                    allPlayers.push(player.displayName)
-                    row.push(`${logColor}${player.displayName.length > usersColumnWidth ? player.displayName.substring(0, usersColumnWidth) : player.displayName}${fillNameGap(usersColumnWidth, player.displayName)}${resetTxt}`)
-                } else {
-                    allPlayers.push(username)
-                    row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > usersColumnWidth ? username.substring(0, usersColumnWidth) : username}${fillNameGap(usersColumnWidth, username)}${resetTxt}`)
-                }
-                let attackBoost = 0
-                if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
-                if (player.armor === `Temmie Armor`) { attackBoost = 10 }
-                row.push(player.lv, `${player.hp}/${getUserMaxHP(username)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`)
-            }
-            return row.join(`\t`)
-        }
-
-        for (const [i] of Object.keys(players).entries()) {
+        for (let i = 0; i < numPlayers; i++) {
             if (i % columnGroups === 0) {
                 const fullRow = []
                 for (let j = 0; j < columnGroups; j++) { fullRow.push(makeFullRow(usersColumnWidth, i, j)) }
@@ -229,6 +228,8 @@ module.exports = {
         }
 
         table.forEach((row) => console.log(row))
-        bot.say(channel, `Players: ${allPlayers.join(`, `)}`)
+
+        // Not counting the Dummy
+        bot.say(channel, `${numPlayers - 1} human${numPlayers - 1 === 1 ? `` : `s`} ha${numPlayers - 1 === 1 ? `s` : `ve`} fallen into the Underground. Use !check to inspect yourself or another user`)
     }
 }

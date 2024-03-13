@@ -1,4 +1,4 @@
-const { BOT_DISPLAY_NAME, DEV, settings, resetTxt, boldTxt, yellowBg } = require(`../config`)
+const { BOT_DISPLAY_NAME, BOT_CHANNEL, DEV, settings, resetTxt, boldTxt, yellowBg } = require(`../config`)
 const { players, playerSave, highestLevels } = require(`../data`)
 const { printLogo } = require(`./graphics`)
 
@@ -7,8 +7,8 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> reviveDummy(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
         players.dummy.hp = 20
@@ -19,8 +19,8 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> playersReset(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
         for (const player in players) {
@@ -49,8 +49,8 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> playersReset(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
         for (const player in players) {
@@ -83,8 +83,8 @@ module.exports = {
         const { bot, channel, tags, args } = props
         if (settings.debug) { console.log(`${boldTxt}> toggleDebugMode(username: ${tags.username}, channel: ${channel}, args:`, args, `)${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         const initialDebugState = settings.debug
         if (args[0] === `on`) { settings.debug = true }
@@ -99,8 +99,8 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> portraitMode(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         settings.landscapeView = false
         printLogo()
@@ -110,8 +110,8 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> landscapeMode(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         settings.landscapeView = true
         printLogo()

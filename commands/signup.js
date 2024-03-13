@@ -1,10 +1,13 @@
-const { DEV, KNOWN_CHANNELS, settings, resetTxt, boldTxt } = require(`../config`)
+const { BOT_USERNAME, BOT_CHANNEL, DEV, KNOWN_CHANNELS, settings, resetTxt, boldTxt } = require(`../config`)
 const { getUsername } = require(`./utils`)
 
 module.exports = {
     handleJoin(props) {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> handleJoin(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
+
+        // In bot's channel only
+        if (channel !== BOT_CHANNEL) { return }
 
         const user = `#${tags.username}`
         if (bot.channels.includes(user)) { return bot.say(channel, `${tags[`display-name`]}, I should already be active in your channel! Use !part if you would like me to leave!`) }
@@ -15,17 +18,20 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> handlePart(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
+        // In bot's channel only
+        if (channel !== BOT_CHANNEL) { return }
+
         const user = `#${tags.username}`
         if (!bot.channels.includes(user)) { return bot.say(channel, `${tags[`display-name`]}, I am not active in your Twitch channel! Use !join if you would like to add me to it!`) }
-        bot.part(user)
         bot.say(channel, `${tags[`display-name`]}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
+        bot.part(user)
     },
     handleRecruit(props) {
         const { bot, channel, tags, args } = props
         if (settings.debug) { console.log(`${boldTxt}> handleRecruit(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         const validUsers = args.map(arg => getUsername(arg)).filter(user => user !== null)
         const alreadyJoined = validUsers.filter(user => bot.channels.includes(`#${user}`))
@@ -42,10 +48,11 @@ module.exports = {
         const { bot, channel, tags, args } = props
         if (settings.debug) { console.log(`${boldTxt}> handleUnrecruit(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
-        const validUsers = args.map(arg => getUsername(arg)).filter(user => user !== null)
+        // Bot's channel is not allowed to be parted
+        const validUsers = args.map(arg => getUsername(arg)).filter(user => user !== null && user !== BOT_USERNAME)
         const needToPart = validUsers.filter(user => bot.channels.includes(`#${user}`))
         const notInChannel = validUsers.filter(user => !bot.channels.includes(`#${user}`))
 
@@ -60,8 +67,8 @@ module.exports = {
         const { bot, channel, tags } = props
         if (settings.debug) { console.log(`${boldTxt}> handleUnrecruit(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
-        // Dev use only
-        if (tags.username !== DEV) { return }
+        // Dev use in bot's channel only
+        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
 
         const alreadyJoined = KNOWN_CHANNELS.filter(user => bot.channels.includes(`#${user}`))
         const notYetJoined = KNOWN_CHANNELS.filter(user => !bot.channels.includes(`#${user}`))

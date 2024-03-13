@@ -37,7 +37,12 @@ module.exports = {
         const alreadyJoined = validUsers.filter(user => bot.channels.includes(`#${user}`))
         const notYetJoined = validUsers.filter(user => !bot.channels.includes(`#${user}`))
 
-        notYetJoined.forEach(user => bot.join(user))
+        // Stagger multiple channel joins
+        for (const [i, channel] of notYetJoined.entries()) {
+            const delay = 600
+            setTimeout(() => bot.join(channel), delay * i)
+        }
+
         notYetJoined.length
             ? alreadyJoined.length
                 ? bot.say(channel, `Joined channel${notYetJoined.length === 1 ? `` : `s`}: ${notYetJoined.join(`, `)} - Already joined: ${alreadyJoined.join(`, `)}`)
@@ -72,7 +77,13 @@ module.exports = {
 
         const alreadyJoined = KNOWN_CHANNELS.filter(user => bot.channels.includes(`#${user}`))
         const notYetJoined = KNOWN_CHANNELS.filter(user => !bot.channels.includes(`#${user}`))
-        notYetJoined.forEach(user => bot.join(user))
+
+        // Stagger multiple channel joins
+        for (const [i, channel] of notYetJoined.entries()) {
+            const delay = 600
+            setTimeout(() => bot.join(channel), delay * i)
+        }
+
         notYetJoined.length
             ? alreadyJoined.length
                 ? bot.say(channel, `Joined channel${notYetJoined.length === 1 ? `` : `s`}: ${notYetJoined.join(`, `)} - Already joined: ${alreadyJoined.join(`, `)}`)

@@ -1,5 +1,5 @@
+const { BOT_CHANNEL, settings, resetTxt, boldTxt, cyanBg } = require(`../config`)
 const { players, playerSave, highestLevels, baseHP } = require(`../data`)
-const { settings, resetTxt, boldTxt, cyanBg } = require(`../config`)
 
 const twitchUsernamePattern = /^[a-z0-9_]{4,25}$/i
 
@@ -11,7 +11,8 @@ function getUserMaxHP(user) {
     return maxHP
 }
 
-function getIntroText(bot, tags) {
+function getIntroText(props) {
+    const { bot, channel, tags } = props
     if (settings.debug) { console.log(`${boldTxt}> getIntroText(bot: ${typeof bot},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
     const displayName = tags[`display-name`]
@@ -91,18 +92,20 @@ function getIntroText(bot, tags) {
 
     const randIntroText = Math.floor(Math.random() * introText.length)
     response += introText[randIntroText]
-    bot.say(bot.channels[0], response)
+    bot.say(BOT_CHANNEL, response)
 }
 
 module.exports = {
     twitchUsernamePattern,
     getUserMaxHP,
     getIntroText,
-    initUser(bot, tags) {
+    initUser(props) {
+        const { tags } = props
         if (settings.debug) { console.log(`${boldTxt}> initUser(username: ${tags.username},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
         const username = tags.username
         const displayName = tags[`display-name`]
+
         players[username] = {
             displayName: displayName,
             lv: 1,
@@ -138,7 +141,7 @@ module.exports = {
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
         highestLevels[username] = 1
-        getIntroText(bot, tags)
+        getIntroText(props)
     },
     getUsername(str) { // used for handleRecruit/handleUnrecruit
         return str

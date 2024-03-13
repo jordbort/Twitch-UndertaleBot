@@ -42,11 +42,11 @@ module.exports = {
         const cmd = args.shift()
 
         // First-time message
-        if (firstMsg && channel === BOT_CHANNEL) { printLogo() }// else {console.log(`not 1st`)}
+        if (channel === BOT_CHANNEL && firstMsg) { printLogo() }
 
-        // Add/manage players
+        // Add/manage players (props are needed for getIntroText)
         if (!(username in players) && !self) {
-            initUser(this, tags)
+            initUser({ bot: this, channel: channel, tags: tags, message: msg, args: args })
         }
 
         // Update logs, log bot message, ignore user non-command attempt

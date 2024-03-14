@@ -146,7 +146,7 @@ function deathCheck(bot, channel, user, target) {
             response += `${capsSender} earned ${awardedEXP} EXP`
 
             // Appending awarded gold
-            const randGold = Math.ceil(Math.random() * 25) * 5
+            const randGold = Math.ceil(Math.random() * 19) * 5
             sendingPlayer.gold += randGold
             if (targetPlayer.gold > 0) {
                 sendingPlayer.gold += targetPlayer.gold

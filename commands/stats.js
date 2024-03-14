@@ -72,7 +72,7 @@ function makeFullRow(columnWidth, i, j) {
     if (username) {
         const player = players[username]
         const logColor = player.dead ? redBg : greenBg
-        if (player.displayName.match(/^[a-zA-Z0-9_]{4,25}$/)) {
+        if (player.displayName.match(twitchUsernamePattern)) {
             row.push(`${logColor}${player.displayName.length > columnWidth ? player.displayName.substring(0, columnWidth) : player.displayName}${fillNameGap(columnWidth, player.displayName)}${resetTxt}`)
         } else {
             row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > columnWidth ? username.substring(0, columnWidth) : username}${fillNameGap(columnWidth, username)}${resetTxt}`)

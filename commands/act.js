@@ -3,123 +3,121 @@ const { getUserMaxHP, stainedApronHeal, initProps } = require(`./utils`)
 const { printAct } = require(`./graphics`)
 const { showStats } = require(`./stats`)
 
-function getAction(user, target) {
-    if (settings.debug) { console.log(`${boldTxt}> getAction(user: ${user}, target: ${target})${resetTxt}`) }
-    const sendingPlayer = players[user]
-    const targetPlayer = players[target]
-    const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-    const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
+function getAction(user, toUser, player, capsPlayer, target, capsTarget) {
+    if (settings.debug) { console.log(`${boldTxt}> getAction(user: ${user}, toUser: ${toUser})${resetTxt}`) }
+
     const randGold = Math.ceil(Math.random() * 10) * 5
     const actions = [
-        ` and the others celebrate ${targetPlayer.displayName}'s disappearance.`,
-        ` and the others ditch ${targetPlayer.displayName} when they look away!`,
-        ` asks ${targetPlayer.displayName} about their day.`,
-        ` asks ${targetPlayer.displayName} about their day. There's no response.`,
-        ` asks ${targetPlayer.displayName} to clean them. ${capsTarget} hops around excitedly.`,
-        ` attempts to touch ${targetPlayer.displayName}'s armor. Their hands slip off.`,
-        ` boos ${targetPlayer.displayName}.`,
+        ` and the others celebrate ${target.displayName}'s disappearance.`,
+        ` and the others ditch ${target.displayName} when they look away!`,
+        ` asks ${target.displayName} about their day.`,
+        ` asks ${target.displayName} about their day. There's no response.`,
+        ` asks ${target.displayName} to clean them. ${capsTarget} hops around excitedly.`,
+        ` attempts to touch ${target.displayName}'s armor. Their hands slip off.`,
+        ` boos ${target.displayName}.`,
         ` boos loudly. ${capsTarget} leaves to look elsewhere for praise.`,
-        ` boos... but haters only make ${targetPlayer.displayName} stronger. ${capsTarget} ATTACK UP+DEFENSE DOWN.`,
-        ` calls ${targetPlayer.displayName}. ${capsTarget} bounds toward them, flecking slobber into ${sendingPlayer.displayName}'s face.`,
+        ` boos... but haters only make ${target.displayName} stronger. ${capsTarget} ATTACK UP+DEFENSE DOWN.`,
+        ` calls ${target.displayName}. ${capsTarget} bounds toward them, flecking slobber into ${player.displayName}'s face.`,
         ` claps like a gorilla. ${capsTarget} is becoming addicted to their praise.`,
         ` claps really sloppily. ${capsTarget} sucks up their praise like a vacuum cleaner.`,
-        ` cleans ${targetPlayer.displayName}'s armor. Its cooling dirt begins to wash away.`,
-        ` compliments ${targetPlayer.displayName}. They understood them perfectly. ${capsTarget}'s ATTACK dropped.`,
+        ` cleans ${target.displayName}'s armor. Its cooling dirt begins to wash away.`,
+        ` compliments ${target.displayName}. They understood them perfectly. ${capsTarget}'s ATTACK dropped.`,
         ` cranks up the thermostat. ${capsTarget} begins to get excited.`,
         ` cranks up the thermostat. It's super hot! ${capsTarget} looks satisfied.`,
         ` did something mysterious. ${capsTarget} recognizes they have more to learn from this world.`,
         ` does nothing. ${capsTarget} leaves to look elsewhere for praise.`,
         ` does nothing. ${capsTarget} looks desperate for attention.`,
         ` does nothing. ${capsTarget} looks disappointed they aren't paying attention.`,
-        ` doesn't hug ${targetPlayer.displayName}. They appreciate their respect of their boundaries.`,
-        ` doesn't pick on ${targetPlayer.displayName}.`,
+        ` doesn't hug ${target.displayName}. They appreciate their respect of their boundaries.`,
+        ` doesn't pick on ${target.displayName}.`,
         ` flexes. ${capsTarget} flexes twice as hard. ATTACK increases for both of them.`,
         ` flexes. ${capsTarget} flexes very hard... They flex themself out of the room!`,
-        ` gave ${targetPlayer.displayName} a patient smile.`,
-        ` gets close to ${targetPlayer.displayName}. But not too close.`,
-        ` gives ${targetPlayer.displayName} a cruel look.`,
-        ` gives ${targetPlayer.displayName} a friendly pat.`,
-        ` hugs ${targetPlayer.displayName}. Gross slime covers them. ${capsSender}'s SPEED decreased.`,
-        ` ignores ${targetPlayer.displayName} and thinks of pollen and sunshine. ${capsSender}'s DEFENSE increased by 1.`,
-        ` informs ${targetPlayer.displayName} that they have a great hat!`,
-        ` invites ${targetPlayer.displayName} to hang out.`,
+        ` gave ${target.displayName} a patient smile.`,
+        ` gets close to ${target.displayName}. But not too close.`,
+        ` gives ${target.displayName} a cruel look.`,
+        ` gives ${target.displayName} a friendly pat.`,
+        ` hugs ${target.displayName}. Gross slime covers them. ${capsPlayer}'s SPEED decreased.`,
+        ` ignores ${target.displayName} and thinks of pollen and sunshine. ${capsPlayer}'s DEFENSE increased by 1.`,
+        ` informs ${target.displayName} that they have a great hat!`,
+        ` invites ${target.displayName} to hang out.`,
         ` kneels and prays for safety. ${capsTarget} remembers their conscience.`,
-        ` laughs at ${targetPlayer.displayName} before they say anything funny.`,
+        ` laughs at ${target.displayName} before they say anything funny.`,
         ` lies down. ${capsTarget} lies down too. ${capsTarget} understands life now.`,
-        ` lies immobile with ${targetPlayer.displayName}. They feel like they understand the world a little better.`,
-        ` makes fun of ${targetPlayer.displayName}.`,
-        ` manages to tear their eyes away from ${targetPlayer.displayName}'s hat. They look annoyed...`,
-        ` pats ${targetPlayer.displayName}'s chest like a muscular bongo.`,
+        ` lies immobile with ${target.displayName}. They feel like they understand the world a little better.`,
+        ` makes fun of ${target.displayName}.`,
+        ` manages to tear their eyes away from ${target.displayName}'s hat. They look annoyed...`,
+        ` pats ${target.displayName}'s chest like a muscular bongo.`,
         ` pats their stomach. ${capsTarget} offers a healthy meal.`,
         ` pays ${randGold} G. ${capsTarget} reduces their ATTACK for this turn!`,
-        ` pets ${targetPlayer.displayName}. Their excitement knows no bounds.`,
-        ` pets the ${targetPlayer.displayName}. They start to generate a Stage I Happiness Froth.`,
-        ` picks on ${targetPlayer.displayName}.`,
-        ` presses the yellow button. The phone is resonating with ${targetPlayer.displayName}'s presence!`,
+        ` pets ${target.displayName}. Their excitement knows no bounds.`,
+        ` pets the ${target.displayName}. They start to generate a Stage I Happiness Froth.`,
+        ` picks on ${target.displayName}.`,
+        ` presses the yellow button. The phone is resonating with ${target.displayName}'s presence!`,
         ` raises their arms and wiggles their fingers. ${capsTarget} freaks out!`,
         ` reaches out. ${capsTarget} recoils from their touch.`,
-        ` says hello to ${targetPlayer.displayName}.`,
+        ` says hello to ${target.displayName}.`,
         ` sings an old lullaby. ${capsTarget} starts to look sleepy...`,
-        ` stands up to ${targetPlayer.displayName}.`,
-        ` talks to ${targetPlayer.displayName}. ...They don't seem much for conversation. No one is happy with this.`,
-        ` talks to ${targetPlayer.displayName}... They don't seem much for conversation. JPEGSTRIPES seems happy with ${sendingPlayer.displayName}.`,
-        ` tells ${targetPlayer.displayName} that no one will ever love them the way they are... They struggle to make a retort, and slink away utterly crushed...`,
-        ` tells ${targetPlayer.displayName} that their attacks are NOT helpful.`,
-        ` tells ${targetPlayer.displayName} that their rump looks like a sack of trash.`,
-        ` tells ${targetPlayer.displayName} that there's a mirror behind them.`,
-        ` tells ${targetPlayer.displayName} that they aren't funny.`,
-        ` tells ${targetPlayer.displayName} their attacks are too easy. The bullets get faster.`,
-        ` tells ${targetPlayer.displayName} their attacks are too easy. The bullets get unfair.`,
-        ` tells ${targetPlayer.displayName} their attacks are too easy. They don't care.`,
-        ` tells ${targetPlayer.displayName} their favorite secret.`,
-        ` tells ${targetPlayer.displayName} they have a powerful rudder.`,
-        ` tells ${targetPlayer.displayName} they have an impressive wingspan.`,
-        ` tells ${targetPlayer.displayName} they have cute winglets.`,
-        ` tells ${targetPlayer.displayName} they have nice turbines.`,
-        ` tells ${targetPlayer.displayName} they like their taste in movies and books.`,
-        ` tells ${targetPlayer.displayName} they're all wrong.`,
-        ` tells ${targetPlayer.displayName} they're doing a great job. Their attacks become extreme...`,
-        ` tells ${targetPlayer.displayName} to be honest with their feelings.`,
-        ` tells ${targetPlayer.displayName} to go away.`,
-        ` threatens ${targetPlayer.displayName}. They understood them perfectly. ${capsTarget}'s DEFENSE dropped.`,
-        ` threw the stick and ${targetPlayer.displayName} ran to get it. They played fetch for a while.`,
+        ` stands up to ${target.displayName}.`,
+        ` talks to ${target.displayName}. ...They don't seem much for conversation. No one is happy with this.`,
+        ` talks to ${target.displayName}... They don't seem much for conversation. JPEGSTRIPES seems happy with ${player.displayName}.`,
+        ` tells ${target.displayName} that no one will ever love them the way they are... They struggle to make a retort, and slink away utterly crushed...`,
+        ` tells ${target.displayName} that their attacks are NOT helpful.`,
+        ` tells ${target.displayName} that their rump looks like a sack of trash.`,
+        ` tells ${target.displayName} that there's a mirror behind them.`,
+        ` tells ${target.displayName} that they aren't funny.`,
+        ` tells ${target.displayName} their attacks are too easy. The bullets get faster.`,
+        ` tells ${target.displayName} their attacks are too easy. The bullets get unfair.`,
+        ` tells ${target.displayName} their attacks are too easy. They don't care.`,
+        ` tells ${target.displayName} their favorite secret.`,
+        ` tells ${target.displayName} they have a powerful rudder.`,
+        ` tells ${target.displayName} they have an impressive wingspan.`,
+        ` tells ${target.displayName} they have cute winglets.`,
+        ` tells ${target.displayName} they have nice turbines.`,
+        ` tells ${target.displayName} they like their taste in movies and books.`,
+        ` tells ${target.displayName} they're all wrong.`,
+        ` tells ${target.displayName} they're doing a great job. Their attacks become extreme...`,
+        ` tells ${target.displayName} to be honest with their feelings.`,
+        ` tells ${target.displayName} to go away.`,
+        ` threatens ${target.displayName}. They understood them perfectly. ${capsTarget}'s DEFENSE dropped.`,
+        ` threw the stick and ${target.displayName} ran to get it. They played fetch for a while.`,
         ` throws the stick. ${capsTarget} brings it back in their mouth.`,
-        ` told ${targetPlayer.displayName} a little joke.`,
-        ` told ${targetPlayer.displayName} they didn't want to fight. But nothing happened.`,
-        ` told ${targetPlayer.displayName} they just want to be friends. They remember someone... ${capsTarget}'s attacks became a little less extreme.`,
-        ` took a bite out of ${targetPlayer.displayName}. ${capsSender} recovered 5 HP!`,
-        ` tried to eat ${targetPlayer.displayName}, but they weren't weakened enough.`,
-        ` tries to console ${targetPlayer.displayName}...`,
+        ` told ${target.displayName} a little joke.`,
+        ` told ${target.displayName} they didn't want to fight. But nothing happened.`,
+        ` told ${target.displayName} they just want to be friends. They remember someone... ${capsTarget}'s attacks became a little less extreme.`,
+        ` took a bite out of ${target.displayName}. ${capsPlayer} recovered 5 HP!`,
+        ` tried to eat ${target.displayName}, but they weren't weakened enough.`,
+        ` tries to console ${target.displayName}...`,
         ` wiggles their hips. ${capsTarget} wiggles back. What a meaningful conversation!`
     ]
 
     const randAction = Math.floor(Math.random() * actions.length)
 
-    // If user paid the target gold
+    // If player paid the target gold
     if (randAction === 40) {
-        const differenceInGold = sendingPlayer.gold - randGold
-        console.log(`randGold: ${randGold}, senderGold: ${sendingPlayer.gold}, differenceInGold: ${differenceInGold}`)
-        if (sendingPlayer.gold <= 0) {
+        const differenceInGold = player.gold - randGold
+        console.log(`randGold: ${randGold}, senderGold: ${player.gold}, differenceInGold: ${differenceInGold}`)
+        if (player.gold <= 0) {
             return ` is out of money. ${capsTarget} shakes their head.`
         } else if (differenceInGold < 0) {
-            targetPlayer.gold += sendingPlayer.gold
-            sendingPlayer.gold = 0
+            target.gold += player.gold
+            player.gold = 0
             return ` empties their pockets. ${capsTarget} lowers the price.`
         } else {
-            sendingPlayer.gold -= randGold
-            targetPlayer.gold += randGold
+            player.gold -= randGold
+            target.gold += randGold
         }
         showStats(user)
+        showStats(toUser)
     }
 
-    // If user took a bite out of the target and recovered 5 HP
+    // If player took a bite out of the target and recovered 5 HP
     if (randAction === 76) {
-        sendingPlayer.hp += 5
-        if (sendingPlayer.hp >= getUserMaxHP(user)) {
-            sendingPlayer.hp = getUserMaxHP(user)
-            actions[randAction] = ` took a bite out of ${targetPlayer.displayName}. ${capsSender}'s HP was maxed out.`
+        player.hp += 5
+        if (player.hp >= getUserMaxHP(user)) {
+            player.hp = getUserMaxHP(user)
+            actions[randAction] = ` took a bite out of ${target.displayName}. ${capsPlayer}'s HP was maxed out.`
         }
-        console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 5 ${resetTxt}`)
+        console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${getUserMaxHP(user)}, healAmt: 5 ${resetTxt}`)
         showStats(user)
     }
 
@@ -244,14 +242,16 @@ function getThirdPersonFlavorText() {
     return actions[Math.floor(Math.random() * actions.length)]
 }
 
-function handleAct(user, toUser) {
+function handleAct(user, toUser, player, capsPlayer, target, capsTarget) {
     if (settings.debug) { console.log(`${boldTxt}> handleAct(user: ${user}, toUser: ${toUser})${resetTxt}`) }
-    const targetPlayer = toUser !== user && toUser in players ? players[toUser] : null
     printAct()
-    let response = `* ${players[user].displayName.substring(0, 1).toUpperCase() + players[user].displayName.substring(1)}`
-    targetPlayer ? response += getAction(user, toUser) : response += getThirdPersonFlavorText()
 
-    if (players[user].armor === `Stained Apron`) { response += stainedApronHeal(user) }
+    let response = `* ${capsPlayer}`
+    target && target !== player
+        ? response += getAction(user, toUser, player, capsPlayer, target, capsTarget)
+        : response += getThirdPersonFlavorText()
+
+    if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player, capsPlayer) }
 
     return response
 }
@@ -266,13 +266,12 @@ module.exports = {
 
         if (toUser) {
             if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
-            if (target) {
-                if (target.dead) { return bot.say(channel, `Sorry ${player.displayName}, ${target.displayName} is dead! :(`) }
-            }
-            else if (toUser === BOT_USERNAME) { return bot.say(channel, `You can't ACT with me, but you can try ACTing the Dummy!`) }
-            else { return bot.say(channel, `${toUser} is not a registered player :(`) }
+            if (toUser === BOT_USERNAME) { return bot.say(channel, `You can't ACT with me, but you can try ACTing the Dummy!`) }
+            if (!target) { return bot.say(channel, `${toUser} is not a known player!`) }
+            if (target.dead) { return bot.say(channel, `Sorry ${player.displayName}, ${target.displayName} is dead!`) }
         }
-        const response = handleAct(user, toUser)
+
+        const response = handleAct(user, toUser, player, capsPlayer, target, capsTarget)
         bot.say(channel, response)
     }
 }

@@ -1,15 +1,12 @@
-const { players, itemNames, itemLvThreshold, consumableItems, itemPrices } = require(`../data`)
-const { settings, resetTxt, boldTxt, redBg, magentaBg, cyanBg, grayBg } = require(`../config`)
+const { settings, resetTxt, boldTxt, magentaBg, cyanBg, grayBg } = require(`../config`)
+const { itemNames, itemLvThreshold, consumableItems, itemPrices } = require(`../data`)
 const { getUserMaxHP, initProps } = require(`./utils`)
 const { printItem } = require(`./graphics`)
 const { showStats } = require(`./stats`)
 const { calculateBisiclePrice, calculateNiceCreamPrice, calculateTemmieArmorPrice } = require(`./math`)
 
-function buyItem(user, str) {
+function buyItem(user, player, capsPlayer, str) {
     if (settings.debug) { console.log(`${boldTxt}> buyItem(user: ${user}, str: ${str})${resetTxt}`) }
-
-    const player = players[user]
-    const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
 
     if (player.lv < itemLvThreshold[str]) { return `${player.displayName}, that item isn't available to you yet!` }
     const price = str === `nice cream`
@@ -22,7 +19,7 @@ function buyItem(user, str) {
 
     if (str === `spider donut`) {
         if (player.gold < price) {
-            return `* ${capsName} didn't have enough gold.`
+            return `* ${capsPlayer} didn't have enough gold.`
         } else {
             player.gold -= price
             player.inventory.push(`Spider Donut`)
@@ -31,7 +28,7 @@ function buyItem(user, str) {
     }
     if (str === `spider cider`) {
         if (player.gold < price) {
-            return `* ${capsName} didn't have enough gold.`
+            return `* ${capsPlayer} didn't have enough gold.`
         } else {
             player.gold -= price
             player.inventory.push(`Spider Cider`)
@@ -44,7 +41,7 @@ function buyItem(user, str) {
         } else {
             player.gold -= price
             player.inventory.push(`Nice Cream`)
-            return `* Here you go! Have a super-duper day! (${capsName} got the Nice Cream.)`
+            return `* Here you go! Have a super-duper day! (${capsPlayer} got the Nice Cream.)`
         }
     }
     if (str === `bisicle`) {
@@ -236,7 +233,7 @@ function buyItem(user, str) {
     }
     if (str === `popato chisps`) {
         if (player.gold < price) {
-            return `* (${capsName} didn't have enough gold.)`
+            return `* (${capsPlayer} didn't have enough gold.)`
         } else {
             player.gold -= price
             player.inventory.push(`Popato Chisps`)
@@ -247,18 +244,15 @@ function buyItem(user, str) {
     return `If you are reading this, ${player.displayName}, I messed up somehow.`
 }
 
-function dropItem(user, str, idx) {
-    if (settings.debug) { console.log(`${boldTxt}> dropItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
-
-    const player = players[user]
-    const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+function dropItem(player, capsPlayer, str, idx) {
+    if (settings.debug) { console.log(`${boldTxt}> dropItem(player.displayName: ${player.displayName}, str: ${str}, idx: ${idx})${resetTxt}`) }
 
     if (str === `abandoned quiche`) {
         player.inventory.splice(idx, 1)
-        return `* ${capsName} leaves the Quiche on the ground and tells it they'll be right back.`
+        return `* ${capsPlayer} leaves the Quiche on the ground and tells it they'll be right back.`
     }
     else if (str === `bad memory`) {
-        return `* (${capsName} threw the Bad Memory away.) (But it came back.)`
+        return `* (${capsPlayer} threw the Bad Memory away.) (But it came back.)`
     }
     else {
         player.inventory.splice(idx, 1)
@@ -266,13 +260,13 @@ function dropItem(user, str, idx) {
         if (randNum < 29) {
             return `* The ${itemNames[str]} was thrown away.`
         } else if ([29, 30].includes(randNum)) {
-            return `* ${capsName} abandoned the ${itemNames[str]}.`
+            return `* ${capsPlayer} abandoned the ${itemNames[str]}.`
         } else if ([31, 32].includes(randNum)) {
-            return `* ${capsName} threw the ${itemNames[str]} on the ground like the piece of trash it is.`
+            return `* ${capsPlayer} threw the ${itemNames[str]} on the ground like the piece of trash it is.`
         } else if ([33, 34].includes(randNum)) {
-            return `* ${capsName} put the ${itemNames[str]} on the ground and gave it a little pat.`
+            return `* ${capsPlayer} put the ${itemNames[str]} on the ground and gave it a little pat.`
         } else {
-            return `* ${capsName} bid a quiet farewell to the ${itemNames[str]}.`
+            return `* ${capsPlayer} bid a quiet farewell to the ${itemNames[str]}.`
         }
     }
 }
@@ -349,8 +343,8 @@ function itemLookup(str) {
             : null
 }
 
-function sellItem(user, str, idx) {
-    if (settings.debug) { console.log(`${boldTxt}> sellItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
+function sellItem(player, str, idx) {
+    if (settings.debug) { console.log(`${boldTxt}> sellItem(player.displayName: ${player.displayName}, str: ${str}, idx: ${idx})${resetTxt}`) }
 
     const items = {
         // Consumable items
@@ -627,7 +621,6 @@ function sellItem(user, str, idx) {
         }
     }
 
-    const player = players[user]
     const item = items[str].shortName
 
     player.inventory.splice(idx, 1)
@@ -644,12 +637,10 @@ function sellItem(user, str, idx) {
     }
 }
 
-function useItem(user, str, idx) {
+function useItem(user, player, capsPlayer, str, idx) {
     if (settings.debug) { console.log(`${boldTxt}> useItem(user: ${user}, str: ${str}, idx: ${idx})${resetTxt}`) }
     printItem()
 
-    const player = players[user]
-    const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
     const maxHP = getUserMaxHP(user)
     let healAmt = consumableItems[str]
     const burntPanBonus = player.weapon === `Burnt Pan` ? 4 : 0
@@ -662,15 +653,15 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const bandageText = [
-            `* ${capsName} re-applied the used Bandage. Still kind of gooey.`,
-            `* ${capsName} re-applied the gross Bandage. Still kind of gooey.`,
-            `* ${capsName} re-applied their old, used Bandage. Still kind of gooey.`,
-            `* ${capsName} re-applied the dirty Bandage. Still kind of gooey.`,
-            `* ${capsName} re-applied the well-used Bandage. Still kind of gooey.`
+            `* ${capsPlayer} re-applied the used Bandage. Still kind of gooey.`,
+            `* ${capsPlayer} re-applied the gross Bandage. Still kind of gooey.`,
+            `* ${capsPlayer} re-applied their old, used Bandage. Still kind of gooey.`,
+            `* ${capsPlayer} re-applied the dirty Bandage. Still kind of gooey.`,
+            `* ${capsPlayer} re-applied the well-used Bandage. Still kind of gooey.`
         ]
         const randIdx = Math.floor(Math.random() * bandageText.length)
         let itemText = bandageText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -681,12 +672,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const monstercandyText = [
-            `* ${capsName} ate a Monster Candy. Very un-licorice-like.`,
-            `* ${capsName} ate a Monster Candy. ...tastes like licorice.`
+            `* ${capsPlayer} ate a Monster Candy. Very un-licorice-like.`,
+            `* ${capsPlayer} ate a Monster Candy. ...tastes like licorice.`
         ]
         const randIdx = Math.floor(Math.random() * monstercandyText.length)
         let itemText = monstercandyText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -697,12 +688,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const spiderdonutText = [
-            `* ${capsName} ate a Spider Donut.`,
-            `* ${capsName} ate a Spider Donut. Made with Spider Cider in the batter.`
+            `* ${capsPlayer} ate a Spider Donut.`,
+            `* ${capsPlayer} ate a Spider Donut. Made with Spider Cider in the batter.`
         ]
         const randIdx = Math.floor(Math.random() * spiderdonutText.length)
         let itemText = spiderdonutText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -713,12 +704,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const spiderciderText = [
-            `* ${capsName} drank a Spider Cider.`,
-            `* ${capsName} drank a Spider Cider. Made with whole spiders, not just the juice.`
+            `* ${capsPlayer} drank a Spider Cider.`,
+            `* ${capsPlayer} drank a Spider Cider. Made with whole spiders, not just the juice.`
         ]
         const randIdx = Math.floor(Math.random() * spiderciderText.length)
         let itemText = spiderciderText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -728,14 +719,14 @@ function useItem(user, str, idx) {
         player.hp = maxHP
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ALL ${resetTxt}`)
         showStats(user)
-        return `* ${capsName} ate the Butterscotch-Cinnamon Pie. ${capsName}'s HP was maxed out.`
+        return `* ${capsPlayer} ate the Butterscotch-Cinnamon Pie. ${capsPlayer}'s HP was maxed out.`
     }
     if (str === `snail pie`) {
         player.inventory.splice(idx, 1)
         player.hp = maxHP - 1
         const snailpieText = [
-            `* ${capsName} ate the Snail Pie. ${capsName}'s HP was maxed out.`,
-            `* ${capsName} ate the Snail Pie. It's an acquired taste. ${capsName}'s HP was maxed out.`
+            `* ${capsPlayer} ate the Snail Pie. ${capsPlayer}'s HP was maxed out.`,
+            `* ${capsPlayer} ate the Snail Pie. It's an acquired taste. ${capsPlayer}'s HP was maxed out.`
         ]
         const randIdx = Math.floor(Math.random() * snailpieText.length)
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ALL - 1 ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
@@ -748,15 +739,15 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const snowmanpieceText = [
-            `* ${capsName} ate a Snowman Piece.`,
-            `* ${capsName} ate a Snowman Piece.`,
-            `* ${capsName} ate a Snowman Piece.`,
-            `* ${capsName} ate a Snowman Piece.`,
-            `* ${capsName} ate a Snowman Piece in front of the Snowman it came from.`
+            `* ${capsPlayer} ate a Snowman Piece.`,
+            `* ${capsPlayer} ate a Snowman Piece.`,
+            `* ${capsPlayer} ate a Snowman Piece.`,
+            `* ${capsPlayer} ate a Snowman Piece.`,
+            `* ${capsPlayer} ate a Snowman Piece in front of the Snowman it came from.`
         ]
         const randIdx = Math.floor(Math.random() * snowmanpieceText.length)
         let itemText = snowmanpieceText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -767,18 +758,18 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const nicecreamText = [
-            `* ${capsName} ate a Nice Cream. You're super spiffy!`,
-            `* ${capsName} ate a Nice Cream. Are those claws natural?`,
-            `* ${capsName} ate a Nice Cream. Love yourself! I love you!`,
-            `* ${capsName} ate a Nice Cream. You look nice today!`,
-            `* ${capsName} ate a Nice Cream. (An illustration of a hug)`,
-            `* ${capsName} ate a Nice Cream. Have a wonderful day!`,
-            `* ${capsName} ate a Nice Cream. Is this as sweet as you?`,
-            `* ${capsName} ate a Nice Cream. You're just great!`
+            `* ${capsPlayer} ate a Nice Cream. You're super spiffy!`,
+            `* ${capsPlayer} ate a Nice Cream. Are those claws natural?`,
+            `* ${capsPlayer} ate a Nice Cream. Love yourself! I love you!`,
+            `* ${capsPlayer} ate a Nice Cream. You look nice today!`,
+            `* ${capsPlayer} ate a Nice Cream. (An illustration of a hug)`,
+            `* ${capsPlayer} ate a Nice Cream. Have a wonderful day!`,
+            `* ${capsPlayer} ate a Nice Cream. Is this as sweet as you?`,
+            `* ${capsPlayer} ate a Nice Cream. You're just great!`
         ]
         const randIdx = Math.floor(Math.random() * nicecreamText.length)
         let itemText = nicecreamText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -789,12 +780,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const bisicleText = [
-            `* ${capsName} eats one half of the Bisicle.`,
-            `* ${capsName} eats one half of the Bisicle. It is now a Unisicle.`
+            `* ${capsPlayer} eats one half of the Bisicle.`,
+            `* ${capsPlayer} eats one half of the Bisicle. It is now a Unisicle.`
         ]
         const randIdx = Math.floor(Math.random() * bisicleText.length)
         let itemText = bisicleText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -805,12 +796,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const unisicleText = [
-            `* ${capsName} ate a Unisicle.`,
-            `* ${capsName} ate a Unisicle. It's a SINGLE-pronged popsicle. Wait, that's just normal...`
+            `* ${capsPlayer} ate a Unisicle.`,
+            `* ${capsPlayer} ate a Unisicle. It's a SINGLE-pronged popsicle. Wait, that's just normal...`
         ]
         const randIdx = Math.floor(Math.random() * unisicleText.length)
         let itemText = unisicleText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -821,12 +812,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const cinnamonbunnyText = [
-            `* ${capsName} ate a Cinnamon Bunny.`,
-            `* ${capsName} ate a Cinnamon Bunny. A cinnamon roll in a shape of a bunny.`
+            `* ${capsPlayer} ate a Cinnamon Bunny.`,
+            `* ${capsPlayer} ate a Cinnamon Bunny. A cinnamon roll in a shape of a bunny.`
         ]
         const randIdx = Math.floor(Math.random() * cinnamonbunnyText.length)
         let itemText = cinnamonbunnyText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -837,12 +828,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const astronautfoodText = [
-            `* ${capsName} ate some Astronaut Food.`,
-            `* ${capsName} ate some Astronaut Food. It's for a pet astronaut?`
+            `* ${capsPlayer} ate some Astronaut Food.`,
+            `* ${capsPlayer} ate some Astronaut Food. It's for a pet astronaut?`
         ]
         const randIdx = Math.floor(Math.random() * astronautfoodText.length)
         let itemText = astronautfoodText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -853,12 +844,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const crabappleText = [
-            `* ${capsName} ate a Crab Apple.`,
-            `* ${capsName} ate a Crab Apple. An aquatic fruit that resembles a crustacean.`
+            `* ${capsPlayer} ate a Crab Apple.`,
+            `* ${capsPlayer} ate a Crab Apple. An aquatic fruit that resembles a crustacean.`
         ]
         const randIdx = Math.floor(Math.random() * crabappleText.length)
         let itemText = crabappleText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -869,12 +860,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const seateaText = [
-            `* ${capsName} drank a Sea Tea.`,
-            `* ${capsName} drank a Sea Tea. Made from glowing marsh water.`
+            `* ${capsPlayer} drank a Sea Tea.`,
+            `* ${capsPlayer} drank a Sea Tea. Made from glowing marsh water.`
         ]
         const randIdx = Math.floor(Math.random() * seateaText.length)
         let itemText = seateaText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -885,13 +876,13 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const abandonedquicheText = [
-            `* ${capsName} ate the Abandoned Quiche.`,
-            `* ${capsName} ate the quiche they found under a bench.`,
-            `* ${capsName} ate a psychologically-damaged spinach egg pie.`
+            `* ${capsPlayer} ate the Abandoned Quiche.`,
+            `* ${capsPlayer} ate the quiche they found under a bench.`,
+            `* ${capsPlayer} ate a psychologically-damaged spinach egg pie.`
         ]
         const randIdx = Math.floor(Math.random() * abandonedquicheText.length)
         let itemText = abandonedquicheText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -902,18 +893,18 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const temmieflakesText = [
-            `* ${capsName} ate some Temmie Flakes (cheap). hOI!`,
-            `* ${capsName} ate some Temmie Flakes (cheap). It's just torn up pieces of colored construction paper.`,
-            `* ${capsName} ate some Temmie Flakes (normal). hOI!!! i'm tEMMIE!!`,
-            `* ${capsName} ate some Temmie Flakes (normal). It's just torn up pieces of colored construction paper.`,
-            `* ${capsName} ate some Temmie Flakes (expensiv). WOA!! u gota... tem flakes!!!`,
-            `* ${capsName} ate some Temmie Flakes (expensiv). It's just torn up pieces of colored construction paper.`,
-            `* ${capsName} ate some Temmie Flakes (premiem). FOOB!!!`,
-            `* ${capsName} ate some Temmie Flakes (premiem). It's just torn up pieces of colored construction paper.`
+            `* ${capsPlayer} ate some Temmie Flakes (cheap). hOI!`,
+            `* ${capsPlayer} ate some Temmie Flakes (cheap). It's just torn up pieces of colored construction paper.`,
+            `* ${capsPlayer} ate some Temmie Flakes (normal). hOI!!! i'm tEMMIE!!`,
+            `* ${capsPlayer} ate some Temmie Flakes (normal). It's just torn up pieces of colored construction paper.`,
+            `* ${capsPlayer} ate some Temmie Flakes (expensiv). WOA!! u gota... tem flakes!!!`,
+            `* ${capsPlayer} ate some Temmie Flakes (expensiv). It's just torn up pieces of colored construction paper.`,
+            `* ${capsPlayer} ate some Temmie Flakes (premiem). FOOB!!!`,
+            `* ${capsPlayer} ate some Temmie Flakes (premiem). It's just torn up pieces of colored construction paper.`
         ]
         const randIdx = Math.floor(Math.random() * temmieflakesText.length)
         let itemText = temmieflakesText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -921,10 +912,10 @@ function useItem(user, str, idx) {
     if (str === `dog salad`) {
         player.inventory.splice(idx, 1)
         const dogSaladText = [
-            `* ${capsName} ate Dog Salad. Oh. There are bones...`,
-            `* ${capsName} ate Dog Salad. Oh. Fried tennis ball...`,
-            `* ${capsName} ate Dog Salad. Oh. Tastes yappy...`,
-            `* ${capsName} ate Dog Salad. It's literally garbage??? ${capsName}'s HP was maxed out.`,
+            `* ${capsPlayer} ate Dog Salad. Oh. There are bones...`,
+            `* ${capsPlayer} ate Dog Salad. Oh. Fried tennis ball...`,
+            `* ${capsPlayer} ate Dog Salad. Oh. Tastes yappy...`,
+            `* ${capsPlayer} ate Dog Salad. It's literally garbage??? ${capsPlayer}'s HP was maxed out.`,
         ]
         const randIdx = Math.floor(Math.random() * dogSaladText.length)
         let dogSaladHealAmt = 99
@@ -946,7 +937,7 @@ function useItem(user, str, idx) {
         if (player.hp > maxHP) { player.hp = maxHP }
         if (randIdx === 3) { player.hp = maxHP }
         let itemText = dogSaladText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${dogSaladHealAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${dogSaladHealAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, dogSaladHealAmt: ${dogSaladHealAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -954,9 +945,9 @@ function useItem(user, str, idx) {
     if (str === `instant noodles`) {
         player.inventory.splice(idx, 1)
         const instantnoodlesText = [
-            `* ${capsName} ate the Instant Noodles. They're better dry.`,
-            `* ${capsName} cooked the Instant Noodles. Comes with everything you need for a quick meal!`,
-            `* ${capsName} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better.`
+            `* ${capsPlayer} ate the Instant Noodles. They're better dry.`,
+            `* ${capsPlayer} cooked the Instant Noodles. Comes with everything you need for a quick meal!`,
+            `* ${capsPlayer} spends four minutes cooking Instant Noodles before eating them. ... they don't taste very good. They add the flavor packet. That's better. Not great, but better.`
         ]
         const randIdx = Math.floor(Math.random() * instantnoodlesText.length)
         let instantNoodlesHealAmt = 4
@@ -977,7 +968,7 @@ function useItem(user, str, idx) {
         }
         if (player.hp > maxHP) { player.hp = maxHP }
         let itemText = instantnoodlesText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${instantNoodlesHealAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${instantNoodlesHealAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, instantNoodlesHealAmt: ${instantNoodlesHealAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -988,13 +979,13 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const hotdogText = [
-            `* ${capsName} ate a Hot Dog...? (Bark!)`,
-            `* ${capsName} ate a Hot Dog...? (Bark!)`,
-            `* ${capsName} ate a Hot Dog...? The "meat" is made of something called a "water sausage."`
+            `* ${capsPlayer} ate a Hot Dog...? (Bark!)`,
+            `* ${capsPlayer} ate a Hot Dog...? (Bark!)`,
+            `* ${capsPlayer} ate a Hot Dog...? The "meat" is made of something called a "water sausage."`
         ]
         const randIdx = Math.floor(Math.random() * hotdogText.length)
         let itemText = hotdogText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1005,13 +996,13 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const hotcatText = [
-            `* ${capsName} ate a Hot Cat. (Meow!)`,
-            `* ${capsName} ate a Hot Cat. (Meow!)`,
-            `* ${capsName} ate a Hot Cat. Like a hot dog, but with little cat ears on the end.`
+            `* ${capsPlayer} ate a Hot Cat. (Meow!)`,
+            `* ${capsPlayer} ate a Hot Cat. (Meow!)`,
+            `* ${capsPlayer} ate a Hot Cat. Like a hot dog, but with little cat ears on the end.`
         ]
         const randIdx = Math.floor(Math.random() * hotcatText.length)
         let itemText = hotcatText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1022,14 +1013,14 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const junkfoodText = [
-            `* ${capsName} used Junk Food.`,
-            `* ${capsName} used Junk Food.`,
-            `* ${capsName} used Junk Food. Food that was probably once thrown away.`,
-            `* ${capsName} used Junk Food. (Eating garbage?!)`
+            `* ${capsPlayer} used Junk Food.`,
+            `* ${capsPlayer} used Junk Food.`,
+            `* ${capsPlayer} used Junk Food. Food that was probably once thrown away.`,
+            `* ${capsPlayer} used Junk Food. (Eating garbage?!)`
         ]
         const randIdx = Math.floor(Math.random() * junkfoodText.length)
         let itemText = junkfoodText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1039,8 +1030,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} ate a Hush Puppy. Dog-magic is neutralized.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} ate a Hush Puppy. Dog-magic is neutralized.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1051,16 +1042,16 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const starfaitText = [
-            `* ${capsName} ate a Starfait.`,
-            `* ${capsName} ate a Starfait.`,
-            `* ${capsName} ate a Starfait.`,
-            `* ${capsName} ate a Starfait. A sweet treat made of sparkling stars.`,
-            `* ${capsName} ate a Starfait. Viewer ratings go up by 200 points!`,
-            `* ${capsName} ate a Starfait. Viewer ratings go up by 200 points!`
+            `* ${capsPlayer} ate a Starfait.`,
+            `* ${capsPlayer} ate a Starfait.`,
+            `* ${capsPlayer} ate a Starfait.`,
+            `* ${capsPlayer} ate a Starfait. A sweet treat made of sparkling stars.`,
+            `* ${capsPlayer} ate a Starfait. Viewer ratings go up by 200 points!`,
+            `* ${capsPlayer} ate a Starfait. Viewer ratings go up by 200 points!`
         ]
         const randIdx = Math.floor(Math.random() * starfaitText.length)
         let itemText = starfaitText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1071,12 +1062,12 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const glamburgerText = [
-            `* ${capsName} ate a Glamburger.`,
-            `* ${capsName} ate the Glamburger. Made of edible glitter and sequins.`
+            `* ${capsPlayer} ate a Glamburger.`,
+            `* ${capsPlayer} ate the Glamburger. Made of edible glitter and sequins.`
         ]
         const randIdx = Math.floor(Math.random() * glamburgerText.length)
         let itemText = glamburgerText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1087,13 +1078,13 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const legendaryheroText = [
-            `* ${capsName} ate a Legendary Hero.`,
-            `* ${capsName} ate the Legendary Hero. Sandwich shaped like a sword. Increases ATTACK when eaten.`,
-            `* ${capsName} ate a Legendary Hero. Viewer ratings go up by 500 points!`
+            `* ${capsPlayer} ate a Legendary Hero.`,
+            `* ${capsPlayer} ate the Legendary Hero. Sandwich shaped like a sword. Increases ATTACK when eaten.`,
+            `* ${capsPlayer} ate a Legendary Hero. Viewer ratings go up by 500 points!`
         ]
         const randIdx = Math.floor(Math.random() * legendaryheroText.length)
         let itemText = legendaryheroText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1104,13 +1095,13 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const steakText = [
-            `* ${capsName} ate the Steak in the Shape of Mettaton's Face. They feel like it's not made of real meat...`,
-            `* ${capsName} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts.`,
-            `* ${capsName} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts. Viewer ratings go up by 700 points!`
+            `* ${capsPlayer} ate the Steak in the Shape of Mettaton's Face. They feel like it's not made of real meat...`,
+            `* ${capsPlayer} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts.`,
+            `* ${capsPlayer} ate the Steak in the Shape of Mettaton's Face. The audience goes nuts. Viewer ratings go up by 700 points!`
         ]
         const randIdx = Math.floor(Math.random() * steakText.length)
         let itemText = steakText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1121,26 +1112,26 @@ function useItem(user, str, idx) {
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
         const popatochispsText = [
-            `* ${capsName} ate some Popato Chisps.`,
-            `* ${capsName} ate some Popato Chisps. Regular old popato chisps.`
+            `* ${capsPlayer} ate some Popato Chisps.`,
+            `* ${capsPlayer} ate some Popato Chisps. Regular old popato chisps.`
         ]
         const randIdx = Math.floor(Math.random() * popatochispsText.length)
         let itemText = popatochispsText[randIdx]
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt} ${grayBg} randIdx: ${randIdx} ${resetTxt}`)
         showStats(user)
         return itemText
     }
     if (str === `bad memory`) {
         player.inventory.splice(idx, 1)
-        let itemText = `* ${capsName} consumes the Bad Memory. `
+        let itemText = `* ${capsPlayer} consumes the Bad Memory. `
         if (player.hp <= 3) {
             player.hp = maxHP
-            itemText += `${capsName}'s HP was maxed out.`
+            itemText += `${capsPlayer}'s HP was maxed out.`
             console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ALL ${resetTxt}`)
         } else {
             player.hp += healAmt
-            itemText += `${capsName} lost 1 HP.`
+            itemText += `${capsPlayer} lost 1 HP.`
             console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         }
         showStats(user)
@@ -1151,8 +1142,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} used Last Dream. Through DETERMINATION, the dream became true.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered 12 HP!`
+        let itemText = `* ${capsPlayer} used Last Dream. Through DETERMINATION, the dream became true.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered 12 HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1162,8 +1153,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} ate Puppydough Icecream. Mmm! Tastes like puppies.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} ate Puppydough Icecream. Mmm! Tastes like puppies.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1173,8 +1164,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} ate Pumpkin Rings. A small pumpkin cooked like onion rings.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} ate Pumpkin Rings. A small pumpkin cooked like onion rings.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1184,8 +1175,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} hit a Croquet Roll into their mouth. Fried dough traditionally served with a mallet.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} hit a Croquet Roll into their mouth. Fried dough traditionally served with a mallet.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1195,8 +1186,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} ate a Ghost Fruit. It will never pass to the other side.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} ate a Ghost Fruit. It will never pass to the other side.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1206,8 +1197,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} ate a Stoic Onion. They didn't cry...`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} ate a Stoic Onion. They didn't cry...`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1217,8 +1208,8 @@ function useItem(user, str, idx) {
         healAmt += burntPanBonus
         player.hp += healAmt
         if (player.hp > maxHP) { player.hp = maxHP }
-        let itemText = `* ${capsName} ate Rock Candy. It's a rock.`
-        player.hp === maxHP ? itemText += ` ${capsName}'s HP was maxed out.` : itemText += ` ${capsName} recovered ${healAmt} HP!`
+        let itemText = `* ${capsPlayer} ate Rock Candy. It's a rock.`
+        player.hp === maxHP ? itemText += ` ${capsPlayer}'s HP was maxed out.` : itemText += ` ${capsPlayer} recovered ${healAmt} HP!`
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${maxHP}, healAmt: ${healAmt} ${resetTxt}`)
         showStats(user)
         return itemText
@@ -1230,8 +1221,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.weapon)
         player.weapon = `Stick`
         const stickText = [
-            `* ${capsName} threw the Stick away. Then picked it back up.`,
-            `* ${capsName} equipped the Stick. Its bark is worse than its bite.`
+            `* ${capsPlayer} threw the Stick away. Then picked it back up.`,
+            `* ${capsPlayer} equipped the Stick. Its bark is worse than its bite.`
         ]
         const randIdx = Math.floor(Math.random() * stickText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Stick ${resetTxt}`)
@@ -1243,8 +1234,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.weapon)
         player.weapon = `Toy Knife`
         const toyKnifeText = [
-            `* ${capsName} equipped the Toy Knife. +3 ATTACK`,
-            `* ${capsName} equipped the Toy Knife. Made of plastic. A rarity nowadays. +3 ATTACK`
+            `* ${capsPlayer} equipped the Toy Knife. +3 ATTACK`,
+            `* ${capsPlayer} equipped the Toy Knife. Made of plastic. A rarity nowadays. +3 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * toyKnifeText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Toy Knife ${resetTxt}`)
@@ -1256,8 +1247,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.weapon)
         player.weapon = `Tough Glove`
         const toughGloveText = [
-            `* ${capsName} equipped the Tough Glove. +5 ATTACK`,
-            `* ${capsName} equipped the Tough Glove. A worn pink leather glove. For five-fingered folk. +5 ATTACK`
+            `* ${capsPlayer} equipped the Tough Glove. +5 ATTACK`,
+            `* ${capsPlayer} equipped the Tough Glove. A worn pink leather glove. For five-fingered folk. +5 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * toughGloveText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Tough Glove ${resetTxt}`)
@@ -1269,8 +1260,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.weapon)
         player.weapon = `Ballet Shoes`
         const balletShoesText = [
-            `* ${capsName} equipped the Ballet Shoes. +7 ATTACK`,
-            `* ${capsName} equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous. +7 ATTACK`
+            `* ${capsPlayer} equipped the Ballet Shoes. +7 ATTACK`,
+            `* ${capsPlayer} equipped the Ballet Shoes. These used shoes make you feel incredibly dangerous. +7 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * balletShoesText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Ballet Shoes ${resetTxt}`)
@@ -1283,15 +1274,15 @@ function useItem(user, str, idx) {
         player.weapon = `Torn Notebook`
         console.log(`${cyanBg} ${player.displayName} equipped the Torn Notebook ${resetTxt}`)
         showStats(user)
-        return `* ${capsName} equipped the Torn Notebook. +2 ATTACK`
+        return `* ${capsPlayer} equipped the Torn Notebook. +2 ATTACK`
     }
     if (str === `burnt pan`) {
         player.inventory.splice(idx, 1)
         player.inventory.push(player.weapon)
         player.weapon = `Burnt Pan`
         const burntPanText = [
-            `* ${capsName} equipped the Burnt Pan. +10 ATTACK`,
-            `* ${capsName} equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP. +10 ATTACK`
+            `* ${capsPlayer} equipped the Burnt Pan. +10 ATTACK`,
+            `* ${capsPlayer} equipped the Burnt Pan. Damage is rather consistent. Consumable items heal 4 more HP. +10 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * burntPanText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Burnt Pan ${resetTxt}`)
@@ -1303,8 +1294,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.weapon)
         player.weapon = `Empty Gun`
         const emptyGunText = [
-            `* ${capsName} equipped the Empty Gun. +12 ATTACK`,
-            `* ${capsName} equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low. +12 ATTACK`
+            `* ${capsPlayer} equipped the Empty Gun. +12 ATTACK`,
+            `* ${capsPlayer} equipped the Empty Gun. An antique revolver. It has no ammo. Must be used precisely, or damage will be low. +12 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * emptyGunText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Empty Gun ${resetTxt}`)
@@ -1316,8 +1307,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.weapon)
         player.weapon = `Worn Dagger`
         const wornDaggerText = [
-            `* ${capsName} equipped the Worn Dagger. +15 ATTACK`,
-            `* ${capsName} equipped the Worn Dagger. Perfect for cutting plants and vines. +15 ATTACK`
+            `* ${capsPlayer} equipped the Worn Dagger. +15 ATTACK`,
+            `* ${capsPlayer} equipped the Worn Dagger. Perfect for cutting plants and vines. +15 ATTACK`
         ]
         const randIdx = Math.floor(Math.random() * wornDaggerText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Worn Dagger ${resetTxt}`)
@@ -1330,7 +1321,7 @@ function useItem(user, str, idx) {
         player.weapon = `Real Knife`
         console.log(`${cyanBg} ${player.displayName} equipped the Real Knife ${resetTxt}`)
         showStats(user)
-        return `* ${capsName} equipped the Real Knife. About time. +99 ATTACK`
+        return `* ${capsPlayer} equipped the Real Knife. About time. +99 ATTACK`
     }
 
     // Armor
@@ -1339,8 +1330,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Faded Ribbon`
         const fadedRibbonText = [
-            `* ${capsName} equipped the Faded Ribbon. +5 DEFENSE`,
-            `* ${capsName} equipped the Faded Ribbon. If you're cuter, they won't hit you as hard. +5 DEFENSE`
+            `* ${capsPlayer} equipped the Faded Ribbon. +5 DEFENSE`,
+            `* ${capsPlayer} equipped the Faded Ribbon. If you're cuter, they won't hit you as hard. +5 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * fadedRibbonText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Faded Ribbon ${resetTxt}`)
@@ -1352,8 +1343,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Manly Bandanna`
         const manlyBandannaText = [
-            `* ${capsName} equipped the Manly Bandanna. +7 DEFENSE`,
-            `* ${capsName} equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it. +7 DEFENSE`
+            `* ${capsPlayer} equipped the Manly Bandanna. +7 DEFENSE`,
+            `* ${capsPlayer} equipped the Manly Bandanna. It has seen some wear. It has abs drawn on it. +7 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * manlyBandannaText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Manly Bandanna ${resetTxt}`)
@@ -1365,8 +1356,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Old Tutu`
         const oldTutuText = [
-            `* ${capsName} equipped the Old Tutu. +10 DEFENSE`,
-            `* ${capsName} equipped the Old Tutu. Finally, a protective piece of armor. +10 DEFENSE`
+            `* ${capsPlayer} equipped the Old Tutu. +10 DEFENSE`,
+            `* ${capsPlayer} equipped the Old Tutu. Finally, a protective piece of armor. +10 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * oldTutuText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Old Tutu ${resetTxt}`)
@@ -1378,8 +1369,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Cloudy Glasses`
         const cloudyGlassesText = [
-            `* ${capsName} equipped the Cloudy Glasses. +5 DEFENSE`,
-            `* ${capsName} equipped the Cloudy Glasses. Glasses marred with wear. +5 DEFENSE`
+            `* ${capsPlayer} equipped the Cloudy Glasses. +5 DEFENSE`,
+            `* ${capsPlayer} equipped the Cloudy Glasses. Glasses marred with wear. +5 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * cloudyGlassesText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Cloudy Glasses ${resetTxt}`)
@@ -1391,8 +1382,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Temmie Armor`
         const temmieArmorText = [
-            `* ${capsName} donned the Temmie Armor. The things you can do with a college education!`,
-            `* ${capsName} donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`
+            `* ${capsPlayer} donned the Temmie Armor. The things you can do with a college education!`,
+            `* ${capsPlayer} donned the Temmie Armor. tem armor so GOOds! any battle becom! a EASY victories!!!`
         ]
         const randIdx = Math.floor(Math.random() * temmieArmorText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Temmie Armor ${resetTxt}`)
@@ -1404,8 +1395,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Stained Apron`
         const stainedApronText = [
-            `* ${capsName} equipped the Stained Apron. +11 DEFENSE`,
-            `* ${capsName} equipped the Stained Apron. Heals 1 HP every other turn.`
+            `* ${capsPlayer} equipped the Stained Apron. +11 DEFENSE`,
+            `* ${capsPlayer} equipped the Stained Apron. Heals 1 HP every other turn.`
         ]
         const randIdx = Math.floor(Math.random() * stainedApronText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Stained Apron ${resetTxt}`)
@@ -1417,8 +1408,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Cowboy Hat`
         const cowboyHatText = [
-            `* ${capsName} equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
-            `* ${capsName} equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. +5 ATTACK +12 DEFENSE`
+            `* ${capsPlayer} equipped the Cowboy Hat. +5 ATTACK +12 DEFENSE`,
+            `* ${capsPlayer} equipped the Cowboy Hat. This battle-worn hat makes them want to grow a beard. +5 ATTACK +12 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * cowboyHatText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Cowboy Hat ${resetTxt}`)
@@ -1430,8 +1421,8 @@ function useItem(user, str, idx) {
         player.inventory.push(player.armor)
         player.armor = `Heart Locket`
         const heartLocketText = [
-            `* ${capsName} equipped the Heart Locket. +15 DEFENSE`,
-            `* ${capsName} equipped the Heart Locket. It says "Best Friends Forever." +15 DEFENSE`
+            `* ${capsPlayer} equipped the Heart Locket. +15 DEFENSE`,
+            `* ${capsPlayer} equipped the Heart Locket. It says "Best Friends Forever." +15 DEFENSE`
         ]
         const randIdx = Math.floor(Math.random() * heartLocketText.length)
         console.log(`${cyanBg} ${player.displayName} equipped the Heart Locket ${resetTxt}`)
@@ -1444,9 +1435,10 @@ function useItem(user, str, idx) {
         player.armor = `The Locket`
         console.log(`${cyanBg} ${player.displayName} equipped the Locket ${resetTxt}`)
         showStats(user)
-        return `* ${capsName} equipped the Locket. Right where it belongs. +99 DEFENSE`
+        return `* ${capsPlayer} equipped the Locket. Right where it belongs. +99 DEFENSE`
     }
-    return `* ${capsName} used 0. If you are reading this, I messed up somehow.`
+
+    return `* ${capsPlayer} used 0. If you are reading this, I messed up somehow.`
 }
 
 module.exports = {
@@ -1465,7 +1457,7 @@ module.exports = {
             }G)`)
 
         const item = itemLookup(args.join(` `))
-        if (player.lv < itemLvThreshold[item]) { return `Sorry ${player.displayName}, that item isn't available to you yet!` }
+        if (player.lv < itemLvThreshold[item]) { return bot.say(channel, `Sorry ${player.displayName}, that item isn't available to you yet!`) }
 
         const checkedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
         return checkedItem
@@ -1476,7 +1468,7 @@ module.exports = {
                     : checkedItem === `temmie armor`
                         ? calculateTemmieArmorPrice(user)
                         : itemPrices[checkedItem]
-                }G.`)
+                } G`)
             : bot.say(channel, `Item prices: ${prices.join(`, `)}`)
     },
     attemptSellItem(props) {
@@ -1491,56 +1483,50 @@ module.exports = {
 
         if (args.length === 0) { return bot.say(channel, `* hOI! welcom to... da TEM SHOP!!!`) }
 
-        const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
         const inventory = player.inventory.map(item => item.toLowerCase())
         if (inventory.length === 0) { return bot.say(channel, `* no more item...`) }
 
         // Item validation
         const soldItem = itemLookup(args.join(` `))
-        if (!soldItem) { return bot.say(channel, `${capsName}, that isn't an item!`) }
+        if (!soldItem) { return bot.say(channel, `${capsPlayer}, that isn't an item!`) }
 
         // Check possession
         const index = inventory.indexOf(soldItem)
         if (index < 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${capsName}, you don't have that item!`)
+            return bot.say(channel, `${capsPlayer}, you don't have that item!`)
         }
 
-        const response = sellItem(user, soldItem, index)
+        const response = sellItem(player, soldItem, index)
         console.log(`Inventory:`, player.inventory)
         bot.say(channel, response)
     },
     attemptDropItem(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptDropItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const player = players[user]
+        const { bot, channel, args, player, capsPlayer } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptDropItem( player.displayName: ${player.displayName}, args:`, args, `)${resetTxt}`) }
 
         // Can't use if dead
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
 
-        const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
         const inventory = player.inventory.map(item => item.toLowerCase())
-        if (inventory.length === 0) { return bot.say(channel, `${capsName} has no items!`) }
+        if (inventory.length === 0) { return bot.say(channel, `${capsPlayer} has no items!`) }
 
         // Stop if no item 
-        if (!args.length) { return bot.say(channel, `${capsName}, no item specified!`) }
+        if (!args.length) { return bot.say(channel, `${capsPlayer}, no item specified!`) }
 
         // Item validation
         const droppedItem = itemLookup(args.join(` `))
 
-        if (!droppedItem) { return bot.say(channel, `${capsName}, that isn't an item!`) }
+        if (!droppedItem) { return bot.say(channel, `${capsPlayer}, that isn't an item!`) }
 
         // Check possession
         const index = inventory.indexOf(droppedItem)
         if (index < 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${capsName}, you don't have that item!`)
+            return bot.say(channel, `${capsPlayer}, you don't have that item!`)
         }
 
-        const response = dropItem(user, droppedItem, index)
+        const response = dropItem(player, capsPlayer, droppedItem, index)
         console.log(`Inventory:`, player.inventory)
         bot.say(channel, response)
     },
@@ -1554,7 +1540,7 @@ module.exports = {
         const purchasedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
 
         if (purchasedItem) {
-            return bot.say(channel, buyItem(user, purchasedItem))
+            return bot.say(channel, buyItem(user, player, capsPlayer, purchasedItem))
         } else {
             let response = `${player.displayName} can buy: `
             if (player.lv >= 1) { response += `Spider Donut, Spider Cider` }
@@ -1573,11 +1559,11 @@ module.exports = {
         // Show items if none selected
         if (args.length === 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${capsName}'s items: ${player.inventory.join(`, `)}`)
+            return bot.say(channel, `${capsPlayer}'s items: ${player.inventory.join(`, `)}`)
         }
 
         const inventory = player.inventory.map(item => item.toLowerCase())
-        if (inventory.length === 0) { return bot.say(channel, `${capsName} has no items!`) }
+        if (inventory.length === 0) { return bot.say(channel, `${capsPlayer} has no items!`) }
 
         // Can't use if dead
         if (player.dead) {
@@ -1590,7 +1576,7 @@ module.exports = {
 
         if (!usedItem) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${capsName}, that isn't an item!`)
+            return bot.say(channel, `${capsPlayer}, that isn't an item!`)
         }
 
         // Can't use !equip if not a weapon or armor
@@ -1600,10 +1586,10 @@ module.exports = {
         const index = inventory.indexOf(usedItem)
         if (index < 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${capsName}, you don't have that item!`)
+            return bot.say(channel, `${capsPlayer}, you don't have that item!`)
         }
 
-        const response = useItem(user, usedItem, index)
+        const response = useItem(user, player, capsPlayer, usedItem, index)
         bot.say(channel, response)
     }
 }

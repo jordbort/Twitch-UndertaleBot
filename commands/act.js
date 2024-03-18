@@ -1,6 +1,5 @@
 const { BOT_USERNAME, settings, resetTxt, boldTxt, cyanBg, } = require(`../config`)
-const { players } = require(`../data`)
-const { getUserMaxHP, getToUser, stainedApronHeal } = require(`./utils`)
+const { getUserMaxHP, stainedApronHeal, initProps } = require(`./utils`)
 const { printAct } = require(`./graphics`)
 const { showStats } = require(`./stats`)
 
@@ -260,14 +259,8 @@ function handleAct(user, toUser) {
 module.exports = {
     getThirdPersonFlavorText,
     attemptAct(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptAct(channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const toUser = getToUser(args[0])
-        const player = players[user]
-        const target = toUser in players ? players[toUser] : null
-        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+        const { bot, channel, user, toUser, player, capsPlayer, target, capsTarget, lastStanding } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptAct( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
 

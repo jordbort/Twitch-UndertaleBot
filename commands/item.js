@@ -1,6 +1,6 @@
 const { players, itemNames, itemLvThreshold, consumableItems, itemPrices } = require(`../data`)
 const { settings, resetTxt, boldTxt, redBg, magentaBg, cyanBg, grayBg } = require(`../config`)
-const { getUserMaxHP } = require(`./utils`)
+const { getUserMaxHP, initProps } = require(`./utils`)
 const { printItem } = require(`./graphics`)
 const { showStats } = require(`./stats`)
 const { calculateBisiclePrice, calculateNiceCreamPrice, calculateTemmieArmorPrice } = require(`./math`)
@@ -1451,11 +1451,8 @@ function useItem(user, str, idx) {
 
 module.exports = {
     getPrices(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getPrices(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const player = players[user]
+        const { bot, channel, args, user, player } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getPrices( user: ${user}, args:`, args, `)${resetTxt}`) }
 
         const availableItems = Object.keys(itemLvThreshold).filter((item) => itemLvThreshold[item] <= player.lv)
         const prices = availableItems.map((item) => `${itemNames[item]} (${item === `temmie armor`
@@ -1483,10 +1480,8 @@ module.exports = {
             : bot.say(channel, `Item prices: ${prices.join(`, `)}`)
     },
     attemptSellItem(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptSellItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-        const user = tags.username
-        const player = players[user]
+        const { bot, channel, args, user, player, capsPlayer } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptSellItem( user: ${user}, args:`, args, `)${resetTxt}`) }
 
         // Can't use if dead
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
@@ -1550,11 +1545,8 @@ module.exports = {
         bot.say(channel, response)
     },
     attemptBuyItem(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptBuyItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const player = players[user]
+        const { bot, channel, args, user, player, capsPlayer } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptBuyItem( user: ${user}, args:`, args, `)${resetTxt}`) }
 
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
 
@@ -1575,13 +1567,8 @@ module.exports = {
         }
     },
     attemptUseItem(props) {
-        const { bot, channel, tags, message, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptUseItem(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, command: ${message.split(` `)[0]}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const player = players[user]
-
-        const capsName = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+        const { bot, channel, message, args, user, player, capsPlayer } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptUseItem( user: ${user}, args:`, args, `)${resetTxt}`) }
 
         // Show items if none selected
         if (args.length === 0) {

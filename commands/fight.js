@@ -1,6 +1,6 @@
 const { BOT_CHANNEL, settings, resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg } = require(`../config`)
 const { players, playerSave, weaponsATK, armorDEF } = require(`../data`)
-const { getUserMaxHP, getToUser, stainedApronHeal } = require(`./utils`)
+const { getUserMaxHP, stainedApronHeal, initProps } = require(`./utils`)
 const { calculateUserLV } = require(`./math`)
 const { printFight } = require(`./graphics`)
 
@@ -196,17 +196,8 @@ function deathCheck(bot, channel, user, target) {
 
 module.exports = {
     attemptFight(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptFight(channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const toUser = getToUser(args[0])
-        const player = players[user]
-        const target = toUser in players ? players[toUser] : null
-        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+        const { bot, channel, user, toUser, player, capsPlayer, target, capsTarget, lastStanding } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptFight( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
 

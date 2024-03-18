@@ -3,6 +3,12 @@ const { players, playerSave, highestLevels, baseHP } = require(`../data`)
 
 const twitchUsernamePattern = /^[a-z0-9_]{4,25}$/i
 
+function getToUser(str) {
+    return str
+        ? str.replace(/^[@#]/, ``)
+        : null
+}
+
 function getUserMaxHP(user) {
     if (settings.debug) { console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
@@ -99,6 +105,17 @@ module.exports = {
     twitchUsernamePattern,
     getUserMaxHP,
     getIntroText,
+    initProps(props) {
+        const { tags, args } = props
+        const user = tags.username
+        const toUser = getToUser(args[0])
+        const player = players[user]
+        const capsPlayer = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
+        const target = toUser in players ? players[toUser] : null
+        const capsTarget = target ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1) : null
+        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+        return { ...props, user: user, toUser: toUser, player: player, capsPlayer: capsPlayer, target: target, capsTarget: capsTarget, lastStanding: lastStanding }
+    },
     initUser(props) {
         const { tags } = props
         if (settings.debug) { console.log(`${boldTxt}> initUser(username: ${tags.username},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
@@ -153,27 +170,22 @@ module.exports = {
                 : null
             : null
     },
-    getToUser(str) {
-        return str
-            ? str.replace(/^[@#]/, ``)
-            : null
-    },
     async announceCrash(bot) {
         if (settings.debug) { console.log(`${boldTxt}> announceCrash(bot: ${typeof bot})${resetTxt}`) }
+
         return bot.channels.forEach((channel) => {
             bot.say(channel, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
         })
     },
-    stainedApronHeal(user) {
+    stainedApronHeal(user, player, capsPlayer) {
         if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
-        const sendingPlayer = players[user]
-        const capsName = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-        sendingPlayer.stainedApronHealTime = !sendingPlayer.stainedApronHealTime
-        if (!sendingPlayer.stainedApronHealTime) {
-            if (sendingPlayer.hp < getUserMaxHP(user)) {
-                sendingPlayer.hp += 1
-                console.log(`${cyanBg} ${sendingPlayer.displayName} HP: ${sendingPlayer.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
-                return sendingPlayer.hp === getUserMaxHP(user) ? ` ${capsName}'s HP was maxed out.` : ` ${capsName} recovered 1 HP!`
+
+        player.stainedApronHealTime = !player.stainedApronHealTime
+        if (!player.stainedApronHealTime) {
+            if (player.hp < getUserMaxHP(user)) {
+                player.hp += 1
+                console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
+                return player.hp === getUserMaxHP(user) ? ` ${capsPlayer}'s HP was maxed out.` : ` ${capsPlayer} recovered 1 HP!`
             }
         }
         return ``

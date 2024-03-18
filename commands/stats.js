@@ -1,4 +1,4 @@
-const { twitchUsernamePattern, getUserMaxHP, getToUser } = require(`./utils`)
+const { twitchUsernamePattern, getUserMaxHP, initProps } = require(`./utils`)
 const { settings, resetTxt, boldTxt, redBg, greenBg } = require(`../config`)
 const { players, weaponsATK, armorDEF } = require(`../data`)
 
@@ -88,105 +88,56 @@ function makeFullRow(columnWidth, i, j) {
 module.exports = {
     showStats,
     getHP(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getHP(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getHP(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
-        if (target) { bot.say(channel, `${capsName} has ${target.hp} HP`) }
+        if (target) { bot.say(channel, `${capsTarget} has ${target.hp} HP`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsName} has ${player.hp} HP`) }
+        else { bot.say(channel, `${capsPlayer} has ${player.hp} HP`) }
     },
     getGold(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getGold(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getGold(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
-        if (target) { bot.say(channel, `${capsName} has ${target.gold} G`) }
+        if (target) { bot.say(channel, `${capsTarget} has ${target.gold} G`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsName} has ${player.gold} G`) }
+        else { bot.say(channel, `${capsPlayer} has ${player.gold} G`) }
     },
     getNext(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getNext(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getNext(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
-        if (target) { bot.say(channel, `${capsName}'s LV will increase with ${target.next} EXP`) }
+        if (target) { bot.say(channel, `${capsTarget}'s LV will increase with ${target.next} EXP`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsName}'s LV will increase with ${player.next} EXP`) }
+        else { bot.say(channel, `${capsPlayer}'s LV will increase with ${player.next} EXP`) }
     },
     getWeapon(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getWeapon(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getWeapon(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
-
-        if (target) { bot.say(channel, `${capsName} has the ${target.weapon} equipped (${weaponsATK[target.weapon]} ATK)`) }
+        if (target) { bot.say(channel, `${capsTarget} has the ${target.weapon} equipped (${weaponsATK[target.weapon]} ATK)`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsName} has the ${player.weapon} equipped (${weaponsATK[player.weapon]} ATK)`) }
+        else { bot.say(channel, `${capsPlayer} has the ${player.weapon} equipped (${weaponsATK[player.weapon]} ATK)`) }
     },
     getArmor(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getArmor(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getArmor(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
-
-        if (target) { bot.say(channel, `${capsName} has the ${target.armor} equipped (${armorDEF[target.armor]} DEF)`) }
+        if (target) { bot.say(channel, `${capsTarget} has the ${target.armor} equipped (${armorDEF[target.armor]} DEF)`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsName} has the ${player.armor} equipped (${armorDEF[player.armor]} DEF)`) }
+        else { bot.say(channel, `${capsPlayer} has the ${player.armor} equipped (${armorDEF[player.armor]} DEF)`) }
     },
     getExp(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> getExp(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> getExp(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
-        const capsName = target
-            ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1)
-            : player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-
-        if (target) { bot.say(channel, `${capsName} has ${target.exp} EXP`) }
+        if (target) { bot.say(channel, `${capsTarget} has ${target.exp} EXP`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsName} has ${player.exp} EXP`) }
+        else { bot.say(channel, `${capsPlayer} has ${player.exp} EXP`) }
     },
     handleCheck(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> handleCheck(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const player = players[tags.username]
-        const toUser = getToUser(args[0])
-        const target = toUser in players ? players[toUser] : null
+        const { bot, channel, user, toUser, player, target } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> handleCheck(user: ${user}, toUser: ${toUser})${resetTxt}`) }
 
         const attackBonus = player.armor === `Cowboy Hat` ? 5 : player.armor === `Temmie Armor` ? 10 : 0
 
@@ -209,7 +160,7 @@ module.exports = {
         if (numPlayers < columnGroups) { columnGroups = numPlayers }
 
         const usersColumnTitle = `username`
-        const maxUsersColWidth = process.stdout.columns < 224 ? process.stdout.columns < 192 ? 7 : 15 : 23
+        const maxUsersColWidth = process.stdout.columns < 192 ? 15 : 23
         let usersColumnWidth = Math.max(...Object.keys(players).map((name) => name.length))
         if (usersColumnWidth < usersColumnTitle.length) { usersColumnWidth = usersColumnTitle.length }
         if (usersColumnWidth > maxUsersColWidth) { usersColumnWidth = maxUsersColWidth }

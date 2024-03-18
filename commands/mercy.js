@@ -1,17 +1,14 @@
 const { BOT_USERNAME, settings, resetTxt, boldTxt, cyanBg } = require(`../config`)
 const { players } = require(`../data`)
-const { getUserMaxHP, getToUser, stainedApronHeal } = require(`./utils`)
+const { getUserMaxHP, stainedApronHeal, initProps } = require(`./utils`)
 const { getThirdPersonFlavorText } = require(`./act`)
 const { printMercy } = require(`./graphics`)
 
 function handleMercy(user, toUser) {
     if (settings.debug) { console.log(`${boldTxt}> handleMercy(user: ${user}, toUser: ${toUser})${resetTxt}`) }
     printMercy()
-    const sendingPlayer = players[user]
-    const targetPlayer = players[toUser]
-    const capsSender = sendingPlayer.displayName.substring(0, 1).toUpperCase() + sendingPlayer.displayName.substring(1)
-    const capsTarget = targetPlayer.displayName.substring(0, 1).toUpperCase() + targetPlayer.displayName.substring(1)
-    const randNum = targetPlayer.hp <= 5
+
+    const randNum = target.hp <= 5
         ? Math.floor(Math.random() * 2)
         : targetPlayer.hp <= 10
             ? Math.floor(Math.random() * 4)
@@ -37,14 +34,8 @@ function handleMercy(user, toUser) {
 
 module.exports = {
     attemptMercy(props) {
-        const { bot, channel, tags, message, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> attemptMercy(channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`}, args:`, args, `)${resetTxt}`) }
-
-        const user = tags.username
-        const toUser = getToUser(args[0])
-        const player = players[user]
-        const target = toUser in players ? players[toUser] : null
-        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+        const { bot, channel, user, toUser, player, capsPlayer, target, capsTarget, lastStanding } = initProps(props)
+        if (settings.debug) { console.log(`${boldTxt}> attemptMercy( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
 

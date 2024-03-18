@@ -12,7 +12,7 @@ module.exports = {
             console.log(`* Connected to ${addr}:${port} at ${startTime}`)
         } else {
             console.log(`* Reconnected to ${addr}:${port} at ${new Date().toLocaleTimeString(settings.locale, timeOptions)}`)
-            this.say(this.channels[0], `Reconnected!`)
+            this.say(BOT_CHANNEL, `Reconnected!`)
         }
         settings.firstConnection = false
     },
@@ -28,7 +28,7 @@ module.exports = {
     },
     onWhisperHandler(fromRoom, tags, message, err) {
         if (err) { return console.log(err) }
-        // this.say(this.channels[0], `Whisper received`)
+        // this.say(BOT_CHANNEL, `Whisper received`)
         // No plans to respond to whispers?
     },
     onChatHandler(channel, tags, message, self) {

@@ -88,6 +88,6 @@ module.exports = {
             ? alreadyJoined.length
                 ? bot.say(channel, `Joined channel${notYetJoined.length === 1 ? `` : `s`}: ${notYetJoined.join(`, `)} - Already joined: ${alreadyJoined.join(`, `)}`)
                 : bot.say(channel, `Joined channel${notYetJoined.length === 1 ? `` : `s`}: ${notYetJoined.join(`, `)}`)
-            : bot.say(channel, `All active users: ${bot.channels.map(channel => channel.substring(1).join(`, `))}`)
+            : bot.say(channel, `All active users: ${bot.channels.map(channel => channel.substring(1)).join(`, `)}`)
     }
 }

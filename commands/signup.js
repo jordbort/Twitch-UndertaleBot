@@ -80,7 +80,7 @@ module.exports = {
 
         // Stagger multiple channel joins
         for (const [i, channel] of notYetJoined.entries()) {
-            const delay = 600
+            const delay = 2000
             setTimeout(() => bot.join(channel), delay * i)
         }
 

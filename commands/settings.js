@@ -4,11 +4,11 @@ const { printLogo } = require(`./graphics`)
 
 module.exports = {
     reviveDummy(props) {
-        const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> reviveDummy(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
+        const { bot, channel, user } = props
+        if (settings.debug) { console.log(`${boldTxt}> reviveDummy(username: ${user}, channel: ${channel})${resetTxt}`) }
 
         // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
+        if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
         players.dummy.hp = 20
@@ -16,11 +16,11 @@ module.exports = {
         bot.say(channel, `The Dummy has been revived!`)
     },
     playersReset(props) {
-        const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> playersReset(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
+        const { bot, channel, user } = props
+        if (settings.debug) { console.log(`${boldTxt}> playersReset(username: ${user}, channel: ${channel})${resetTxt}`) }
 
         // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
+        if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
         for (const player in players) {
@@ -46,11 +46,11 @@ module.exports = {
         console.log(`${yellowBg}${channel} ${boldTxt}${BOT_DISPLAY_NAME}:${resetTxt}${yellowBg}${quote}${resetTxt}`)
     },
     playersTrueReset(props) {
-        const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> playersReset(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
+        const { bot, channel, user } = props
+        if (settings.debug) { console.log(`${boldTxt}> playersReset(username: ${user}, channel: ${channel})${resetTxt}`) }
 
         // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
+        if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
         for (const player in players) {
@@ -79,11 +79,11 @@ module.exports = {
         console.log(`${yellowBg}${channel} ${boldTxt}${BOT_DISPLAY_NAME}:${resetTxt}${yellowBg}${quote}${resetTxt}`)
     },
     toggleDebugMode(props) {
-        const { bot, channel, tags, args } = props
-        if (settings.debug) { console.log(`${boldTxt}> toggleDebugMode(username: ${tags.username}, channel: ${channel}, args:`, args, `)${resetTxt}`) }
+        const { bot, channel, args, user } = props
+        if (settings.debug) { console.log(`${boldTxt}> toggleDebugMode(username: ${user}, channel: ${channel}, args:`, args, `)${resetTxt}`) }
 
         // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
+        if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         const initialDebugState = settings.debug
         if (args[0] === `on`) { settings.debug = true }
@@ -95,22 +95,22 @@ module.exports = {
             : bot.say(channel, `Debug mode is now ${settings.debug ? `on` : `off`}!`)
     },
     portraitMode(props) {
-        const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> portraitMode(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
+        const { bot, channel, user } = props
+        if (settings.debug) { console.log(`${boldTxt}> portraitMode(username: ${user}, channel: ${channel})${resetTxt}`) }
 
         // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
+        if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         settings.landscapeView = false
         printLogo()
         bot.say(channel, `Display is in portrait orientation mode`)
     },
     landscapeMode(props) {
-        const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> landscapeMode(username: ${tags.username}, channel: ${channel})${resetTxt}`) }
+        const { bot, channel, user } = props
+        if (settings.debug) { console.log(`${boldTxt}> landscapeMode(username: ${user}, channel: ${channel})${resetTxt}`) }
 
         // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
+        if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         settings.landscapeView = true
         printLogo()

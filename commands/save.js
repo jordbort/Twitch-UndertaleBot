@@ -5,19 +5,19 @@ const { showStats } = require(`./stats`)
 
 module.exports = {
     handleSave(props) {
-        const { bot, channel, tags } = props
+        const { bot, channel, tags, user, player } = props
         if (settings.debug) { console.log(`${boldTxt}> handleSave(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
-        const user = tags.username
-        const player = players[user]
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+        const { displayName, capsName, dead } = player
+        if (dead) {
+            bot.say(channel, `Sorry ${displayName}, you are dead!`)
+            return
+        }
 
         playerSave[user] = { ...players[user] }
         playerSave[user].inventory = [...players[user].inventory]
         showStats(user)
 
-        const displayName = player.displayName
-        const capsName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
         const saveText = [
             `The shadow of the ruins looms above, filling ${displayName} with determination.`,
             `Playfully crinkling through the leaves fills ${displayName} with determination.`,
@@ -55,10 +55,9 @@ module.exports = {
         bot.say(channel, `* ${randSaveText}`)
     },
     handleLoad(props) {
-        const { bot, channel, tags } = props
+        const { bot, channel, tags, user } = props
         if (settings.debug) { console.log(`${boldTxt}> handleLoad(From: ${tags[`display-name`]}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
-        const user = tags.username
         players[user] = { ...playerSave[user] }
         players[user].inventory = [...playerSave[user].inventory]
         showStats(user)

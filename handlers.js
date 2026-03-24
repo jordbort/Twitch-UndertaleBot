@@ -33,6 +33,7 @@ module.exports = {
     onChatHandler(channel, tags, message, self) {
         // Message context
         const user = tags.username
+        if (!user) { return }
         const firstMsg = tags[`first-msg`]
 
         // Command and arguments parser

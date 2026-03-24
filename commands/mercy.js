@@ -4,7 +4,7 @@ const { getUserMaxHP, stainedApronHeal } = require(`./utils`)
 const { getThirdPersonFlavorText } = require(`./act`)
 const { printMercy } = require(`./graphics`)
 
-function handleMercy(user, toUser, player, capsPlayer, target, capsTarget) {
+function handleMercy(user, toUser, player, target) {
     if (settings.debug) { console.log(`${boldTxt}> handleMercy(user: ${user}, toUser: ${toUser})${resetTxt}`) }
     printMercy()
 
@@ -18,15 +18,15 @@ function handleMercy(user, toUser, player, capsPlayer, target, capsTarget) {
     let response = `* `
 
     if (randNum === 0) {
-        response += `YOU WON! ${capsTarget} was spared. ${capsPlayer} earned 0 EXP and ${randGold} gold.`
+        response += `YOU WON! ${target.capsName} was spared. ${player.capsName} earned 0 EXP and ${randGold} gold.`
         player.gold += randGold
         player.hp = getUserMaxHP(user)
         target.hp = getUserMaxHP(toUser)
     } else {
-        response += `${capsPlayer} tried to spare ${target.displayName}. ${capsTarget}`
+        response += `${player.capsName} tried to spare ${target.displayName}. ${target.capsName}`
         response += getThirdPersonFlavorText()
     }
-    if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player, capsPlayer) }
+    if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player) }
 
     console.log(`${cyanBg} sender: ${player.displayName} (${player.hp} HP), target: ${toUser === `dummy` ? `DUMMY` : target?.displayName || `none`}${target ? ` (${target.hp} HP)` : ``}, randNum: ${randNum} ${resetTxt}`)
     return response
@@ -48,7 +48,7 @@ module.exports = {
         }
         else { return bot.say(channel, `* ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} tried to spare themself. But nothing happened.`) }
 
-        const response = handleMercy(user, toUser, player, capsPlayer, target, capsTarget)
+        const response = handleMercy(user, toUser, player, target)
         bot.say(channel, response)
     }
 }

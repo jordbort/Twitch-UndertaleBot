@@ -91,49 +91,49 @@ module.exports = {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getHP(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${capsTarget} has ${target.hp} HP`) }
+        if (target) { bot.say(channel, `${target.capsName} has ${target.hp} HP`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsPlayer} has ${player.hp} HP`) }
+        else { bot.say(channel, `${player.capsName} has ${player.hp} HP`) }
     },
     getGold(props) {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getGold(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${capsTarget} has ${target.gold} G`) }
+        if (target) { bot.say(channel, `${target.capsName} has ${target.gold} G`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsPlayer} has ${player.gold} G`) }
+        else { bot.say(channel, `${player.capsName} has ${player.gold} G`) }
     },
     getNext(props) {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getNext(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${capsTarget}'s LV will increase with ${target.next} EXP`) }
+        if (target) { bot.say(channel, `${target.capsName}'s LV will increase with ${target.next} EXP`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsPlayer}'s LV will increase with ${player.next} EXP`) }
+        else { bot.say(channel, `${player.capsName}'s LV will increase with ${player.next} EXP`) }
     },
     getWeapon(props) {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getWeapon(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${capsTarget} has the ${target.weapon} equipped (${weaponsATK[target.weapon]} ATK)`) }
+        if (target) { bot.say(channel, `${target.capsName} has the ${target.weapon} equipped (${weaponsATK[target.weapon]} ATK)`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsPlayer} has the ${player.weapon} equipped (${weaponsATK[player.weapon]} ATK)`) }
+        else { bot.say(channel, `${player.capsName} has the ${player.weapon} equipped (${weaponsATK[player.weapon]} ATK)`) }
     },
     getArmor(props) {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getArmor(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${capsTarget} has the ${target.armor} equipped (${armorDEF[target.armor]} DEF)`) }
+        if (target) { bot.say(channel, `${target.capsName} has the ${target.armor} equipped (${armorDEF[target.armor]} DEF)`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsPlayer} has the ${player.armor} equipped (${armorDEF[player.armor]} DEF)`) }
+        else { bot.say(channel, `${player.capsName} has the ${player.armor} equipped (${armorDEF[player.armor]} DEF)`) }
     },
     getExp(props) {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getExp(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${capsTarget} has ${target.exp} EXP`) }
+        if (target) { bot.say(channel, `${target.capsName} has ${target.exp} EXP`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${capsPlayer} has ${player.exp} EXP`) }
+        else { bot.say(channel, `${player.capsName} has ${player.exp} EXP`) }
     },
     handleCheck(props) {
         const { bot, channel, user, player, toUser, target } = props

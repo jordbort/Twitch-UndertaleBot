@@ -18,11 +18,10 @@ function getUserMaxHP(user) {
 }
 
 function getIntroText(props) {
-    const { bot, channel, tags } = props
-    if (settings.debug) { console.log(`${boldTxt}> getIntroText(bot: ${typeof bot}, channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
+    const { bot, channel, tags, player } = props
+    if (settings.debug) { console.log(`${boldTxt}> getIntroText(channel: ${channel},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
 
-    const displayName = tags[`display-name`]
-    const capsName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
+    const { displayName, capsName } = player
     let response = `* `
     const introText = [
         `${capsName} and co. decided to pick on you!`,
@@ -159,14 +158,7 @@ module.exports = {
                 : null
             : null
     },
-    async announceCrash(bot) {
-        if (settings.debug) { console.log(`${boldTxt}> announceCrash(bot: ${typeof bot})${resetTxt}`) }
-
-        return bot.channels.forEach((channel) => {
-            bot.say(channel, `Oops, I just crashed! >( If you would like me to rejoin your channel, please visit https://www.twitch.tv/undertalebot and use !join when I am online again!`)
-        })
-    },
-    stainedApronHeal(user, player, capsPlayer) {
+    stainedApronHeal(user, player) {
         if (settings.debug) { console.log(`${boldTxt}> stainedApronHeal(user: ${user})${resetTxt}`) }
 
         player.stainedApronHealTime = !player.stainedApronHealTime
@@ -174,7 +166,7 @@ module.exports = {
             if (player.hp < getUserMaxHP(user)) {
                 player.hp += 1
                 console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${getUserMaxHP(user)}, healAmt: 1 ${resetTxt}`)
-                return player.hp === getUserMaxHP(user) ? ` ${capsPlayer}'s HP was maxed out.` : ` ${capsPlayer} recovered 1 HP!`
+                return player.hp === getUserMaxHP(user) ? ` ${player.capsName}'s HP was maxed out.` : ` ${player.capsName} recovered 1 HP!`
             }
         }
         return ``

@@ -49,29 +49,29 @@ function calculateUserNextLV(user) {
 
 module.exports = {
     calculateUserLV(user) {
-        if (settings.debug) { console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${players[user].lv}, Highest level: ${highestLevels[user]}${resetTxt}`) }
         const player = players[user]
+        if (settings.debug) { console.log(`${boldTxt}> calculateUserLV(user: ${user}) Current level: ${player.lv}, Highest level: ${player.highestLevel}${resetTxt}`) }
 
         const collectedItems = []
         while (player.next <= 0) {
             player.lv += 1
-            if (player.lv === 2 && highestLevels[user] < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
-            if (player.lv === 3 && highestLevels[user] < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
-            if (player.lv === 4 && highestLevels[user] < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
-            if (player.lv === 5 && highestLevels[user] < 5) { collectedItems.push(`Instant Noodles`) }
-            if (player.lv === 6 && highestLevels[user] < 6) { collectedItems.push(`Hush Puppy`) }
-            if (player.lv === 7 && highestLevels[user] < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
-            if (player.lv === 8 && highestLevels[user] < 8) { collectedItems.push(`Bad Memory`) }
-            if (player.lv === 9 && highestLevels[user] < 9) { collectedItems.push(`Last Dream`) }
-            if (player.lv === 10 && highestLevels[user] < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
-            if (player.lv === 11 && highestLevels[user] < 11) { collectedItems.push(`Puppydough Icecream`) }
-            if (player.lv === 12 && highestLevels[user] < 12) { collectedItems.push(`Pumpkin Rings`) }
-            if (player.lv === 13 && highestLevels[user] < 13) { collectedItems.push(`Croquet Roll`) }
-            if (player.lv === 14 && highestLevels[user] < 14) { collectedItems.push(`Ghost Fruit`) }
-            if (player.lv === 15 && highestLevels[user] < 15) { collectedItems.push(`Stoic Onion`) }
-            if (player.lv === 16 && highestLevels[user] < 16) { collectedItems.push(`Rock Candy`) }
+            if (player.lv === 2 && player.highestLevel < 2) { collectedItems.push(`Snowman Piece`, `Toy Knife`, `Faded Ribbon`) }
+            if (player.lv === 3 && player.highestLevel < 3) { collectedItems.push(`Astronaut Food`, `Ballet Shoes`, `Old Tutu`) }
+            if (player.lv === 4 && player.highestLevel < 4) { collectedItems.push(`Abandoned Quiche`, `Burnt Pan`, `Stained Apron`) }
+            if (player.lv === 5 && player.highestLevel < 5) { collectedItems.push(`Instant Noodles`) }
+            if (player.lv === 6 && player.highestLevel < 6) { collectedItems.push(`Hush Puppy`) }
+            if (player.lv === 7 && player.highestLevel < 7) { collectedItems.push(`Worn Dagger`, `Heart Locket`) }
+            if (player.lv === 8 && player.highestLevel < 8) { collectedItems.push(`Bad Memory`) }
+            if (player.lv === 9 && player.highestLevel < 9) { collectedItems.push(`Last Dream`) }
+            if (player.lv === 10 && player.highestLevel < 10) { collectedItems.push(`Real Knife`, `The Locket`) }
+            if (player.lv === 11 && player.highestLevel < 11) { collectedItems.push(`Puppydough Icecream`) }
+            if (player.lv === 12 && player.highestLevel < 12) { collectedItems.push(`Pumpkin Rings`) }
+            if (player.lv === 13 && player.highestLevel < 13) { collectedItems.push(`Croquet Roll`) }
+            if (player.lv === 14 && player.highestLevel < 14) { collectedItems.push(`Ghost Fruit`) }
+            if (player.lv === 15 && player.highestLevel < 15) { collectedItems.push(`Stoic Onion`) }
+            if (player.lv === 16 && player.highestLevel < 16) { collectedItems.push(`Rock Candy`) }
 
-            if (player.lv > highestLevels[user]) { highestLevels[user] = player.lv }
+            if (player.lv > player.highestLevel) { player.highestLevel = player.lv }
             player.next += calculateUserNextLV(user)
             player.at = calculateUserATK(user)
             player.df = calculateUserDEF(user)

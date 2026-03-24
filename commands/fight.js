@@ -4,11 +4,11 @@ const { getUserMaxHP, stainedApronHeal } = require(`./utils`)
 const { calculateUserLV } = require(`./math`)
 const { printFight } = require(`./graphics`)
 
-function handleFight(bot, channel, user, toUser, player, capsPlayer, target, capsTarget) {
+function handleFight(bot, channel, user, toUser, player, target) {
     if (settings.debug) { console.log(`${boldTxt}> handleFight(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
     printFight()
 
-    let response = `* ${capsPlayer} attacks `
+    let response = `* ${player.capsName} attacks `
     target ? response += `${target.displayName}, ` : response += `themself, `
 
     const smallDamage = Math.ceil(Math.random() * 4)
@@ -67,10 +67,10 @@ function handleFight(bot, channel, user, toUser, player, capsPlayer, target, cap
             console.log(`${grayBg} extraLargeDamage: ${extraLargeDamage} ${resetTxt} ${player.hp <= 0 ? redBg : greenBg} ${player.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${extraLargeDamage + weaponDamage + attackBonus} ${resetTxt} ${target.hp <= 0 ? redBg : greenBg} ${toUser === `dummy` ? `DUMMY` : target.displayName} ${resetTxt} ${magentaBg} DEF: ${defenseBonus}, armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${extraLargeDamageDealt} ${resetTxt}`)
         }
 
-        if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player, capsPlayer) }
+        if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player) }
 
         bot.say(channel, response)
-        deathCheck(bot, channel, user, toUser, player, capsPlayer, target, capsTarget)
+        deathCheck(bot, channel, user, toUser, player, target)
     } else {
         if (randNum === 0) {
             player.hp -= smallDamageDealt
@@ -86,14 +86,14 @@ function handleFight(bot, channel, user, toUser, player, capsPlayer, target, cap
             console.log(`${grayBg} extraLargeDamage: ${extraLargeDamage} ${resetTxt} ${player.hp <= 0 ? redBg : greenBg} ${player.displayName} ${resetTxt} ${blueBg} ATK: ${attackBonus}, weapon: ${weaponDamage} ${resetTxt} ${grayBg} ${extraLargeDamage + weaponDamage + attackBonus} ${resetTxt} ${magentaBg} DEF: ${defenseBonus} armor: ${armorDeduction} ${resetTxt} ${grayBg} ${armorDeduction + defenseBonus} ${resetTxt} ${yellowBg} ${extraLargeDamageDealt} ${resetTxt}`)
         }
 
-        if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player, capsPlayer) }
+        if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player) }
 
         bot.say(channel, response)
-        deathCheck(bot, channel, user, toUser, player, capsPlayer, target, capsTarget)
+        deathCheck(bot, channel, user, toUser, player, target)
     }
 }
 
-function deathCheck(bot, channel, user, toUser, player, capsPlayer, target, capsTarget) {
+function deathCheck(bot, channel, user, toUser, player, target) {
     if (settings.debug) { console.log(`${boldTxt}> deathCheck(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
 
     const targetSaveData = playerSave[toUser]
@@ -128,14 +128,14 @@ function deathCheck(bot, channel, user, toUser, player, capsPlayer, target, caps
                 bot.say(channel, flavorText)
             }, settings.msDelay)
         } else {
-            response += ` ${capsTarget}! Stay determined... `
+            response += ` ${target.capsName}! Stay determined... `
         }
 
         // Checking if user killed a different user
         if (user !== toUser) {
             // Appending awarded EXP
             const awardedEXP = 10 + target.exp
-            response += `${capsPlayer} earned ${awardedEXP} EXP`
+            response += `${player.capsName} earned ${awardedEXP} EXP`
 
             // Appending awarded gold
             const randGold = Math.ceil(Math.random() * 19) * 5
@@ -161,13 +161,13 @@ function deathCheck(bot, channel, user, toUser, player, capsPlayer, target, caps
             player.exp += awardedEXP
             player.next -= awardedEXP
             if (player.next <= 0) {
-                response += ` ${capsPlayer}'s LOVE increased.`
+                response += ` ${player.capsName}'s LOVE increased.`
                 response += calculateUserLV(user)
             }
         } else {
             if (player.gold > 0) {
                 player.gold = 0
-                response += ` ${capsPlayer} lost all their gold!`
+                response += ` ${player.capsName} lost all their gold!`
             }
         }
 
@@ -198,10 +198,10 @@ module.exports = {
             if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
             if (toUser === `undertalebot`) { return bot.say(channel, `You can't FIGHT me, but you can try FIGHTing the Dummy!`) }
             if (!target) { return bot.say(channel, `${toUser} is not a known player!`) }
-            if (target.dead) { return bot.say(channel, `${target.displayName} is already dead!`) }
+            if (target.dead) { return bot.say(channel, `${target.capsName} is already dead!`) }
         }
-        else { return bot.say(channel, `* ${capsPlayer} tried to fight themself. But nothing happened.`) }
+        else { return bot.say(channel, `* ${player.capsName} tried to fight themself. But nothing happened.`) }
 
-        handleFight(bot, channel, user, toUser, player, capsPlayer, target, capsTarget)
+        handleFight(bot, channel, user, toUser, player, target)
     }
 }

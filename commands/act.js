@@ -3,7 +3,7 @@ const { getUserMaxHP, stainedApronHeal } = require(`./utils`)
 const { printAct } = require(`./graphics`)
 const { showStats } = require(`./stats`)
 
-function getAction(user, toUser, player, capsPlayer, target, capsTarget) {
+function getAction(user, toUser, player, target) {
     if (settings.debug) { console.log(`${boldTxt}> getAction(user: ${user}, toUser: ${toUser})${resetTxt}`) }
 
     const randGold = Math.ceil(Math.random() * 10) * 5
@@ -12,51 +12,51 @@ function getAction(user, toUser, player, capsPlayer, target, capsTarget) {
         ` and the others ditch ${target.displayName} when they look away!`,
         ` asks ${target.displayName} about their day.`,
         ` asks ${target.displayName} about their day. There's no response.`,
-        ` asks ${target.displayName} to clean them. ${capsTarget} hops around excitedly.`,
+        ` asks ${target.displayName} to clean them. ${target.capsName} hops around excitedly.`,
         ` attempts to touch ${target.displayName}'s armor. Their hands slip off.`,
         ` boos ${target.displayName}.`,
-        ` boos loudly. ${capsTarget} leaves to look elsewhere for praise.`,
-        ` boos... but haters only make ${target.displayName} stronger. ${capsTarget} ATTACK UP+DEFENSE DOWN.`,
-        ` calls ${target.displayName}. ${capsTarget} bounds toward them, flecking slobber into ${player.displayName}'s face.`,
-        ` claps like a gorilla. ${capsTarget} is becoming addicted to their praise.`,
-        ` claps really sloppily. ${capsTarget} sucks up their praise like a vacuum cleaner.`,
+        ` boos loudly. ${target.capsName} leaves to look elsewhere for praise.`,
+        ` boos... but haters only make ${target.displayName} stronger. ${target.capsName} ATTACK UP+DEFENSE DOWN.`,
+        ` calls ${target.displayName}. ${target.capsName} bounds toward them, flecking slobber into ${player.displayName}'s face.`,
+        ` claps like a gorilla. ${target.capsName} is becoming addicted to their praise.`,
+        ` claps really sloppily. ${target.capsName} sucks up their praise like a vacuum cleaner.`,
         ` cleans ${target.displayName}'s armor. Its cooling dirt begins to wash away.`,
-        ` compliments ${target.displayName}. They understood them perfectly. ${capsTarget}'s ATTACK dropped.`,
-        ` cranks up the thermostat. ${capsTarget} begins to get excited.`,
-        ` cranks up the thermostat. It's super hot! ${capsTarget} looks satisfied.`,
-        ` did something mysterious. ${capsTarget} recognizes they have more to learn from this world.`,
-        ` does nothing. ${capsTarget} leaves to look elsewhere for praise.`,
-        ` does nothing. ${capsTarget} looks desperate for attention.`,
-        ` does nothing. ${capsTarget} looks disappointed they aren't paying attention.`,
+        ` compliments ${target.displayName}. They understood them perfectly. ${target.capsName}'s ATTACK dropped.`,
+        ` cranks up the thermostat. ${target.capsName} begins to get excited.`,
+        ` cranks up the thermostat. It's super hot! ${target.capsName} looks satisfied.`,
+        ` did something mysterious. ${target.capsName} recognizes they have more to learn from this world.`,
+        ` does nothing. ${target.capsName} leaves to look elsewhere for praise.`,
+        ` does nothing. ${target.capsName} looks desperate for attention.`,
+        ` does nothing. ${target.capsName} looks disappointed they aren't paying attention.`,
         ` doesn't hug ${target.displayName}. They appreciate their respect of their boundaries.`,
         ` doesn't pick on ${target.displayName}.`,
-        ` flexes. ${capsTarget} flexes twice as hard. ATTACK increases for both of them.`,
-        ` flexes. ${capsTarget} flexes very hard... They flex themself out of the room!`,
+        ` flexes. ${target.capsName} flexes twice as hard. ATTACK increases for both of them.`,
+        ` flexes. ${target.capsName} flexes very hard... They flex themself out of the room!`,
         ` gave ${target.displayName} a patient smile.`,
         ` gets close to ${target.displayName}. But not too close.`,
         ` gives ${target.displayName} a cruel look.`,
         ` gives ${target.displayName} a friendly pat.`,
-        ` hugs ${target.displayName}. Gross slime covers them. ${capsPlayer}'s SPEED decreased.`,
-        ` ignores ${target.displayName} and thinks of pollen and sunshine. ${capsPlayer}'s DEFENSE increased by 1.`,
+        ` hugs ${target.displayName}. Gross slime covers them. ${player.capsName}'s SPEED decreased.`,
+        ` ignores ${target.displayName} and thinks of pollen and sunshine. ${player.capsName}'s DEFENSE increased by 1.`,
         ` informs ${target.displayName} that they have a great hat!`,
         ` invites ${target.displayName} to hang out.`,
-        ` kneels and prays for safety. ${capsTarget} remembers their conscience.`,
+        ` kneels and prays for safety. ${target.capsName} remembers their conscience.`,
         ` laughs at ${target.displayName} before they say anything funny.`,
-        ` lies down. ${capsTarget} lies down too. ${capsTarget} understands life now.`,
+        ` lies down. ${target.capsName} lies down too. ${target.capsName} understands life now.`,
         ` lies immobile with ${target.displayName}. They feel like they understand the world a little better.`,
         ` makes fun of ${target.displayName}.`,
         ` manages to tear their eyes away from ${target.displayName}'s hat. They look annoyed...`,
         ` pats ${target.displayName}'s chest like a muscular bongo.`,
-        ` pats their stomach. ${capsTarget} offers a healthy meal.`,
-        ` pays ${randGold} G. ${capsTarget} reduces their ATTACK for this turn!`,
+        ` pats their stomach. ${target.capsName} offers a healthy meal.`,
+        ` pays ${randGold} G. ${target.capsName} reduces their ATTACK for this turn!`,
         ` pets ${target.displayName}. Their excitement knows no bounds.`,
         ` pets the ${target.displayName}. They start to generate a Stage I Happiness Froth.`,
         ` picks on ${target.displayName}.`,
         ` presses the yellow button. The phone is resonating with ${target.displayName}'s presence!`,
-        ` raises their arms and wiggles their fingers. ${capsTarget} freaks out!`,
-        ` reaches out. ${capsTarget} recoils from their touch.`,
+        ` raises their arms and wiggles their fingers. ${target.capsName} freaks out!`,
+        ` reaches out. ${target.capsName} recoils from their touch.`,
         ` says hello to ${target.displayName}.`,
-        ` sings an old lullaby. ${capsTarget} starts to look sleepy...`,
+        ` sings an old lullaby. ${target.capsName} starts to look sleepy...`,
         ` stands up to ${target.displayName}.`,
         ` talks to ${target.displayName}. ...They don't seem much for conversation. No one is happy with this.`,
         ` talks to ${target.displayName}... They don't seem much for conversation. JPEGSTRIPES seems happy with ${player.displayName}.`,
@@ -78,16 +78,16 @@ function getAction(user, toUser, player, capsPlayer, target, capsTarget) {
         ` tells ${target.displayName} they're doing a great job. Their attacks become extreme...`,
         ` tells ${target.displayName} to be honest with their feelings.`,
         ` tells ${target.displayName} to go away.`,
-        ` threatens ${target.displayName}. They understood them perfectly. ${capsTarget}'s DEFENSE dropped.`,
+        ` threatens ${target.displayName}. They understood them perfectly. ${target.capsName}'s DEFENSE dropped.`,
         ` threw the stick and ${target.displayName} ran to get it. They played fetch for a while.`,
-        ` throws the stick. ${capsTarget} brings it back in their mouth.`,
+        ` throws the stick. ${target.capsName} brings it back in their mouth.`,
         ` told ${target.displayName} a little joke.`,
         ` told ${target.displayName} they didn't want to fight. But nothing happened.`,
-        ` told ${target.displayName} they just want to be friends. They remember someone... ${capsTarget}'s attacks became a little less extreme.`,
-        ` took a bite out of ${target.displayName}. ${capsPlayer} recovered 5 HP!`,
+        ` told ${target.displayName} they just want to be friends. They remember someone... ${target.capsName}'s attacks became a little less extreme.`,
+        ` took a bite out of ${target.displayName}. ${player.capsName} recovered 5 HP!`,
         ` tried to eat ${target.displayName}, but they weren't weakened enough.`,
         ` tries to console ${target.displayName}...`,
-        ` wiggles their hips. ${capsTarget} wiggles back. What a meaningful conversation!`
+        ` wiggles their hips. ${target.capsName} wiggles back. What a meaningful conversation!`
     ]
 
     const randAction = Math.floor(Math.random() * actions.length)
@@ -97,11 +97,11 @@ function getAction(user, toUser, player, capsPlayer, target, capsTarget) {
         const differenceInGold = player.gold - randGold
         console.log(`randGold: ${randGold}, senderGold: ${player.gold}, differenceInGold: ${differenceInGold}`)
         if (player.gold <= 0) {
-            return ` is out of money. ${capsTarget} shakes their head.`
+            return ` is out of money. ${target.capsName} shakes their head.`
         } else if (differenceInGold < 0) {
             target.gold += player.gold
             player.gold = 0
-            return ` empties their pockets. ${capsTarget} lowers the price.`
+            return ` empties their pockets. ${target.capsName} lowers the price.`
         } else {
             player.gold -= randGold
             target.gold += randGold
@@ -115,7 +115,7 @@ function getAction(user, toUser, player, capsPlayer, target, capsTarget) {
         player.hp += 5
         if (player.hp >= getUserMaxHP(user)) {
             player.hp = getUserMaxHP(user)
-            actions[randAction] = ` took a bite out of ${target.displayName}. ${capsPlayer}'s HP was maxed out.`
+            actions[randAction] = ` took a bite out of ${target.displayName}. ${player.capsName}'s HP was maxed out.`
         }
         console.log(`${cyanBg} ${player.displayName} HP: ${player.hp}/${getUserMaxHP(user)}, healAmt: 5 ${resetTxt}`)
         showStats(user)
@@ -242,16 +242,16 @@ function getThirdPersonFlavorText() {
     return actions[Math.floor(Math.random() * actions.length)]
 }
 
-function handleAct(user, toUser, player, capsPlayer, target, capsTarget) {
+function handleAct(user, toUser, player, target) {
     if (settings.debug) { console.log(`${boldTxt}> handleAct(user: ${user}, toUser: ${toUser})${resetTxt}`) }
     printAct()
 
-    let response = `* ${capsPlayer}`
+    let response = `* ${player.capsName}`
     target && target !== player
-        ? response += getAction(user, toUser, player, capsPlayer, target, capsTarget)
+        ? response += getAction(user, toUser, player, target)
         : response += getThirdPersonFlavorText()
 
-    if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player, capsPlayer) }
+    if (player.armor === `Stained Apron`) { response += stainedApronHeal(user, player) }
 
     return response
 }
@@ -271,7 +271,7 @@ module.exports = {
             if (target.dead) { return bot.say(channel, `Sorry ${player.displayName}, ${target.displayName} is dead!`) }
         }
 
-        const response = handleAct(user, toUser, player, capsPlayer, target, capsTarget)
+        const response = handleAct(user, toUser, player, target)
         bot.say(channel, response)
     }
 }

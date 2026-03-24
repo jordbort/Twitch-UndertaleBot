@@ -46,9 +46,11 @@ function showStats(user) {
         `----`
     ].join(`\t`))
 
-    let attackBoost = 0
-    if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
-    if (player.armor === `Temmie Armor`) { attackBoost = 10 }
+    const attackBoost = player.armor === `Temmie Armor`
+        ? 10
+        : player.armor === `Cowboy Hat`
+            ? 5
+            : 0
     table.push([
         `${logColor}${userEntry}${fillShortEntry(userColumnWidth, userColumnTitle)}${resetTxt}`,
         player.lv,
@@ -77,9 +79,11 @@ function makeFullRow(columnWidth, i, j) {
         } else {
             row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > columnWidth ? username.substring(0, columnWidth) : username}${fillNameGap(columnWidth, username)}${resetTxt}`)
         }
-        let attackBoost = 0
-        if (player.armor === `Cowboy Hat`) { attackBoost = 5 }
-        if (player.armor === `Temmie Armor`) { attackBoost = 10 }
+        const attackBoost = player.armor === `Temmie Armor`
+            ? 10
+            : player.armor === `Cowboy Hat`
+                ? 5
+                : 0
         row.push(player.lv, `${player.hp}/${getUserMaxHP(username)}`, `${player.at}(${weaponsATK[player.weapon] + attackBoost})`, `${player.df}(${armorDEF[player.armor] + attackBoost})`)
     }
     return row.join(`\t`)

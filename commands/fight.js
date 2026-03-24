@@ -18,15 +18,17 @@ function handleFight(bot, channel, user, toUser, player, target) {
     const weaponDamage = weaponsATK[player.weapon]
     const armorDeduction = target ? armorDEF[target.armor] : armorDEF[player.armor]
     const defenseBonus = target ? target.df : player.df
-    let attackBonus = player.at
+    const attackBonus = player.armor === `Temmie Armor`
+        ? player.at + 10
+        : player.armor === `Cowboy Hat`
+            ? player.at + 5
+            : player.at
 
     // Attack bonus for Cowboy Hat and Temmie Armor
     if (player.armor === `Cowboy Hat`) {
         console.log(`${magentaBg} ${player.displayName} is wearing the Cowboy Hat, +5 ATK ${resetTxt}`)
-        attackBonus += 5
     } else if (player.armor === `Temmie Armor`) {
         console.log(`${magentaBg} ${player.displayName} is wearing the Temmie Armor, +10 ATK ${resetTxt}`)
-        attackBonus += 10
     }
 
     let smallDamageDealt = (smallDamage + weaponDamage + attackBonus) - armorDeduction - defenseBonus

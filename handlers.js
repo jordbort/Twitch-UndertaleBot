@@ -1,7 +1,5 @@
 const { BOT_DISPLAY_NAME, BOT_CHANNEL, settings, timeOptions, startTime, resetTxt, boldTxt, inverted, redTxt, greenTxt, yellowTxt, yellowBg } = require(`./config`)
 const { printLogo } = require(`./commands/graphics`)
-const { makeLogs } = require(`./commands/logs`)
-const { initUser } = require(`./commands/utils`)
 const { players } = require(`./data`)
 const commands = require(`./commands`)
 
@@ -48,9 +46,6 @@ module.exports = {
         if (!(username in players) && !self) {
             initUser({ bot: this, channel: channel, tags: tags, message: msg, args: args })
         }
-
-        // Update logs, log bot message, ignore user non-command attempt
-        makeLogs(this.channels)
 
         if (self) { return console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}${BOT_DISPLAY_NAME}:${resetTxt}`, `${yellowTxt}${message}${resetTxt}`) }
         if (!msg.startsWith(`!`)) { return }

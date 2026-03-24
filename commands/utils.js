@@ -126,6 +126,7 @@ module.exports = {
         const displayName = tags[`display-name`]
 
         players[username] = {
+            id: Number(tags[`user-id`]),
             displayName: displayName,
             capsName: displayName.substring(0, 1).toUpperCase() + displayName.substring(1),
             lv: 1,
@@ -146,6 +147,7 @@ module.exports = {
         }
 
         playerSave[username] = {
+            id: Number(tags[`user-id`]),
             displayName: displayName,
             capsName: displayName.substring(0, 1).toUpperCase() + displayName.substring(1),
             lv: 1,
@@ -164,8 +166,29 @@ module.exports = {
             stainedApronHealTime: false,
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
-        highestLevels[username] = 1
-        getIntroText(props)
+
+        let firstTimer = true
+        for (const oldUsername of Object.keys(players)) {
+            if (players[username].id === players[oldUsername].id && oldUsername !== username) {
+                firstTimer = false
+                players[username] = {
+                    ...players[oldUsername],
+                    displayName: displayName,
+                    capsName: displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
+                }
+                playerSave[username] = {
+                    ...playerSave[oldUsername],
+                    displayName: displayName,
+                    capsName: displayName.substring(0, 1).toUpperCase() + displayName.substring(1)
+                }
+                delete players[oldUsername]
+            }
+        }
+
+        if (firstTimer) {
+            props.player = players[username]
+            getIntroText(props)
+        }
     },
     getUsername(str) {
         return str

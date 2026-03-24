@@ -1,6 +1,7 @@
 const tmi = require(`tmi.js`)
 
-const { BOT_USERNAME, OAUTH_TOKEN, BOT_CHANNEL } = require(`./config`)
+const { BOT_USERNAME, OAUTH_TOKEN } = require(`./config`)
+const { joined } = require(`./data`)
 
 const { onChatHandler, onJoinedHandler, onPartedHandler, onWhisperHandler, onConnectedHandler } = require(`./handlers`)
 
@@ -9,7 +10,7 @@ const client = new tmi.client({
         username: BOT_USERNAME,
         password: OAUTH_TOKEN
     },
-    channels: [BOT_CHANNEL]
+    channels: joined
 })
 
 client.on(`connected`, onConnectedHandler)

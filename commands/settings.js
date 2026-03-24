@@ -1,5 +1,5 @@
 const { BOT_DISPLAY_NAME, BOT_CHANNEL, DEV, settings, resetTxt, boldTxt, yellowBg } = require(`../config`)
-const { players, playerSave, highestLevels } = require(`../data`)
+const { players, playerSave } = require(`../data`)
 const { printLogo } = require(`./graphics`)
 
 module.exports = {
@@ -25,6 +25,7 @@ module.exports = {
         clearTimeout(settings.respawnTimer)
         for (const player in players) {
             players[player].lv = 1
+            players[player].highestLevel = 1
             players[player].hp = 20
             players[player].dead = false
             players[player].timesKilled = 0
@@ -36,7 +37,6 @@ module.exports = {
             players[player].armor = `Bandage`
             players[player].gold = 0
             players[player].stainedApronHealTime = false
-            highestLevels[player] = 1
             if (player !== `dummy`) {
                 players[player].inventory = [`Monster Candy`, `Butterscotch Pie`]
             }
@@ -57,9 +57,9 @@ module.exports = {
             if (player !== `dummy`) {
                 delete players[player]
                 delete playerSave[player]
-                delete highestLevels[player]
             } else {
                 players[player].lv = 1
+                players[player].highestLevel = 1
                 players[player].hp = 20
                 players[player].dead = false
                 players[player].timesKilled = 0
@@ -72,7 +72,6 @@ module.exports = {
                 players[player].gold = 0
                 players[player].stainedApronHealTime = false
                 players[player].inventory = []
-                highestLevels[player] = 1
             }
         }
         const quote = `* If you DO end up erasing everything... You have to erase my memories, too.`

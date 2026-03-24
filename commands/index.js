@@ -5,12 +5,12 @@ const { attemptMercy } = require(`./mercy`)
 
 const { portraitMode, landscapeMode, toggleDebugMode, playersReset, playersTrueReset, reviveDummy } = require(`./settings`)
 const { showPlayers, getHP, getGold, getNext, getWeapon, getArmor, getExp, handleCheck } = require(`./stats`)
-const { handleRecruit, handleUnrecruit, handlePart, handleJoin, handleKnownJoin } = require(`./signup`)
+const { handleRecruit, handleUnrecruit, handlePart, handleJoin } = require(`./signup`)
 const { getDocs, getHelp, getCommands } = require(`./help`)
 const { getSansFace, printLogo } = require(`./graphics`)
+const { getIntroText, shutdown } = require(`./utils`)
 const { handleSave, handleLoad } = require(`./save`)
 const { getSpamtonQuote } = require(`./quotes`)
-const { getIntroText } = require(`./utils`)
 
 module.exports = {
     '!fight': attemptFight,
@@ -47,7 +47,6 @@ module.exports = {
     '!part': handlePart,
     '!recruit': handleRecruit,
     '!unrecruit': handleUnrecruit,
-    '!connect': handleKnownJoin,
 
     '!memory': showPlayers,
     '!players': showPlayers,
@@ -83,5 +82,7 @@ module.exports = {
 
     '!reset': playersReset,
 
-    '!truereset': playersTrueReset
+    '!truereset': playersTrueReset,
+
+    '!shutdown': shutdown
 }

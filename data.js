@@ -1,47 +1,16 @@
+const { joined, players, playerSave } = require(`./memory.json`)
+
+// change to dum?
+players.dummy = {
+    ...players.dummy,
+    hp: 20,
+    dead: false
+}
+
 module.exports = {
-    // Initializing players
-    players: {
-        dummy: { // change to dum?
-            displayName: `the Dummy`,
-            lv: 1,
-            hp: 20,
-            dead: false,
-            timesKilled: 0,
-            itemsSold: 0,
-            at: 0,
-            df: 0,
-            exp: 0,
-            next: 10,
-            weapon: `Stick`,
-            armor: `Bandage`,
-            gold: 0,
-            stainedApronHealTime: false,
-            inventory: []
-        }
-    },
-
-    // Initializing player SAVE data
-    playerSave: {
-        dummy: { // change to dum?
-            lv: 1,
-            hp: 20,
-            dead: false,
-            timesKilled: 0,
-            itemsSold: 0,
-            at: 0,
-            df: 0,
-            exp: 0,
-            next: 10,
-            weapon: `Stick`,
-            armor: `Bandage`,
-            gold: 0,
-            stainedApronHealTime: false,
-            inventory: []
-        }
-    },
-
-    // Keeping track of highest-reached level to avoid duplicate item earnings
-    highestLevels: { dummy: 1 }, // change to dum?
+    joined,
+    players,
+    playerSave,
 
     // Base stats
     baseHP: 16,

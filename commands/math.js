@@ -1,4 +1,4 @@
-const { players, highestLevels, baseAT, baseDF } = require(`../data`)
+const { players, baseAT, baseDF } = require(`../data`)
 const { settings, resetTxt, boldTxt, cyanBg } = require(`../config`)
 const { getUserMaxHP } = require(`./utils`)
 const { showStats } = require(`./stats`)

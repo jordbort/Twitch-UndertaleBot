@@ -4,7 +4,6 @@ const BOT_USERNAME = BOT_DISPLAY_NAME.toLowerCase()
 const BOT_CHANNEL = `#${BOT_USERNAME}`
 const DEV = process.env.DEV
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN
-const KNOWN_CHANNELS = process.env.KNOWN_CHANNELS.split(`,`)
 
 const settings = {
     // Helper functions log their params when invoked
@@ -49,7 +48,6 @@ module.exports = {
     BOT_CHANNEL,
     DEV,
     OAUTH_TOKEN,
-    KNOWN_CHANNELS,
 
     settings,
     dateOptions,

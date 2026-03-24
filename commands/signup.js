@@ -1,4 +1,4 @@
-const { BOT_USERNAME, BOT_CHANNEL, DEV, KNOWN_CHANNELS, settings, resetTxt, boldTxt } = require(`../config`)
+const { BOT_USERNAME, BOT_CHANNEL, DEV, settings, resetTxt, boldTxt } = require(`../config`)
 const { getUsername } = require(`./utils`)
 
 module.exports = {
@@ -66,28 +66,6 @@ module.exports = {
             ? notInChannel.length
                 ? bot.say(channel, `Parted from channel${needToPart.length === 1 ? `` : `s`}: ${needToPart.join(`, `)} - Not already in: ${notInChannel.join(`, `)}`)
                 : bot.say(channel, `Parted from channel${needToPart.length === 1 ? `` : `s`}: ${needToPart.join(`, `)}`)
-            : bot.say(channel, `All active users: ${bot.channels.map(channel => channel.substring(1)).join(`, `)}`)
-    },
-    handleKnownJoin(props) {
-        const { bot, channel, tags } = props
-        if (settings.debug) { console.log(`${boldTxt}> handleKnownJoin(channel: ${channel}, display-name: ${tags[`display-name`]},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }
-
-        // Dev use in bot's channel only
-        if (channel !== BOT_CHANNEL || tags.username !== DEV) { return }
-
-        const alreadyJoined = KNOWN_CHANNELS.filter(user => bot.channels.includes(`#${user}`))
-        const notYetJoined = KNOWN_CHANNELS.filter(user => !bot.channels.includes(`#${user}`))
-
-        // Stagger multiple channel joins
-        for (const [i, channel] of notYetJoined.entries()) {
-            const delay = 2000
-            setTimeout(() => bot.join(channel), delay * i)
-        }
-
-        notYetJoined.length
-            ? alreadyJoined.length
-                ? bot.say(channel, `Joined channel${notYetJoined.length === 1 ? `` : `s`}: ${notYetJoined.join(`, `)} - Already joined: ${alreadyJoined.join(`, `)}`)
-                : bot.say(channel, `Joined channel${notYetJoined.length === 1 ? `` : `s`}: ${notYetJoined.join(`, `)}`)
             : bot.say(channel, `All active users: ${bot.channels.map(channel => channel.substring(1)).join(`, `)}`)
     }
 }

@@ -1,5 +1,7 @@
 const { BOT_CHANNEL, settings, resetTxt, boldTxt, cyanBg } = require(`../config`)
-const { players, playerSave, highestLevels, baseHP } = require(`../data`)
+const { players, playerSave, baseHP } = require(`../data`)
+
+const fs = require(`fs/promises`)
 
 const twitchUsernamePattern = /^[a-z0-9_]{4,25}$/i
 
@@ -100,8 +102,17 @@ function getIntroText(props) {
     bot.say(channel, response)
 }
 
+async function printMemory(channels) {
+    await fs.writeFile(`./memory.json`, JSON.stringify({
+        joined: channels,
+        players,
+        playerSave
+    }, null, 4))
+}
+
 module.exports = {
     twitchUsernamePattern,
+    getToUser,
     getUserMaxHP,
     getIntroText,
     initUser(props) {
@@ -116,7 +127,9 @@ module.exports = {
 
         players[username] = {
             displayName: displayName,
+            capsName: displayName.substring(0, 1).toUpperCase() + displayName.substring(1),
             lv: 1,
+            highestLevel: 1,
             hp: 20,
             dead: false,
             timesKilled: 0,
@@ -131,9 +144,12 @@ module.exports = {
             stainedApronHealTime: false,
             inventory: [`Monster Candy`, `Butterscotch Pie`]
         }
+
         playerSave[username] = {
             displayName: displayName,
+            capsName: displayName.substring(0, 1).toUpperCase() + displayName.substring(1),
             lv: 1,
+            highestLevel: 1,
             hp: 20,
             dead: false,
             timesKilled: 0,
@@ -170,5 +186,20 @@ module.exports = {
             }
         }
         return ``
+    },
+    async shutdown(props) {
+        if (settings.debug) { console.log(`${boldTxt}> shutdown()${resetTxt}`) }
+        await printMemory(props.bot.channels)
+        if (settings.debug) { console.log(`${boldTxt}Done${resetTxt}`) }
+        process.exit(0)
+    },
+    async announceCrash(bot) {
+        if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
+
+        await printMemory(bot.channels)
+
+        bot.channels.forEach(channel => {
+            bot.say(channel, `Oops, I just crashed! >(`)
+        })
     }
 }

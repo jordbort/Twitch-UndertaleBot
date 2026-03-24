@@ -1,5 +1,5 @@
 const { BOT_USERNAME, settings, resetTxt, boldTxt, cyanBg, } = require(`../config`)
-const { getUserMaxHP, stainedApronHeal, initProps } = require(`./utils`)
+const { getUserMaxHP, stainedApronHeal } = require(`./utils`)
 const { printAct } = require(`./graphics`)
 const { showStats } = require(`./stats`)
 
@@ -259,7 +259,7 @@ function handleAct(user, toUser, player, capsPlayer, target, capsTarget) {
 module.exports = {
     getThirdPersonFlavorText,
     attemptAct(props) {
-        const { bot, channel, user, toUser, player, capsPlayer, target, capsTarget, lastStanding } = initProps(props)
+        const { bot, channel, user, player, toUser, target, lastStanding } = props
         if (settings.debug) { console.log(`${boldTxt}> attemptAct( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }

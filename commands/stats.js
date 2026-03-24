@@ -1,4 +1,4 @@
-const { twitchUsernamePattern, getUserMaxHP, initProps } = require(`./utils`)
+const { twitchUsernamePattern, getUserMaxHP } = require(`./utils`)
 const { settings, resetTxt, boldTxt, redBg, greenBg } = require(`../config`)
 const { players, weaponsATK, armorDEF } = require(`../data`)
 
@@ -88,7 +88,7 @@ function makeFullRow(columnWidth, i, j) {
 module.exports = {
     showStats,
     getHP(props) {
-        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getHP(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
         if (target) { bot.say(channel, `${capsTarget} has ${target.hp} HP`) }
@@ -96,7 +96,7 @@ module.exports = {
         else { bot.say(channel, `${capsPlayer} has ${player.hp} HP`) }
     },
     getGold(props) {
-        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getGold(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
         if (target) { bot.say(channel, `${capsTarget} has ${target.gold} G`) }
@@ -104,7 +104,7 @@ module.exports = {
         else { bot.say(channel, `${capsPlayer} has ${player.gold} G`) }
     },
     getNext(props) {
-        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getNext(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
         if (target) { bot.say(channel, `${capsTarget}'s LV will increase with ${target.next} EXP`) }
@@ -112,7 +112,7 @@ module.exports = {
         else { bot.say(channel, `${capsPlayer}'s LV will increase with ${player.next} EXP`) }
     },
     getWeapon(props) {
-        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getWeapon(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
         if (target) { bot.say(channel, `${capsTarget} has the ${target.weapon} equipped (${weaponsATK[target.weapon]} ATK)`) }
@@ -120,7 +120,7 @@ module.exports = {
         else { bot.say(channel, `${capsPlayer} has the ${player.weapon} equipped (${weaponsATK[player.weapon]} ATK)`) }
     },
     getArmor(props) {
-        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getArmor(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
         if (target) { bot.say(channel, `${capsTarget} has the ${target.armor} equipped (${armorDEF[target.armor]} DEF)`) }
@@ -128,7 +128,7 @@ module.exports = {
         else { bot.say(channel, `${capsPlayer} has the ${player.armor} equipped (${armorDEF[player.armor]} DEF)`) }
     },
     getExp(props) {
-        const { bot, channel, toUser, player, capsPlayer, target, capsTarget } = initProps(props)
+        const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getExp(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
         if (target) { bot.say(channel, `${capsTarget} has ${target.exp} EXP`) }
@@ -136,7 +136,7 @@ module.exports = {
         else { bot.say(channel, `${capsPlayer} has ${player.exp} EXP`) }
     },
     handleCheck(props) {
-        const { bot, channel, user, toUser, player, target } = initProps(props)
+        const { bot, channel, user, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> handleCheck(user: ${user}, toUser: ${toUser})${resetTxt}`) }
 
         const attackBonus = player.armor === `Cowboy Hat` ? 5 : player.armor === `Temmie Armor` ? 10 : 0

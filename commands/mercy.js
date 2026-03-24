@@ -1,6 +1,6 @@
 const { BOT_USERNAME, settings, resetTxt, boldTxt, cyanBg } = require(`../config`)
 const { players } = require(`../data`)
-const { getUserMaxHP, stainedApronHeal, initProps } = require(`./utils`)
+const { getUserMaxHP, stainedApronHeal } = require(`./utils`)
 const { getThirdPersonFlavorText } = require(`./act`)
 const { printMercy } = require(`./graphics`)
 
@@ -34,7 +34,7 @@ function handleMercy(user, toUser, player, capsPlayer, target, capsTarget) {
 
 module.exports = {
     attemptMercy(props) {
-        const { bot, channel, user, toUser, player, capsPlayer, target, capsTarget, lastStanding } = initProps(props)
+        const { bot, channel, user, player, toUser, target, lastStanding } = props
         if (settings.debug) { console.log(`${boldTxt}> attemptMercy( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
         if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }

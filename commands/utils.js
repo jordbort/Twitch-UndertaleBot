@@ -105,17 +105,6 @@ module.exports = {
     twitchUsernamePattern,
     getUserMaxHP,
     getIntroText,
-    initProps(props) {
-        const { tags, args } = props
-        const user = tags.username
-        const toUser = getToUser(args[0])
-        const player = players[user]
-        const capsPlayer = player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)
-        const target = toUser in players ? players[toUser] : null
-        const capsTarget = target ? target.displayName.substring(0, 1).toUpperCase() + target.displayName.substring(1) : null
-        const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
-        return { ...props, user: user, toUser: toUser, player: player, capsPlayer: capsPlayer, target: target, capsTarget: capsTarget, lastStanding: lastStanding }
-    },
     initUser(props) {
         const { tags } = props
         if (settings.debug) { console.log(`${boldTxt}> initUser(username: ${tags.username},`, Object.keys(tags).length, `tag${Object.keys(tags).length === 1 ? `` : `s`})${resetTxt}`) }

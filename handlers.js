@@ -1,4 +1,5 @@
 const { BOT_DISPLAY_NAME, BOT_CHANNEL, settings, timeOptions, startTime, resetTxt, boldTxt, inverted, redTxt, greenTxt, yellowTxt, yellowBg } = require(`./config`)
+const { initUser, getToUser } = require(`./commands/utils`)
 const { printLogo } = require(`./commands/graphics`)
 const { players } = require(`./data`)
 const commands = require(`./commands`)
@@ -31,7 +32,7 @@ module.exports = {
     },
     onChatHandler(channel, tags, message, self) {
         // Message context
-        const username = tags.username
+        const user = tags.username
         const firstMsg = tags[`first-msg`]
 
         // Command and arguments parser
@@ -43,7 +44,7 @@ module.exports = {
         if (channel === BOT_CHANNEL && firstMsg) { printLogo() }
 
         // Add/manage players (props are needed for getIntroText)
-        if (!(username in players) && !self) {
+        if (!(user in players) && !self) {
             initUser({ bot: this, channel: channel, tags: tags, message: msg, args: args })
         }
 
@@ -53,9 +54,24 @@ module.exports = {
         for (const command in commands) {
             if (cmd === command) {
                 if (settings.debug) { console.log(`> Matched command:`, cmd, commands[command]) }
-                const player = players[username]
+                const player = players[user]
+                const toUser = getToUser(args[0])
+                const target = toUser in players ? players[toUser] : null
+                const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+
                 console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${player.dead ? redTxt : greenTxt}${player.displayName}:${resetTxt}`, msg)
-                return commands[command]({ bot: this, channel: channel, tags: tags, message: msg, args: args })
+                return commands[command]({
+                    bot: this,
+                    channel: channel,
+                    tags: tags,
+                    message: msg,
+                    args: args,
+                    user: user,
+                    player: player,
+                    toUser: toUser,
+                    target: target,
+                    lastStanding: lastStanding
+                })
             }
         }
         if (settings.debug) { console.log(`${boldTxt}> COMMAND NOT RECOGNIZED${resetTxt}`) }

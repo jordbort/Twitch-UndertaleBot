@@ -7,44 +7,22 @@ const { showStats } = require(`./stats`)
 function calculateUserATK(user) {
     if (settings.debug) { console.log(`${boldTxt}> calculateUserATK(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
-    let attack = baseAT + (2 * userLV)
-    if (userLV >= 20) { attack = 38 }
+    const attack = userLV >= 20 ? 38 : baseAT + (2 * userLV)
     return attack
 }
 
 function calculateUserDEF(user) {
     if (settings.debug) { console.log(`${boldTxt}> calculateUserDEF(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
-    let defense = Math.floor((userLV - 1) * baseDF)
-    if (userLV >= 20) { defense = 4 }
+    const defense = userLV >= 20 ? 4 : Math.floor((userLV - 1) * baseDF)
     return defense
 }
 
 function calculateUserNextLV(user) {
     if (settings.debug) { console.log(`${boldTxt}> calculateUserNextLV(user: ${user})${resetTxt}`) }
     const userLV = players[user].lv
-
-    let userNext = 0
-    if (userLV === 1) { userNext = 10 }
-    if (userLV === 2) { userNext = 20 }
-    if (userLV === 3) { userNext = 40 }
-    if (userLV === 4) { userNext = 50 }
-    if (userLV === 5) { userNext = 80 }
-    if (userLV === 6) { userNext = 100 }
-    if (userLV === 7) { userNext = 200 }
-    if (userLV === 8) { userNext = 300 }
-    if (userLV === 9) { userNext = 400 }
-    if (userLV === 10) { userNext = 500 }
-    if (userLV === 11) { userNext = 800 }
-    if (userLV === 12) { userNext = 1000 }
-    if (userLV === 13) { userNext = 1500 }
-    if (userLV === 14) { userNext = 2000 }
-    if (userLV === 15) { userNext = 3000 }
-    if (userLV === 16) { userNext = 5000 }
-    if (userLV === 17) { userNext = 10000 }
-    if (userLV === 18) { userNext = 25000 }
-    if (userLV === 19) { userNext = 49999 }
-    if (userLV >= 20) { userNext = 999999 }
+    const nextLV = [0, 10, 20, 40, 50, 80, 100, 200, 300, 400, 500, 800, 1000, 1500, 2000, 3000, 5000, 10000, 25000, 49999]
+    const userNext = userLV < nextLV.length ? nextLV[userLV] : 999999
     return userNext
 }
 
@@ -90,53 +68,23 @@ module.exports = {
     },
     calculateBisiclePrice(user) {
         if (settings.debug) { console.log(`${boldTxt}> calculateBisiclePrice(user: ${user})${resetTxt}`) }
-
         const lv = players[user].lv
-        return lv < 3
-            ? 15
-            : lv < 4
-                ? 30
-                : lv < 5
-                    ? 45
-                    : 75
+        const price = lv < 3 ? 15 : lv < 4 ? 30 : lv < 5 ? 45 : 75
+        return price
     },
     calculateNiceCreamPrice(user) {
         if (settings.debug) { console.log(`${boldTxt}> calculateNiceCreamPrice(user: ${user})${resetTxt}`) }
-
         const lv = players[user].lv
-        if (lv < 3) { return 15 }
-        else if (lv < 4) { return 25 }
-        else { return 12 }
+        const price = lv < 3 ? 15 : lv < 4 ? 25 : 12
+        return price
     },
     calculateTemmieArmorPrice(user) {
         if (settings.debug) { console.log(`${boldTxt}> calculateTemmieArmorPrice(user: ${user})${resetTxt}`) }
 
         const deaths = players[user].timesKilled
-        const priceTable = {
-            0: 9999,
-            1: 9000,
-            2: 8000,
-            3: 7000,
-            4: 6000,
-            5: 5000,
-            6: 4500,
-            7: 4000,
-            8: 3500,
-            9: 3000,
-            10: 2800,
-            11: 2600,
-            12: 2400,
-            13: 2200,
-            14: 2000,
-            15: 1800,
-            16: 1600,
-            17: 1400,
-            18: 1250,
-            19: 1100
-        }
-        if (deaths >= 30) { return 500 }
-        else if (deaths >= 25) { return 750 }
-        else if (deaths >= 20) { return 1000 }
-        else { return priceTable[deaths] }
+        const priceList = [9999, 9000, 8000, 7000, 6000, 5000, 4500, 4000, 3500, 3000, 2800, 2600, 2400, 2200, 2000, 1800, 1600, 1400, 1250, 1100]
+
+        const price = deaths >= 30 ? 500 : deaths >= 25 ? 750 : deaths >= 20 ? 1000 : priceList[deaths]
+        return price
     }
 }

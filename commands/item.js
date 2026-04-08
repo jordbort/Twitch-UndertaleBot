@@ -1452,10 +1452,13 @@ module.exports = {
             }G)`)
 
         const item = itemLookup(args.join(` `))
-        if (player.lv < itemLvThreshold[item]) { return bot.say(channel, `Sorry ${player.displayName}, that item isn't available to you yet!`) }
+        if (player.lv < itemLvThreshold[item]) {
+            bot.say(channel, `Sorry ${player.displayName}, that item isn't available to you yet!`)
+            return
+        }
 
         const checkedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
-        return checkedItem
+        checkedItem
             ? bot.say(channel, `The ${itemNames[checkedItem]} costs ${checkedItem === `nice cream`
                 ? calculateNiceCreamPrice(user)
                 : checkedItem === `bisicle`
@@ -1471,25 +1474,43 @@ module.exports = {
         if (settings.debug) { console.log(`${boldTxt}> attemptSellItem( user: ${user}, args:`, args, `)${resetTxt}`) }
 
         // Can't use if dead
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+        if (player.dead) {
+            bot.say(channel, `Sorry ${player.displayName}, you are dead!`)
+            return
+        }
 
         // Can't use if not LV 3
-        if (player.lv < 3) { return bot.say(channel, `* Huh? Sell somethin'? Does this look like a pawn shop? I don't know how it works where you come from... but... If I started spending money on old branches and used bandages, I'd be out of business in a jiffy!`) }
+        if (player.lv < 3) {
+            bot.say(channel, `* Huh? Sell somethin'? Does this look like a pawn shop? I don't know how it works where you come from... but... If I started spending money on old branches and used bandages, I'd be out of business in a jiffy!`)
+            return
+        }
 
-        if (args.length === 0) { return bot.say(channel, `* hOI! welcom to... da TEM SHOP!!!`) }
+        // Welcome/no item specified
+        if (args.length === 0) {
+            bot.say(channel, `* hOI! welcom to... da TEM SHOP!!!`)
+            return
+        }
 
+        // Empty inventory
         const inventory = player.inventory.map(item => item.toLowerCase())
-        if (inventory.length === 0) { return bot.say(channel, `* no more item...`) }
+        if (inventory.length === 0) {
+            bot.say(channel, `* no more item...`)
+            return
+        }
 
         // Item validation
         const soldItem = itemLookup(args.join(` `))
-        if (!soldItem) { return bot.say(channel, `${player.capsName}, that isn't an item!`) }
+        if (!soldItem) {
+            bot.say(channel, `${player.capsName}, that isn't an item!`)
+            return
+        }
 
         // Check possession
         const index = inventory.indexOf(soldItem)
         if (index < 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${player.capsName}, you don't have that item!`)
+            bot.say(channel, `${player.capsName}, you don't have that item!`)
+            return
         }
 
         const response = sellItem(player, soldItem, index)
@@ -1501,24 +1522,38 @@ module.exports = {
         if (settings.debug) { console.log(`${boldTxt}> attemptDropItem( player.displayName: ${player.displayName}, args:`, args, `)${resetTxt}`) }
 
         // Can't use if dead
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+        if (player.dead) {
+            bot.say(channel, `Sorry ${player.displayName}, you are dead!`)
+            return
+        }
 
+        // Empty inventory
         const inventory = player.inventory.map(item => item.toLowerCase())
-        if (inventory.length === 0) { return bot.say(channel, `${player.capsName} has no items!`) }
+        if (inventory.length === 0) {
+            bot.say(channel, `${player.capsName} has no items!`)
+            return
+        }
 
         // Stop if no item 
-        if (!args.length) { return bot.say(channel, `${player.capsName}, no item specified!`) }
+        if (!args.length) {
+            bot.say(channel, `${player.capsName}, no item specified!`)
+            return
+        }
 
         // Item validation
         const droppedItem = itemLookup(args.join(` `))
 
-        if (!droppedItem) { return bot.say(channel, `${player.capsName}, that isn't an item!`) }
+        if (!droppedItem) {
+            bot.say(channel, `${player.capsName}, that isn't an item!`)
+            return
+        }
 
         // Check possession
         const index = inventory.indexOf(droppedItem)
         if (index < 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${player.capsName}, you don't have that item!`)
+            bot.say(channel, `${player.capsName}, you don't have that item!`)
+            return
         }
 
         const response = dropItem(player, droppedItem, index)
@@ -1529,13 +1564,16 @@ module.exports = {
         const { bot, channel, args, user, player } = props
         if (settings.debug) { console.log(`${boldTxt}> attemptBuyItem( user: ${user}, args:`, args, `)${resetTxt}`) }
 
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead!`) }
+        if (player.dead) {
+            bot.say(channel, `Sorry ${player.displayName}, you are dead!`)
+            return
+        }
 
         const item = itemLookup(args.join(` `))
         const purchasedItem = [`nice cream`, `bisicle`, `temmie armor`].includes(item) || item in itemPrices ? item : null
 
         if (purchasedItem) {
-            return bot.say(channel, buyItem(user, player, purchasedItem))
+            bot.say(channel, buyItem(user, player, purchasedItem))
         } else {
             let response = `${player.displayName} can buy: `
             if (player.lv >= 1) { response += `Spider Donut, Spider Cider` }
@@ -1544,7 +1582,7 @@ module.exports = {
             if (player.lv >= 4) { response += `, Temmie Armor, Hot Dog...?` }
             if (player.lv >= 5) { response += `, Junk Food, Starfait, Glamburger, Legendary Hero, Steak in the Shape of Mettaton's Face, Empty Gun, Cowboy Hat` }
             if (player.lv >= 6) { response += `, Popato Chisps` }
-            return bot.say(channel, response)
+            bot.say(channel, response)
         }
     },
     attemptUseItem(props) {
@@ -1554,16 +1592,22 @@ module.exports = {
         // Show items if none selected
         if (args.length === 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${player.capsName}'s items: ${player.inventory.join(`, `)}`)
+            bot.say(channel, `${player.capsName}'s items: ${player.inventory.join(`, `)}`)
+            return
         }
 
+        // Empty inventory
         const inventory = player.inventory.map(item => item.toLowerCase())
-        if (inventory.length === 0) { return bot.say(channel, `${player.capsName} has no items!`) }
+        if (inventory.length === 0) {
+            bot.say(channel, `${player.capsName} has no items!`)
+            return
+        }
 
         // Can't use if dead
         if (player.dead) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `Sorry ${player.displayName}, you are dead!`)
+            bot.say(channel, `Sorry ${player.displayName}, you are dead!`)
+            return
         }
 
         // Item validation
@@ -1571,7 +1615,8 @@ module.exports = {
 
         if (!usedItem) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${player.capsName}, that isn't an item!`)
+            bot.say(channel, `${player.capsName}, that isn't an item!`)
+            return
         }
 
         // Can't use !equip if not a weapon or armor
@@ -1581,7 +1626,8 @@ module.exports = {
         const index = inventory.indexOf(usedItem)
         if (index < 0) {
             console.log(`Inventory:`, player.inventory)
-            return bot.say(channel, `${player.capsName}, you don't have that item!`)
+            bot.say(channel, `${player.capsName}, you don't have that item!`)
+            return
         }
 
         const response = useItem(user, player, usedItem, index)

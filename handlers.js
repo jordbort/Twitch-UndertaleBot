@@ -26,7 +26,10 @@ module.exports = {
         else if (settings.debug) { console.log(`${username} parted from ${channel}`) }
     },
     onWhisperHandler(fromRoom, tags, message, err) {
-        if (err) { return console.log(err) }
+        if (err) {
+            console.log(err)
+            return
+        }
         // this.say(BOT_CHANNEL, `Whisper received`)
         // No plans to respond to whispers?
     },
@@ -49,31 +52,33 @@ module.exports = {
             initUser({ bot: this, channel: channel, tags: tags, message: msg, args: args })
         }
 
-        if (self) { return console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}${BOT_DISPLAY_NAME}:${resetTxt}`, `${yellowTxt}${message}${resetTxt}`) }
+        if (self) {
+            console.log(`${yellowBg}${channel} ${resetTxt}`, `${boldTxt}${yellowTxt}${BOT_DISPLAY_NAME}:${resetTxt}`, `${yellowTxt}${message}${resetTxt}`)
+            return
+        }
         if (!msg.startsWith(`!`)) { return }
 
-        for (const command in commands) {
-            if (cmd === command) {
-                if (settings.debug) { console.log(`> Matched command:`, cmd, commands[command]) }
-                const player = players[user]
-                const toUser = getToUser(args[0])
-                const target = toUser in players ? players[toUser] : null
-                const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
+        if (cmd in commands) {
+            if (settings.debug) { console.log(`> Matched command:`, cmd, commands[cmd]) }
+            const player = players[user]
+            const toUser = getToUser(args[0])
+            const target = toUser in players ? players[toUser] : null
+            const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
 
-                console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${player.dead ? redTxt : greenTxt}${player.displayName}:${resetTxt}`, msg)
-                return commands[command]({
-                    bot: this,
-                    channel: channel,
-                    tags: tags,
-                    message: msg,
-                    args: args,
-                    user: user,
-                    player: player,
-                    toUser: toUser,
-                    target: target,
-                    lastStanding: lastStanding
-                })
-            }
+            console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${player.dead ? redTxt : greenTxt}${player.displayName}:${resetTxt}`, msg)
+            commands[cmd]({
+                bot: this,
+                channel: channel,
+                tags: tags,
+                message: msg,
+                args: args,
+                user: user,
+                player: player,
+                toUser: toUser,
+                target: target,
+                lastStanding: lastStanding
+            })
+            return
         }
         if (settings.debug) { console.log(`${boldTxt}> COMMAND NOT RECOGNIZED${resetTxt}`) }
     }

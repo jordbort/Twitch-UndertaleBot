@@ -262,13 +262,28 @@ module.exports = {
         const { bot, channel, user, player, toUser, target, lastStanding } = props
         if (settings.debug) { console.log(`${boldTxt}> attemptAct( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
+        if (player.dead) {
+            bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`)
+            return
+        }
 
         if (toUser) {
-            if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
-            if (toUser === BOT_USERNAME) { return bot.say(channel, `You can't ACT with me, but you can try ACTing the Dummy!`) }
-            if (!target) { return bot.say(channel, `${toUser} is not a known player!`) }
-            if (target.dead) { return bot.say(channel, `Sorry ${player.displayName}, ${target.displayName} is dead!`) }
+            if (lastStanding) {
+                bot.say(channel, `* But nobody came.`)
+                return
+            }
+            if (toUser === BOT_USERNAME) {
+                bot.say(channel, `You can't ACT with me, but you can try ACTing the Dummy!`)
+                return
+            }
+            if (!target) {
+                bot.say(channel, `${toUser} is not a known player!`)
+                return
+            }
+            if (target.dead) {
+                bot.say(channel, `Sorry ${player.displayName}, ${target.displayName} is dead!`)
+                return
+            }
         }
 
         const response = handleAct(user, toUser, player, target)

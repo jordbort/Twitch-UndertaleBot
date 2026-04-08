@@ -193,16 +193,33 @@ module.exports = {
         const { bot, channel, user, player, toUser, target, lastStanding } = props
         if (settings.debug) { console.log(`${boldTxt}> attemptFight( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
+        if (player.dead) {
+            bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`)
+            return
+        }
 
         // Stop if target is the bot, dead, or not known, or if no target is specified
         if (toUser) {
-            if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
-            if (toUser === `undertalebot`) { return bot.say(channel, `You can't FIGHT me, but you can try FIGHTing the Dummy!`) }
-            if (!target) { return bot.say(channel, `${toUser} is not a known player!`) }
-            if (target.dead) { return bot.say(channel, `${target.capsName} is already dead!`) }
+            if (lastStanding) {
+                bot.say(channel, `* But nobody came.`)
+                return
+            }
+            if (toUser === `undertalebot`) {
+                bot.say(channel, `You can't FIGHT me, but you can try FIGHTing the Dummy!`)
+                return
+            }
+            if (!target) {
+                bot.say(channel, `${toUser} is not a known player!`)
+                return
+            }
+            if (target.dead) {
+                bot.say(channel, `${target.capsName} is already dead!`)
+                return
+            }
+        } else {
+            bot.say(channel, `* ${player.capsName} tried to fight themself. But nothing happened.`)
+            return
         }
-        else { return bot.say(channel, `* ${player.capsName} tried to fight themself. But nothing happened.`) }
 
         handleFight(bot, channel, user, toUser, player, target)
     }

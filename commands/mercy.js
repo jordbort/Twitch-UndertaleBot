@@ -37,16 +37,34 @@ module.exports = {
         const { bot, channel, user, player, toUser, target, lastStanding } = props
         if (settings.debug) { console.log(`${boldTxt}> attemptMercy( user: ${user}, toUser: ${toUser}, lastStanding:`, lastStanding, `)${resetTxt}`) }
 
-        if (player.dead) { return bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`) }
+        if (player.dead) {
+            bot.say(channel, `Sorry ${player.displayName}, you are dead! :(`)
+            return
+        }
 
         // Check if toUser is the sender
         if (toUser && toUser !== user) {
-            if (lastStanding) { return bot.say(channel, `* But nobody came.`) }
-            if (toUser === BOT_USERNAME) { return bot.say(channel, `You can't MERCY me, but you can try MERCYing the Dummy!`) }
-            if (!target) { return bot.say(channel, `${toUser} is not a known player!`) }
-            if (target.dead) { return bot.say(channel, `Sorry ${player.displayName}, ${players[toUser].displayName} is dead!`) }
+            if (lastStanding) {
+                bot.say(channel, `* But nobody came.`)
+                return
+            }
+            if (toUser === BOT_USERNAME) {
+                bot.say(channel, `You can't MERCY me, but you can try MERCYing the Dummy!`)
+                return
+            }
+            if (!target) {
+                bot.say(channel, `${toUser} is not a known player!`)
+                return
+            }
+            if (target.dead) {
+                bot.say(channel, `Sorry ${player.displayName}, ${players[toUser].displayName} is dead!`)
+                return
+            }
         }
-        else { return bot.say(channel, `* ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} tried to spare themself. But nothing happened.`) }
+        else {
+            bot.say(channel, `* ${player.displayName.substring(0, 1).toUpperCase() + player.displayName.substring(1)} tried to spare themself. But nothing happened.`)
+            return
+        }
 
         const response = handleMercy(user, toUser, player, target)
         bot.say(channel, response)

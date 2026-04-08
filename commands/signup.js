@@ -11,7 +11,11 @@ module.exports = {
         if (channel !== BOT_CHANNEL) { return }
 
         const username = `#${user}`
-        if (bot.channels.includes(username)) { return bot.say(channel, `${displayName}, I should already be active in your channel! Use !part if you would like me to leave!`) }
+        if (bot.channels.includes(username)) {
+            bot.say(channel, `${displayName}, I should already be active in your channel! Use !part if you would like me to leave!`)
+            return
+        }
+
         bot.join(username)
         bot.say(channel, `${displayName}, I am now active in your Twitch channel! Use !part in this channel if you would like me to leave!`)
     },
@@ -24,7 +28,11 @@ module.exports = {
         if (channel !== BOT_CHANNEL) { return }
 
         const username = `#${user}`
-        if (!bot.channels.includes(username)) { return bot.say(channel, `${displayName}, I am not active in your Twitch channel! Use !join if you would like to add me to it!`) }
+        if (!bot.channels.includes(username)) {
+            bot.say(channel, `${displayName}, I am not active in your Twitch channel! Use !join if you would like to add me to it!`)
+            return
+        }
+
         bot.say(channel, `${displayName}, I have left your Twitch channel! Use !join in this channel if you would like me to come back!`)
         bot.part(username)
     },

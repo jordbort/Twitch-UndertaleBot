@@ -1,6 +1,7 @@
-const { twitchUsernamePattern, getUserMaxHP } = require(`./utils`)
 const { settings, resetTxt, boldTxt, redBg, greenBg } = require(`../config`)
 const { players, weaponsATK, armorDEF } = require(`../data`)
+
+const { twitchUsernamePattern, getUserMaxHP } = require(`./utils`)
 
 const bufferSpaces = (len) => Array(len).fill(` `).join(``)
 const fillNameGap = (colWidth, user) => { return colWidth > user.length ? bufferSpaces(colWidth - user.length) : `` }
@@ -103,9 +104,9 @@ module.exports = {
         const { bot, channel, player, toUser, target } = props
         if (settings.debug) { console.log(`${boldTxt}> getGold(player.displayName: ${player.displayName}, toUser: ${toUser})${resetTxt}`) }
 
-        if (target) { bot.say(channel, `${target.capsName} has ${target.gold} G`) }
+        if (target) { bot.say(channel, `${target.capsName} has ${target.gold}G`) }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
-        else { bot.say(channel, `${player.capsName} has ${player.gold} G`) }
+        else { bot.say(channel, `${player.capsName} has ${player.gold}G`) }
     },
     getNext(props) {
         const { bot, channel, player, toUser, target } = props

@@ -1,7 +1,8 @@
 const { BOT_DISPLAY_NAME, BOT_CHANNEL, settings, timeOptions, startTime, resetTxt, boldTxt, inverted, redTxt, greenTxt, yellowTxt, yellowBg } = require(`./config`)
+const { players } = require(`./data`)
+
 const { initUser, getToUser } = require(`./commands/utils`)
 const { printLogo } = require(`./commands/graphics`)
-const { players } = require(`./data`)
 const commands = require(`./commands`)
 
 module.exports = {

@@ -1,5 +1,6 @@
 const { BOT_CHANNEL, settings, resetTxt, boldTxt, redBg, greenBg, yellowBg, blueBg, magentaBg, grayBg } = require(`../config`)
 const { players, playerSave, weaponsATK, armorDEF } = require(`../data`)
+
 const { getUserMaxHP, stainedApronHeal } = require(`./utils`)
 const { calculateUserLV } = require(`./math`)
 const { printFight } = require(`./graphics`)

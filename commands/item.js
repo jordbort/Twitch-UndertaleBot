@@ -1,5 +1,6 @@
 const { settings, resetTxt, boldTxt, magentaBg, cyanBg, grayBg } = require(`../config`)
 const { itemNames, itemLvThreshold, consumableItems, itemPrices } = require(`../data`)
+
 const { getUserMaxHP } = require(`./utils`)
 const { printItem } = require(`./graphics`)
 const { showStats } = require(`./stats`)
@@ -1466,7 +1467,7 @@ module.exports = {
                     : checkedItem === `temmie armor`
                         ? calculateTemmieArmorPrice(user)
                         : itemPrices[checkedItem]
-                } G`)
+                }G`)
             : bot.say(channel, `Item prices: ${prices.join(`, `)}`)
     },
     attemptSellItem(props) {

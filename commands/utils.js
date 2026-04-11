@@ -210,7 +210,7 @@ module.exports = {
         return ``
     },
     async shutdown(props) {
-        if (settings.debug) { console.log(`${boldTxt}> shutdown()${resetTxt}`) }
+        if (settings.debug) { console.log(`${boldTxt}> shutdown(${props.bot.channels})${resetTxt}`) }
         await printMemory(props.bot.channels)
         if (settings.debug) { console.log(`${boldTxt}Done${resetTxt}`) }
         process.exit(0)

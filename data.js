@@ -1,8 +1,14 @@
-const { joined, players, playerSave } = require(`./memory.json`)
+function getMemory(str) {
+    let modulePath
+    try { modulePath = require.resolve(`./memory.json`) }
+    catch (err) { return null }
+    return require(modulePath)[str]
+}
 
-// change to dum?
-players.dummy = {
-    ...players.dummy,
+// Initialize memory
+const joined = getMemory(`joined`) || []
+const players = getMemory(`players`) || {}
+const playerSave = getMemory(`playerSave`) || {}
     hp: 20,
     dead: false
 }

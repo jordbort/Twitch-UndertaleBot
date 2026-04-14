@@ -217,11 +217,7 @@ module.exports = {
     },
     async announceCrash(bot) {
         if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
-
         await printMemory(bot.channels)
-
-        bot.channels.forEach(channel => {
-            bot.say(channel, `Oops, I just crashed! >(`)
-        })
+        bot.say(`#undertalebot`, `Oops, I just crashed! >(`)
     }
 }

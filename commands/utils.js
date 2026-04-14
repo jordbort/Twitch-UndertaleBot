@@ -103,7 +103,7 @@ function getIntroText(props) {
 
 async function printMemory(channels) {
     await fs.writeFile(`./memory.json`, JSON.stringify({
-        joined: channels,
+        joined: [`#undertalebot`, ...channels],
         players,
         playerSave
     }, null, 4))

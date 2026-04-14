@@ -103,7 +103,7 @@ function getIntroText(props) {
 
 async function printMemory(channels) {
     await fs.writeFile(`./memory.json`, JSON.stringify({
-        joined: [`#undertalebot`, ...channels],
+        joined: channels,
         players,
         playerSave
     }, null, 4))
@@ -218,6 +218,6 @@ module.exports = {
     async announceCrash(bot) {
         if (settings.debug) { console.log(`${boldTxt}> announceCrash()${resetTxt}`) }
         await printMemory(bot.channels)
-        bot.say(`#undertalebot`, `Oops, I just crashed! >(`)
+        bot.say(BOT_CHANNEL, `Oops, I just crashed! >(`)
     }
 }

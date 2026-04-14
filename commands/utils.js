@@ -13,7 +13,7 @@ function getToUser(str) {
 
 function getUserMaxHP(user) {
     if (settings.debug) { console.log(`${boldTxt}> getUserMaxHP(user: ${user})${resetTxt}`) }
-    const userLV = players[user].lv
+    const userLV = user === `dummy` ? players.dum.lv : players[user].lv
     const maxHP = userLV >= 20 ? 99 : baseHP + (4 * userLV)
     return maxHP
 }

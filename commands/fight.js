@@ -99,7 +99,7 @@ function handleFight(bot, channel, user, toUser, player, target) {
 function deathCheck(bot, channel, user, toUser, player, target) {
     if (settings.debug) { console.log(`${boldTxt}> deathCheck(channel: ${channel}, user: ${user}, toUser: ${toUser})${resetTxt}`) }
 
-    const targetSaveData = playerSave[toUser]
+    const targetSaveData = toUser === `dummy` ? playerSave.dum : playerSave[toUser]
     console.log(`${player.hp <= 0 ? redBg : greenBg} user: ${player.displayName} ${player.hp}/${getUserMaxHP(user)} HP ${resetTxt} ${target.hp <= 0 ? redBg : greenBg} target: ${toUser === `dummy` ? `DUMMY` : target.displayName} ${target.hp}/${getUserMaxHP(toUser)} HP ${resetTxt}`)
 
     const deathText = [
@@ -126,8 +126,8 @@ function deathCheck(bot, channel, user, toUser, player, target) {
                     `* Dummy stands around absentmindedly.`
                 ]
                 const flavorText = flavorTexts[Math.floor(Math.random() * flavorTexts.length)]
-                players.dummy.hp = getUserMaxHP(`dummy`)
-                players.dummy.dead = false
+                players.dum.hp = getUserMaxHP(`dum`)
+                players.dum.dead = false
                 bot.say(channel, flavorText)
             }, settings.msDelay)
         } else {

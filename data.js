@@ -9,9 +9,13 @@ function getMemory(str) {
 const joined = getMemory(`joined`) || []
 const players = getMemory(`players`) || {}
 const playerSave = getMemory(`playerSave`) || {}
+
+players.dum = {
+    ...players.dum,
     hp: 20,
     dead: false
 }
+playerSave.dum = {...players.dum}
 
 module.exports = {
     joined,

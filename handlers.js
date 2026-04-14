@@ -63,7 +63,7 @@ module.exports = {
             if (settings.debug) { console.log(`> Matched command:`, cmd, commands[cmd]) }
             const player = players[user]
             const toUser = getToUser(args[0])
-            const target = toUser in players ? players[toUser] : null
+            const target = toUser in players ? players[toUser] : toUser === `dummy` ? players.dum : null
             const lastStanding = Object.keys(players).filter((player) => { return !players[player].dead }).length === 1
 
             console.log(`${inverted}${channel} ${resetTxt}`, `${boldTxt}${player.dead ? redTxt : greenTxt}${player.displayName}:${resetTxt}`, msg)

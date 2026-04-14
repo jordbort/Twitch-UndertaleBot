@@ -12,8 +12,8 @@ module.exports = {
         if (channel !== BOT_CHANNEL || user !== DEV) { return }
 
         clearTimeout(settings.respawnTimer)
-        players.dummy.hp = 20
-        players.dummy.dead = false
+        players.dum.hp = 20
+        players.dum.dead = false
         bot.say(channel, `The Dummy has been revived!`)
     },
     playersReset(props) {
@@ -38,7 +38,7 @@ module.exports = {
             players[player].armor = `Bandage`
             players[player].gold = 0
             players[player].stainedApronHealTime = false
-            if (player !== `dummy`) {
+            if (player !== `dum`) {
                 players[player].inventory = [`Monster Candy`, `Butterscotch Pie`]
             }
         }
@@ -55,7 +55,7 @@ module.exports = {
 
         clearTimeout(settings.respawnTimer)
         for (const player in players) {
-            if (player !== `dummy`) {
+            if (player !== `dum`) {
                 delete players[player]
                 delete playerSave[player]
             } else {

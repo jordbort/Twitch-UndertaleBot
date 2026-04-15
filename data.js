@@ -1,8 +1,8 @@
 function getMemory(str) {
-    let modulePath
-    try { modulePath = require.resolve(`./memory.json`) }
+    let path
+    try { path = require.resolve(`./memory.json`) }
     catch (err) { return null }
-    return require(modulePath)[str]
+    return require(path)[str]
 }
 
 // Initialize memory
@@ -15,7 +15,7 @@ players.dum = {
     hp: 20,
     dead: false
 }
-playerSave.dum = {...players.dum}
+playerSave.dum = { ...players.dum }
 
 module.exports = {
     joined,

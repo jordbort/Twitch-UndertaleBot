@@ -209,6 +209,7 @@ module.exports = {
         }
         return ``
     },
+    printMemory,
     async shutdown(props) {
         if (settings.debug) { console.log(`${boldTxt}> shutdown(${props.bot.channels})${resetTxt}`) }
         await printMemory(props.bot.channels)

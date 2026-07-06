@@ -4,10 +4,13 @@ const client = require(`./client`)
 
 const { announceCrash } = require(`./commands/utils`)
 
-process.on(`uncaughtException`, async (err) => {
+async function exit(err) {
     await announceCrash(client)
     console.error(err)
     process.exit(1)
-})
+}
+
+process.on(`uncaughtException`, exit)
+process.on(`unhandledRejection`, exit)
 
 client.connect()

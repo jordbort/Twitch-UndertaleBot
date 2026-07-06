@@ -14,7 +14,7 @@ function showStats(user) {
     const logColor = player.dead ? redBg : greenBg
 
     const userColumnTitle = `username`
-    const userEntry = user === `dummy` ? `DUMMY` : player.displayName.match(twitchUsernamePattern) ? player.displayName : user
+    const userEntry = user === `dum` ? `DUMMY` : twitchUsernamePattern.test(player.displayName) ? player.displayName : user
     const userColumnWidth = userEntry.length
     const weaponColumnTitle = `weapon`
     const weaponColumnWidth = player.weapon.length
@@ -75,10 +75,10 @@ function makeFullRow(columnWidth, i, j) {
     if (username) {
         const player = players[username]
         const logColor = player.dead ? redBg : greenBg
-        if (player.displayName.match(twitchUsernamePattern)) {
+        if (twitchUsernamePattern.test(player.displayName)) {
             row.push(`${logColor}${player.displayName.length > columnWidth ? player.displayName.substring(0, columnWidth) : player.displayName}${fillNameGap(columnWidth, player.displayName)}${resetTxt}`)
         } else {
-            row.push(`${logColor}${username === `dummy` ? `DUMMY` : username.length > columnWidth ? username.substring(0, columnWidth) : username}${fillNameGap(columnWidth, username)}${resetTxt}`)
+            row.push(`${logColor}${username === `dum` ? `DUMMY` : username.length > columnWidth ? username.substring(0, columnWidth) : username}${fillNameGap(columnWidth, username)}${resetTxt}`)
         }
         const attackBoost = player.armor === `Temmie Armor`
             ? 10
@@ -148,12 +148,12 @@ module.exports = {
 
         if (target) {
             showStats(toUser === `dummy` ? `dum` : toUser)
-            bot.say(channel, `"${toUser === `dummy` ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser)}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBonus}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`)
+            bot.say(channel, `"${[`dum`, `dummy`].includes(toUser) ? `DUMMY` : target.displayName}" LV: ${target.lv}, HP: ${target.hp}/${getUserMaxHP(toUser)}, AT: ${target.at}(${weaponsATK[target.weapon] + attackBonus}), DF: ${target.df}(${armorDEF[target.armor]}), EXP: ${target.exp}, NEXT: ${target.next}, WEAPON: ${target.weapon}, ARMOR: ${target.armor}, GOLD: ${target.gold}`)
         }
         else if (toUser) { bot.say(channel, `"${toUser}" isn't a known player!`) }
         else {
             showStats(user)
-            bot.say(channel, `"${user === `dummy` ? `DUMMY` : player.displayName}" LV: ${player.lv}, HP: ${player.hp}/${getUserMaxHP(user)}, AT: ${player.at}(${weaponsATK[player.weapon] + attackBonus}), DF: ${player.df}(${armorDEF[player.armor]}), EXP: ${player.exp}, NEXT: ${player.next}, WEAPON: ${player.weapon}, ARMOR: ${player.armor}, GOLD: ${player.gold}`)
+            bot.say(channel, `"${[`dum`, `dummy`].includes(user) ? `DUMMY` : player.displayName}" LV: ${player.lv}, HP: ${player.hp}/${getUserMaxHP(user)}, AT: ${player.at}(${weaponsATK[player.weapon] + attackBonus}), DF: ${player.df}(${armorDEF[player.armor]}), EXP: ${player.exp}, NEXT: ${player.next}, WEAPON: ${player.weapon}, ARMOR: ${player.armor}, GOLD: ${player.gold}`)
         }
     },
     showPlayers(props) {

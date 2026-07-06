@@ -191,7 +191,7 @@ module.exports = {
     },
     getUsername(str) {
         return str
-            ? str.replace(/^[@#]/, ``).match(twitchUsernamePattern)
+            ? twitchUsernamePattern.test(str.replace(/^[@#]/, ``))
                 ? str.replace(/^[@#]/, ``)
                 : null
             : null
